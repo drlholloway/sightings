@@ -11,7 +11,7 @@ platform is exercised with a real DCA75.
 | STATE serial / firmware match the unit | ✅ s/n 225000, hw 0001, fw 0023, R(MT2) 559.5 Ω; CAL 1012 / 8110 / 59409 / 470261 Ω | _pending_ | _pending_ |
 | STATE exchange loop (`just bench`): p50 / p95 / errors | ✅ 300 exchanges: p50 0.27 ms, p95 0.35 ms, max 0.54 ms, 0 stale/errors | _pending_ | _pending_ |
 | Identify matches the unit's screen | ✅ 2N5088: NPN, hFE 404, E=Green B=Red C=Blue, Vbe 769 mV @ 5 mA, Vce(sat) 22.8 mV (confirmed against the unit's display) | _pending_ | _pending_ |
-| Unit-button test appears as a draft | _pending_ | _pending_ | _pending_ |
+| Unit-button test appears as a draft | ✅ app: identify, draft flow and tagging confirmed by the owner | _pending_ | _pending_ |
 | Unplug mid-session → disconnected, replug → auto-connect | _pending_ | _pending_ | _pending_ |
 | Android: unit powers from OTG with battery removed | | | _pending_ |
 
@@ -19,8 +19,8 @@ platform is exercised with a real DCA75.
 
 | Sweep | Part | Matches reference client? | Notes |
 |---|---|---|---|
-| Ic/Vce family | 2N3904 | _pending_ | |
-| hFE vs Ic | 2N3904 | _pending_ | |
+| Ic/Vce family | 2N5088 | ✅ runs (not yet compared numerically) | 5 traces × 51 pts, Ib 5–25 µA from hFE 404, 29.5 s, no errors (2 runs) |
+| hFE vs Ic | 2N5088 | ✅ runs (not yet compared numerically) | 21 pts, Ib 0.49–25 µA, Vce 5 V, 16.5 s, no errors |
 | Id/Vds family | 2N7000 | _pending_ | |
 | Id/Vgs transfer | 2N7000 / J201 | _pending_ | |
 | PN I-V forward | 1N4148, red LED | _pending_ | |
