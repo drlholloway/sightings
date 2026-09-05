@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Peak Atlas DCA75 / DCA Pro: VID 0x04D8 (Microchip), PID 0xF8CA -->
+    <usb-device vendor-id="1240" product-id="63690" />
+</resources>

@@ -1,0 +1,13 @@
+.dart_tool/
+.packages
+build/
+pubspec.lock
+*.iml
+.idea/
+.vscode/
+.DS_Store
+*.dcalog
+!tools/dca75_cli/test/fixtures/*.dcalog
+key.properties
+*.jks
+*.keystore

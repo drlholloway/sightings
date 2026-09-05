@@ -1,0 +1,14 @@
+name: dca75_transport
+description: Transport interface for the DCA75 (64-byte exchange), policy enforcement, logging, and fake/replay transports for tests. Pure Dart; the USB implementation lives in dca75_transport_usb.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+environment:
+  sdk: ^3.6.0
+dependencies:
+  dca75_protocol: ^0.1.0
+  ffi: ^2.1.0
+  meta: ^1.15.0
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

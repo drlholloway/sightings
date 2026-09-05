@@ -1,0 +1,12 @@
+name: dca75_workbench_workspace
+description: Pub workspace root for the DCA75 Workbench monorepo.
+publish_to: none
+environment:
+  sdk: ^3.6.0
+workspace:
+  - packages/dca75_protocol
+  - packages/dca75_transport
+  - packages/dca75_device
+  - packages/dca75_store
+  - tools/dca75_cli
+  - apps/workbench

@@ -1,0 +1,12 @@
+name: dca75_protocol
+description: Pure-Dart protocol library for the Peak Atlas DCA75 (DCA Pro) semiconductor analyser. Frames, opcodes, decoders, lead tables, derived measurements. No I/O.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+environment:
+  sdk: ^3.6.0
+dependencies:
+  meta: ^1.15.0
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0
