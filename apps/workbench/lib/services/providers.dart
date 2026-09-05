@@ -164,6 +164,14 @@ class ReadingIntake {
   final Ref ref;
   StreamSubscription<IdentifyEvent>? _sub;
 
+  /// The most recent saved result, restored when the last draft is discarded.
+  LastResult? _lastSaved;
+
+  void _setSaved(LastResult r) {
+    _lastSaved = r;
+    ref.read(lastResultProvider.notifier).set(r);
+  }
+
   Future<void> _onEvent(IdentifyEvent e) async {
     if (!e.result.type.isComponent && e.result.type != ComponentType.none) {
       // Low battery / USB fail: surface as a banner, not a reading.
@@ -180,9 +188,7 @@ class ReadingIntake {
       return;
     }
     final id = await save(e);
-    ref
-        .read(lastResultProvider.notifier)
-        .set(LastResult(event: e, readingId: id));
+    _setSaved(LastResult(event: e, readingId: id));
   }
 
   Future<int> save(IdentifyEvent e) async {
@@ -202,10 +208,11 @@ class ReadingIntake {
     final id = await save(d.event);
     ref.read(draftsProvider.notifier).remove(d);
     final last = ref.read(lastResultProvider);
+    final saved = LastResult(event: d.event, readingId: id);
     if (last?.draft?.seq == d.seq) {
-      ref
-          .read(lastResultProvider.notifier)
-          .set(LastResult(event: d.event, readingId: id));
+      _setSaved(saved);
+    } else {
+      _lastSaved = saved;
     }
     return id;
   }
@@ -219,7 +226,7 @@ class ReadingIntake {
           .read(lastResultProvider.notifier)
           .set(
             next.isEmpty
-                ? null
+                ? _lastSaved
                 : LastResult(event: next.first.event, draft: next.first),
           );
     }

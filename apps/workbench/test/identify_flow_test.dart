@@ -5,6 +5,7 @@ import 'package:dca75_store/dca75_store.dart';
 import 'package:dca75_transport/dca75_transport.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -112,6 +113,31 @@ void main() {
       await tester.pump();
       expect(find.textContaining('DRAFT'), findsNothing);
       expect(await repo.countReadings(), 2);
+
+      // Tagging: keyboard input must reach the text fields despite the
+      // screen shortcuts (Enter = Save, Space = Test, Backspace = Discard).
+      final part = find.widgetWithText(TextField, 'Part number');
+      await pumpUntil(tester, part); // the strip loads the saved tag first
+      await tester.enterText(part, '2N5088');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await pumpUntil(tester, find.text('— none —')); // bin picker enabled
+      final parts = await repo.listParts();
+      expect(parts.single.partNumber, '2N5088');
+      final label = find.widgetWithText(TextField, 'Label');
+      await pumpUntil(tester, label);
+      await tester.enterText(label, 'lot ab'); // backspace below trims the b
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(tester.widget<TextField>(label).controller!.text, 'lot a');
+      expect(
+        await repo.countReadings(),
+        2,
+        reason: 'Backspace must not discard, Space must not test',
+      );
+      final detail = await repo.loadReading(2);
+      expect(detail!.tag.partId, parts.single.id);
+      expect(detail.tag.label, 'lot a');
 
       // Stop timers cleanly.
       await tester.tap(find.text('Disconnect'));

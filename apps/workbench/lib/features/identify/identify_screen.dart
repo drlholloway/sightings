@@ -117,16 +117,17 @@ class _IdentifyScreenState extends ConsumerState<IdentifyScreen> {
       },
       child: Actions(
         actions: {
-          _TestIntent: CallbackAction<_TestIntent>(
-            onInvoke: (_) => canTest ? _test() : null,
+          _TestIntent: _ScreenAction<_TestIntent>(
+            enabled: canTest,
+            onInvoke: (_) => _test(),
           ),
-          _SaveIntent: CallbackAction<_SaveIntent>(
-            onInvoke: (_) => draft != null ? _saveDraft(draft) : null,
+          _SaveIntent: _ScreenAction<_SaveIntent>(
+            enabled: draft != null,
+            onInvoke: (_) => _saveDraft(draft!),
           ),
-          _DiscardIntent: CallbackAction<_DiscardIntent>(
-            onInvoke: (_) => draft != null
-                ? ref.read(intakeProvider).discardDraft(draft)
-                : null,
+          _DiscardIntent: _ScreenAction<_DiscardIntent>(
+            enabled: draft != null,
+            onInvoke: (_) => ref.read(intakeProvider).discardDraft(draft!),
           ),
         },
         child: Focus(
@@ -275,6 +276,25 @@ class _IdentifyScreenState extends ConsumerState<IdentifyScreen> {
       ],
     );
   }
+}
+
+/// Screen-level keyboard action that steps aside whenever a text field has
+/// focus, so Enter / Space / Backspace still reach the field. A disabled
+/// action leaves the key event unhandled, which lets it propagate.
+class _ScreenAction<T extends Intent> extends CallbackAction<T> {
+  _ScreenAction({required this.enabled, required super.onInvoke});
+  final bool enabled;
+
+  static bool get _textFieldFocused {
+    final ctx = FocusManager.instance.primaryFocus?.context;
+    if (ctx == null) return false;
+    // The focused node belongs to a Focus widget inside the EditableText.
+    return ctx.widget is EditableText ||
+        ctx.findAncestorWidgetOfExactType<EditableText>() != null;
+  }
+
+  @override
+  bool isEnabled(T intent) => enabled && !_textFieldFocused;
 }
 
 class _TestIntent extends Intent {
