@@ -81,12 +81,19 @@ Future<T> withDevice<T>(
         'Vref ${s.rails?.vRef.toStringAsFixed(3)} V, R(MT2) ${s.rails?.rMt2.toStringAsFixed(1)} Ω');
     return await body(ctl, t);
   } finally {
-    if (capture != null) {
-      File(capture).writeAsStringSync(
-          encodeCapture(t.log.entries, comment: 'dca75_cli'));
-      stdout.writeln('capture written to $capture (${t.log.length} exchanges)');
-    }
+    // Shut the unit down first; a capture-write failure must never skip it.
     await ctl.dispose();
+    if (capture != null) {
+      try {
+        final f = File(capture);
+        f.parent.createSync(recursive: true);
+        f.writeAsStringSync(encodeCapture(t.log.entries, comment: 'dca75_cli'));
+        stdout
+            .writeln('capture written to $capture (${t.log.length} exchanges)');
+      } catch (e) {
+        stderr.writeln('could not write capture: $e');
+      }
+    }
   }
 }
 

@@ -81,7 +81,11 @@ abstract class DcaTransport {
   /// One serialised exchange. Validates the frame against policy, sends it,
   /// reads the reply, and retries up to [maxAttempts] times if the reply's
   /// opcode does not echo the request. Every call is logged.
-  Future<Response> exchange(Frame frame);
+  ///
+  /// [timeout] overrides the transport default for this exchange. The unit
+  /// does not service USB while it runs an identify test (several seconds),
+  /// so the STATE poll after TEST(1) needs a long one.
+  Future<Response> exchange(Frame frame, {Duration? timeout});
 
   /// Release resources; the transport cannot be reused afterwards.
   Future<void> dispose();
@@ -91,7 +95,7 @@ abstract class DcaTransport {
 /// only provide [transferOut] / [transferIn] plus device management.
 abstract class SerializedTransport implements DcaTransport {
   SerializedTransport({
-    this.timeout = const Duration(seconds: 3),
+    this.timeout = const Duration(seconds: 5),
     this.maxAttempts = 3,
     TransportLog? log,
   }) : log = log ?? TransportLog();
@@ -123,22 +127,24 @@ abstract class SerializedTransport implements DcaTransport {
   @protected
   void markClosed() => _openDevice = null;
 
-  /// Write exactly 64 bytes to the bulk OUT endpoint.
+  /// Write exactly 64 bytes to the bulk OUT endpoint. [timeout] is the
+  /// budget for this transfer.
   @protected
-  Future<void> transferOut(Uint8List bytes);
+  Future<void> transferOut(Uint8List bytes, Duration timeout);
 
   /// Read up to 64 bytes from the bulk IN endpoint.
   @protected
-  Future<Uint8List> transferIn();
+  Future<Uint8List> transferIn(Duration timeout);
 
   @override
-  Future<Response> exchange(Frame frame) {
+  Future<Response> exchange(Frame frame, {Duration? timeout}) {
     // Policy first: never enqueue a frame that must not be sent.
     final bytes = frame.bytes; // throws ProtocolPolicyError
     final completer = Completer<Response>();
+    final budget = timeout ?? this.timeout;
     _chain = _chain.then((_) async {
       try {
-        completer.complete(await _exchange(bytes));
+        completer.complete(await _exchange(bytes, budget));
       } catch (e, st) {
         completer.completeError(e, st);
       }
@@ -146,7 +152,7 @@ abstract class SerializedTransport implements DcaTransport {
     return completer.future;
   }
 
-  Future<Response> _exchange(Uint8List out) async {
+  Future<Response> _exchange(Uint8List out, Duration budget) async {
     if (_disposed) {
       throw TransportException(
           TransportErrorKind.notOpen, 'transport disposed');
@@ -159,8 +165,8 @@ abstract class SerializedTransport implements DcaTransport {
     for (var attempt = 1; attempt <= maxAttempts; attempt++) {
       Uint8List inBytes;
       try {
-        await _timed(transferOut(out));
-        inBytes = await _timed(transferIn());
+        await _timed(transferOut(out, budget), budget);
+        inBytes = await _timed(transferIn(budget), budget);
       } on TransportException catch (e) {
         log.add(TransportLogEntry(
             opcode: want,
@@ -201,7 +207,8 @@ abstract class SerializedTransport implements DcaTransport {
         'response mismatch after $maxAttempts tries for opcode 0x${want.toRadixString(16)}');
   }
 
-  Future<T> _timed<T>(Future<T> f) => f.timeout(timeout,
+  Future<T> _timed<T>(Future<T> f, Duration budget) => f.timeout(
+      budget + const Duration(milliseconds: 500),
       onTimeout: () =>
           throw TransportException(TransportErrorKind.timeout, 'USB timeout'));
 

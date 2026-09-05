@@ -40,8 +40,8 @@ void main() {
     expect(r.hfe, closeTo(212.4, 1e-3));
     expect(r.param('hfe')!.display, '212.4');
     expect(r.param('vbe_5ma')!.display, '710 mV');
-    expect(r.param('ib_5ma')!.value, closeTo(24e-6, 1e-12));
-    expect(r.param('ib_5ma')!.display, '24.0 µA');
+    expect(r.param('vbe_5ma')!.label, 'Vbe @ 24.0 µA');
+    expect(r.param('ic_vbe_hi')!.value, closeTo(24e-6, 1e-12));
     expect(r.param('ic_leak')!.value, closeTo(1e-6, 1e-12));
     expect(r.param('r_shunt'), isNull, reason: 'Rshunt 0 is hidden');
     expect(r.param('r_input'), isNull, reason: 'only for digital');

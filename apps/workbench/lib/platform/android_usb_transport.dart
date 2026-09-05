@@ -6,19 +6,13 @@ import 'package:flutter/services.dart';
 /// Android transport over a small Kotlin bridge (`UsbBridge.kt`) that uses
 /// `UsbManager` / `UsbDeviceConnection.bulkTransfer` on a background thread.
 class AndroidUsbTransport extends SerializedTransport {
-  AndroidUsbTransport({
-    this.usbTimeout = const Duration(milliseconds: 2500),
-    super.timeout,
-    super.maxAttempts,
-    super.log,
-  }) {
+  AndroidUsbTransport({super.timeout, super.maxAttempts, super.log}) {
     _events.receiveBroadcastStream().listen(_onEvent, onError: (_) {});
   }
 
   static const _channel = MethodChannel('dca75/usb');
   static const _events = EventChannel('dca75/usb_events');
 
-  final Duration usbTimeout;
   Future<Uint8List>? _pendingIn;
   final _permission = <String, Completer<bool>>{};
 
@@ -107,16 +101,16 @@ class AndroidUsbTransport extends SerializedTransport {
   }
 
   @override
-  Future<void> transferOut(Uint8List bytes) async {
+  Future<void> transferOut(Uint8List bytes, Duration timeout) async {
     _pendingIn = _call<Uint8List>('exchange', {
       'data': Uint8List.fromList(bytes),
-      'timeoutMs': usbTimeout.inMilliseconds,
+      'timeoutMs': timeout.inMilliseconds,
     });
     _pendingIn!.ignore();
   }
 
   @override
-  Future<Uint8List> transferIn() {
+  Future<Uint8List> transferIn(Duration timeout) {
     final f = _pendingIn;
     _pendingIn = null;
     return f ??

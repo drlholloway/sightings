@@ -186,14 +186,17 @@ void _bjt(_Builder b, Response r, int cfg, int fl) {
     b.milliamps('ic_on', 'Ic(on)', f[3]);
     b.milliamps('ic_off', 'Ic(off)', f[4]);
   } else {
-    b.volts('vbe_5ma', 'Vbe @ 5 mA', f[1]);
-    b.volts('vbe_1ma', 'Vbe @ 1 mA', f[2]);
-    b.milliamps('ib_5ma', 'Ib @ 5 mA', f[3]);
-    b.milliamps('ib_1ma', 'Ib @ 1 mA', f[4]);
+    // f[3] / f[4] are the collector test currents at which the two Vbe
+    // values were measured (5 mA and 1 mA on a 2N5088 capture), not base
+    // currents as the reference client labelled them.
+    b.volts('vbe_5ma', 'Vbe @ ${eng(f[3] / 1000, 'A')}', f[1]);
+    b.volts('vbe_1ma', 'Vbe @ ${eng(f[4] / 1000, 'A')}', f[2]);
+    b.milliamps('ic_vbe_hi', 'Ic for Vbe (hi)', f[3]);
+    b.milliamps('ic_vbe_lo', 'Ic for Vbe (lo)', f[4]);
   }
   b.volts('vce_sat', 'Vce(sat)', f[7]);
-  b.plain('ic_sat', '@ Ic (sat)', f[8] / 1000, eng(f[8] / 1000, 'A'));
-  b.plain('ib_sat', '@ Ib (sat)', f[9] / 1000, eng(f[9] / 1000, 'A'));
+  b.plain('ic_sat', 'Ic (sat test)', f[8] / 1000, eng(f[8] / 1000, 'A'));
+  b.plain('ib_sat', 'Ib (sat test)', f[9] / 1000, eng(f[9] / 1000, 'A'));
   if (f[10] > 0 && f[10] < 56000) b.ohms('r_shunt', 'B-E shunt R', f[10]);
   if (digital) b.ohms('r_input', 'Input R', f[11]);
 

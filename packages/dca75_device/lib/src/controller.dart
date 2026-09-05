@@ -279,7 +279,10 @@ class DeviceController {
       DeviceState? st;
       do {
         await sleep(identifyPollInterval);
-        st = (await c.getState(DeviceState.idle)).state;
+        // The unit is silent for the whole test (seconds); let one poll
+        // block for the full identify budget rather than time out.
+        st = (await c.getState(DeviceState.idle, timeout: identifyTimeout))
+            .state;
         if (cancel?.isCancelled ?? false) {
           throw const IdentifyCancelled();
         }

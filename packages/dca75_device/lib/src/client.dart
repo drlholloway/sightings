@@ -23,8 +23,9 @@ class DcaClient {
 
   // ---------------------------------------------------------------- commands
 
-  Future<StateInfo> getState(DeviceState ack) async {
-    final s = parseState(await transport.exchange(buildState(ack)));
+  Future<StateInfo> getState(DeviceState ack, {Duration? timeout}) async {
+    final s =
+        parseState(await transport.exchange(buildState(ack), timeout: timeout));
     lastState = s;
     mirror.applyState(s);
     return s;

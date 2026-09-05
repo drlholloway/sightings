@@ -96,11 +96,27 @@ void main() {
   test('timeout', () async {
     final slow = FakeTransport(timeout: const Duration(milliseconds: 20));
     await slow.open((await slow.listDevices()).single);
-    slow.latency = const Duration(milliseconds: 200);
+    slow.latency = const Duration(milliseconds: 800); // > 20 ms + 500 ms margin
     await expectLater(
         slow.exchange(buildLeadsSafe()),
         throwsA(isA<TransportException>()
             .having((e) => e.kind, 'kind', TransportErrorKind.timeout)));
+    await slow.dispose();
+  });
+
+  test('per-exchange timeout override', () async {
+    final slow = FakeTransport(timeout: const Duration(milliseconds: 20));
+    await slow.open((await slow.listDevices()).single);
+    slow.latency = const Duration(milliseconds: 800);
+    // default budget (20 ms + 500 ms margin) is not enough for 800 ms
+    await expectLater(
+        slow.exchange(buildLeadsSafe()),
+        throwsA(isA<TransportException>()
+            .having((e) => e.kind, 'kind', TransportErrorKind.timeout)));
+    // an override of 1 s is
+    final r = await slow.exchange(buildLeadsSafe(),
+        timeout: const Duration(seconds: 1));
+    expect(r.opcode, 0x8D);
     await slow.dispose();
   });
 

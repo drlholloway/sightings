@@ -99,8 +99,8 @@ void main() {
           ..where((p) => p.readingId.equals(id)))
         .get();
     expect(params.map((p) => p.key),
-        containsAll(['hfe', 'vbe_5ma', 'ib_5ma', 'ic_leak', 'vce_sat']));
-    expect(params.firstWhere((p) => p.key == 'ib_5ma').unit, 'A');
+        containsAll(['hfe', 'vbe_5ma', 'ic_vbe_hi', 'ic_leak', 'vce_sat']));
+    expect(params.firstWhere((p) => p.key == 'ic_vbe_hi').unit, 'A');
     expect(await repo.countReadings(), 1);
     expect(await repo.loadReading(999), isNull);
   });

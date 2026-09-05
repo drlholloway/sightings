@@ -13,17 +13,12 @@ import 'worker.dart';
 class LibusbTransport extends SerializedTransport {
   LibusbTransport({
     this.libraryPath,
-    this.usbTimeout = const Duration(milliseconds: 2500),
     super.timeout,
     super.maxAttempts,
     super.log,
   });
 
   final String? libraryPath;
-
-  /// Per-transfer timeout handed to libusb; shorter than the Dart-side
-  /// [timeout] so the worker always answers first.
-  final Duration usbTimeout;
 
   Isolate? _isolate;
   SendPort? _commands;
@@ -124,16 +119,16 @@ class LibusbTransport extends SerializedTransport {
   }
 
   @override
-  Future<void> transferOut(Uint8List bytes) async {
+  Future<void> transferOut(Uint8List bytes, Duration timeout) async {
     _pendingOut = Uint8List.fromList(bytes);
     _pendingIn =
-        _call<Uint8List>(['xchg', _pendingOut, usbTimeout.inMilliseconds]);
+        _call<Uint8List>(['xchg', _pendingOut, timeout.inMilliseconds]);
     // Surface OUT-side failures here; IN-side ones surface in transferIn.
     _pendingIn!.ignore();
   }
 
   @override
-  Future<Uint8List> transferIn() {
+  Future<Uint8List> transferIn(Duration timeout) {
     final f = _pendingIn;
     _pendingIn = null;
     if (f == null) {

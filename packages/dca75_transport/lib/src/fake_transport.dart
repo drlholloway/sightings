@@ -78,7 +78,7 @@ class FakeTransport extends SerializedTransport {
   }
 
   @override
-  Future<void> transferOut(Uint8List bytes) async {
+  Future<void> transferOut(Uint8List bytes, Duration timeout) async {
     if (!present) {
       throw TransportException(TransportErrorKind.disconnected, 'device gone');
     }
@@ -91,7 +91,7 @@ class FakeTransport extends SerializedTransport {
   }
 
   @override
-  Future<Uint8List> transferIn() async {
+  Future<Uint8List> transferIn(Duration timeout) async {
     if (!present) {
       throw TransportException(TransportErrorKind.disconnected, 'device gone');
     }
@@ -142,7 +142,7 @@ class ReplayTransport extends SerializedTransport {
   Future<void> close() async => markClosed();
 
   @override
-  Future<void> transferOut(Uint8List bytes) async {
+  Future<void> transferOut(Uint8List bytes, Duration timeout) async {
     if (exhausted) {
       throw TransportException(
           TransportErrorKind.io, 'replay exhausted after $_cursor exchanges');
@@ -161,7 +161,7 @@ class ReplayTransport extends SerializedTransport {
   }
 
   @override
-  Future<Uint8List> transferIn() async {
+  Future<Uint8List> transferIn(Duration timeout) async {
     final c = _current;
     _current = null;
     final input = c?.input;
