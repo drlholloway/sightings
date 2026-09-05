@@ -1,5 +1,5 @@
 name: workbench
-description: "DCA75 Workbench - Peak Atlas DCA75 semiconductor analyser companion for macOS, Linux and Android."
+description: "Sightings - DCA75 Workbench. Companion app for the Peak Atlas DCA75 semiconductor analyser on macOS, Linux and Android."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none'

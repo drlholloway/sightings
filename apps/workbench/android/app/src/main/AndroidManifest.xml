@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-feature android:name="android.hardware.usb.host" android:required="true" />
     <application
-        android:label="DCA75 Workbench"
+        android:label="Sightings"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,4 +1,7 @@
-# DCA75 Workbench — Project Plan
+# Sightings (DCA75 Workbench) — Project Plan
+
+Product name: **Sightings**, subtitle **DCA75 Workbench** (decided 2026‑09‑05). Internal
+identifiers (`workbench` Dart package, `dev.laneholloway.workbench` bundle id) are unchanged.
 
 Desktop (macOS, Linux) and Android application that talks to a Peak Atlas DCA75
 (“DCA Pro”) semiconductor analyser over USB, runs identify tests and curve

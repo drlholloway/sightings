@@ -50,7 +50,7 @@ class _WorkbenchAppState extends ConsumerState<WorkbenchApp>
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     return MaterialApp.router(
-      title: 'DCA75 Workbench',
+      title: 'Sightings',
       debugShowCheckedModeBanner: false,
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),

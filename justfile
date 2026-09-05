@@ -1,4 +1,4 @@
-# DCA75 Workbench task runner (https://github.com/casey/just). `just --list`.
+# Sightings (DCA75 Workbench) task runner (https://github.com/casey/just). `just --list`.
 
 set shell := ["bash", "-cu"]
 export PATH := "/opt/homebrew/bin:" + env_var("PATH")
@@ -37,7 +37,7 @@ run-android:
 
 build-macos:
     cd apps/workbench && flutter build macos --release
-    ./packaging/macos/bundle-libusb.sh apps/workbench/build/macos/Build/Products/Release/workbench.app
+    ./packaging/macos/bundle-libusb.sh apps/workbench/build/macos/Build/Products/Release/Sightings.app
 
 build-linux:
     cd apps/workbench && flutter build linux --release

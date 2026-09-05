@@ -139,11 +139,24 @@ class _Header extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            Text(
-              'DCA75 WORKBENCH',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.2,
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'SIGHTINGS',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.6,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '  DCA75 Workbench',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(width: 16),

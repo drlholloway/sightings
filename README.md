@@ -1,4 +1,4 @@
-# DCA75 Workbench
+# Sightings — DCA75 Workbench
 
 Companion application for the **Peak Atlas DCA75 (DCA Pro)** semiconductor
 analyser. Connects over USB, runs identify tests and curve sweeps, shows the
@@ -80,6 +80,9 @@ from the phone, use a powered OTG hub or keep the AAA battery in.
   search for transistor matching.
 - **Settings** — backup/restore the database, re-decode readings, theme.
 
+The app is called *Sightings*: every component you clip in is a sighting to be
+identified, recorded and compared with the rest of its kind.
+
 ## Terminal tools
 
 ```sh
@@ -95,4 +98,4 @@ Phases 0–6 of the plan are implemented and unit-tested against a fake
 transport. Hardware validation is tracked in
 [docs/hardware-notes.md](docs/hardware-notes.md).
 
-Not affiliated with Peak Electronic Design Ltd.
+Sightings is a Cryptid Effects project. Not affiliated with Peak Electronic Design Ltd.

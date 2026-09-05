@@ -98,7 +98,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
         ListTile(
-          title: const Text('DCA75 Workbench'),
+          title: const Text('Sightings — DCA75 Workbench'),
           subtitle: Text(
             'version ${info.value?.version ?? '…'} · ${Platform.operatingSystem}\n'
             'Not affiliated with Peak Electronic Design Ltd. Never writes to the unit\'s firmware or calibration.',
