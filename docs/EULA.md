@@ -17,7 +17,9 @@ Sightings application for macOS, Linux and Android (the "App").
 ## 2. What you may not do
 
 - Redistribute, sell, rent, sublicense or make the App available to third parties,
-  including re-uploading the free builds or the Android build to any store or site.
+  including re-uploading the free builds to any store or site.
+- Create, sell or charge for any derivative, modified, rebranded or repackaged
+  version of the App. Only Cryptid Effects may offer a paid edition of Sightings.
 - Reverse engineer, decompile or disassemble the App, except to the extent that
   applicable law expressly permits.
 - Remove or alter any notices in the App.
