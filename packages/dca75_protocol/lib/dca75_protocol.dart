@@ -1,6 +1,6 @@
 /// Pure-Dart protocol library for the Peak Atlas DCA75 ("DCA Pro").
 ///
-/// Ported from the reference WebUSB client (`ref-docs/dca-bench.html`).
+/// Ported from a reference WebUSB client that is kept outside this repository.
 /// Contains no I/O: it builds 64-byte command frames, parses 64-byte
 /// responses, and computes derived measurements. A transport (see
 /// `dca75_transport`) moves the bytes.

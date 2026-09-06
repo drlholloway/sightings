@@ -3,7 +3,7 @@
 **Goal:** a pure‑Dart, dependency‑free library that encodes every DCA75 command, decodes
 every response, exposes the lead/config tables and derived measurements, and is proven by
 unit tests and golden frames. It is a faithful port of the `DCA` class, `decodeResult`,
-`pinsFor`, `diodePins`, `configFrom12G` and the constants in `ref-docs/dca-bench.html`.
+`pinsFor`, `diodePins`, `configFrom12G` and the constants in the reference WebUSB client (kept privately, not in the repository).
 
 **Effort:** 3–5 days. **Hardware:** none (golden frames can be captured later in Phase 2
 and added to the test corpus).

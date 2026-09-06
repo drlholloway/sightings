@@ -27,7 +27,6 @@ packages/dca75_device/     Typed client, connection controller (polling, drafts)
 packages/dca75_store/      SQLite via drift: readings, params, parts, bins, sweeps, stats
 tools/dca75_cli/           decode / probe / identify / bench / replay from the terminal
 packaging/                 udev rule, macOS libusb bundling
-ref-docs/                  Reference WebUSB client the protocol was ported from
 ```
 
 ## Building

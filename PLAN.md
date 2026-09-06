@@ -50,7 +50,7 @@ plan under `docs/plans/`.
 
 ## 2. What we already have
 
-`ref-docs/dca-bench.html` is a working single‑file WebUSB client. It is the most
+The reference WebUSB client (a single HTML file, kept privately outside this repository) is the most
 valuable input to this project because it contains, verified against hardware:
 
 - USB identity: **VID 0x04D8, PID 0xF8CA**, vendor‑specific bulk interface (WinUSB on
@@ -67,8 +67,8 @@ valuable input to this project because it contains, verified against hardware:
   (EEPROM write arm) with CAL/SERIAL.
 
 Phase 1 is largely a **faithful port of this file's logic into a typed, tested Dart
-library**. The HTML stays in `ref-docs/` as the reference implementation and as a
-hardware sanity‑check tool.
+library**. The HTML is kept locally by the owner as the reference implementation and as a
+hardware sanity‑check tool; it is not part of the repository.
 
 Note on provenance: the reference client was built from a reverse‑engineered protocol
 dossier. **Permission to distribute binaries has been granted** (decision recorded 2026‑09‑05):
@@ -142,7 +142,6 @@ packages/dca75_transport/  DcaTransport interface, libusb dart:ffi transport (wo
 packages/dca75_device/     Typed client, DeviceController (state machine, polling), SweepEngine. Pure Dart.
 packages/dca75_store/      drift schema, repository, stats, CSV. Depends on dca75_protocol/device for types.
 tools/dca75_cli/           decode / probe / identify / bench / replay from the terminal.
-ref-docs/                  Reference WebUSB client (unchanged).
 ```
 
 *Implementation note (2026‑09‑05):* `quick_usb` turned out to be four years stale and pins

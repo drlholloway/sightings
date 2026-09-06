@@ -22,7 +22,6 @@ Android, with CI, linting and the package boundaries in place so later phases on
    packages/dca75_store/         # dart package with drift + drift_dev
    tools/dca75_cli/              # dart CLI: capture, replay, decode frames
    docs/plans/                   # this directory
-   ref-docs/                     # unchanged reference client
    ```
 
 3. **Shared tooling**
