@@ -151,8 +151,14 @@ class _Builder {
   void ohms(String key, String label, double v) => params.add(
       Param(key: key, label: label, value: v, unit: 'Ω', display: eng(v, 'Ω')));
 
-  void siemens(String key, String label, double v) => params.add(
-      Param(key: key, label: label, value: v, unit: 'S', display: eng(v, 'S')));
+  /// Frame transconductances are in mS (a J201 reports gfs ≈ 1.56, i.e.
+  /// 1.56 mS); store siemens.
+  void millisiemens(String key, String label, double mS) => params.add(Param(
+      key: key,
+      label: label,
+      value: mS / 1000,
+      unit: 'S',
+      display: eng(mS / 1000, 'S')));
 
   void plain(String key, String label, double v, String display) => params
       .add(Param(key: key, label: label, value: v, unit: '', display: display));
@@ -226,7 +232,7 @@ void _mosfetIgbt(_Builder b, Response r, int type, int cfg, int fl) {
 
   b.volts('vgs_th', 'Vgs(th)', f[0]);
   b.milliamps('id_on', 'Id(on)', f[1]);
-  b.siemens('gm', 'gm / gfe', f[6]);
+  b.millisiemens('gm', 'gm / gfe', f[6]);
   b.volts('vds_sat', isMosfet ? 'Vds(sat)' : 'Vce(sat)', f[7]);
   b.milliamps('id_sat', '@ Id', f[8]);
   b.volts('vg_sat', '@ Vg', f[9]);
@@ -236,7 +242,7 @@ void _mosfetIgbt(_Builder b, Response r, int type, int cfg, int fl) {
 
   b.head('vgs_th', f[0]);
   b.head('rds_on', f[10]);
-  b.head('gm', f[6]);
+  b.head('gm', f[6] / 1000);
   b.head('id_off', f[5] / 1000);
 }
 
@@ -253,7 +259,7 @@ void _jfet(_Builder b, Response r, int cfg, int fl) {
 
   b.volts('vgs_off', 'Vgs(off) pinch-off', f[0]);
   b.milliamps('idss', 'Idss (Vgs=0)', f[6]);
-  b.siemens('gfs', 'gfs', f[5]);
+  b.millisiemens('gfs', 'gfs', f[5]);
   b.milliamps('id_off', 'Id(off) leakage', f[1]);
   b.volts('vgs_on', 'Vgs @ on', f[2]);
   b.milliamps('id_on', 'Id @ on', f[3]);
@@ -261,7 +267,7 @@ void _jfet(_Builder b, Response r, int cfg, int fl) {
 
   b.head('vgs_off', f[0]);
   b.head('idss', f[6] / 1000);
-  b.head('gfs', f[5]);
+  b.head('gfs', f[5] / 1000);
 }
 
 void _scrTriac(_Builder b, Response r, int type, int cfg) {

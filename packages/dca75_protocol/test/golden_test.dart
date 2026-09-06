@@ -36,4 +36,23 @@ void main() {
     expect(r.param('r_shunt'), isNull);
     expect(r.headline['hfe'], closeTo(404.0, 0.01));
   });
+
+  test('J201 (N-channel JFET, config 1)', () {
+    final r = decodeResult(golden('jfet-j201'));
+    expect(r.type, ComponentType.jfet);
+    expect(r.name, 'N-ch JFET');
+    expect(r.flagLabels, ['N-CHANNEL', 'SYMMETRIC D/S']);
+    expect(r.config, 1);
+    expect(r.pins, [
+      const PinAssignment(lead: Lead.red, terminal: 'S'),
+      const PinAssignment(lead: Lead.blue, terminal: 'G'),
+      const PinAssignment(lead: Lead.green, terminal: 'D'),
+    ]);
+    expect(r.vgsOff, closeTo(-0.734, 1e-3));
+    expect(r.param('idss')!.display, '484 µA');
+    expect(r.param('gfs')!.display, '1.56 mS');
+    expect(r.param('id_off')!.display, '4.80 µA');
+    expect(r.param('rds')!.display, '673 Ω');
+    expect(r.headline['gfs'], closeTo(1.561e-3, 1e-5));
+  });
 }

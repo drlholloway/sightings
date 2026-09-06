@@ -74,7 +74,7 @@ void main() {
         2,
         fetFlagNChannel | fetFlagBodyDiode,
         (d) => floats(
-            d, 5, [2.1, 10, 0, 0, 0, 0.0002, 0.35, 0.2, 10, 5, 1.8, 0.72])));
+            d, 5, [2.1, 10, 0, 0, 0, 0.0002, 350, 0.2, 10, 5, 1.8, 0.72])));
     expect(r.name, 'N-ch MOSFET');
     expect(r.flagLabels, ['N-CHANNEL', 'BODY DIODE']);
     expect(r.pins!.map((p) => p.terminal), ['S', 'G', 'D']);
