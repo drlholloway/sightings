@@ -24,6 +24,11 @@ class CurvesScreen extends ConsumerStatefulWidget {
   ConsumerState<CurvesScreen> createState() => _CurvesScreenState();
 }
 
+/// Sweeps that apply to the identified component, in menu order. The
+/// two-lead PN sweep needs no identify and is always offered last.
+List<SweepKind> sweepKindsFor(IdentifyResult? last) =>
+    SweepKind.values.where((k) => k.canRun(last)).toList();
+
 class _CurvesScreenState extends ConsumerState<CurvesScreen> {
   SweepKind _kind = SweepKind.icvce;
   SweepParams _params = const IcVceParams();
@@ -75,6 +80,14 @@ class _CurvesScreenState extends ConsumerState<CurvesScreen> {
     setState(() => _params = defaultsFor(_kind, last));
   }
 
+  /// Keep [_kind] within the applicable set, switching to the first
+  /// applicable sweep (and its defaults) when the component changes.
+  void _selectKindFor(IdentifyResult? last) {
+    final kinds = sweepKindsFor(last);
+    if (!kinds.contains(_kind)) _kind = kinds.first;
+    _params = defaultsFor(_kind, last);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -89,7 +102,7 @@ class _CurvesScreenState extends ConsumerState<CurvesScreen> {
       _defaultsFor = key;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          _applyDefaults(lastResult);
+          setState(() => _selectKindFor(lastResult));
           _refreshSaved();
         }
       });
@@ -120,10 +133,11 @@ class _CurvesScreenState extends ConsumerState<CurvesScreen> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             DropdownMenu<SweepKind>(
+              key: ValueKey('${lastResult?.typeCode}-${_kind.name}'),
               initialSelection: _kind,
               label: const Text('Curve'),
               dropdownMenuEntries: [
-                for (final k in SweepKind.values)
+                for (final k in sweepKindsFor(lastResult))
                   DropdownMenuEntry(value: k, label: k.title),
               ],
               onSelected: (k) {
