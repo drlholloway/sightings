@@ -7,13 +7,13 @@ platform is exercised with a real DCA75.
 
 | Check | macOS | Linux | Android |
 |---|---|---|---|
-| Device enumerates (`just probe`) | ✅ 2026‑09‑05, bus 1 addr 1; USB string descriptors empty (product/serial come from STATE) | _pending_ | _pending_ |
-| STATE serial / firmware match the unit | ✅ s/n 225000, hw 0001, fw 0023, R(MT2) 559.5 Ω; CAL 1012 / 8110 / 59409 / 470261 Ω | _pending_ | _pending_ |
-| STATE exchange loop (`just bench`): p50 / p95 / errors | ✅ 300 exchanges: p50 0.27 ms, p95 0.35 ms, max 0.54 ms, 0 stale/errors | _pending_ | _pending_ |
-| Identify matches the unit's screen | ✅ 2N5088: NPN, hFE 404, E=Green B=Red C=Blue, Vbe 769 mV @ 5 mA, Vce(sat) 22.8 mV (confirmed against the unit's display) | _pending_ | _pending_ |
-| Unit-button test appears as a draft | ✅ app: identify, draft flow and tagging confirmed by the owner | _pending_ | _pending_ |
+| Device enumerates (`just probe`) | ✅ 2026‑09‑05, bus 1 addr 1; USB string descriptors empty (product/serial come from STATE) | _pending_ | ✅ 2026‑09‑06, USB OTG, release APK sideloaded |
+| STATE serial / firmware match the unit | ✅ s/n 225000, hw 0001, fw 0023, R(MT2) 559.5 Ω; CAL 1012 / 8110 / 59409 / 470261 Ω | _pending_ | ✅ |
+| STATE exchange loop (`just bench`): p50 / p95 / errors | ✅ 300 exchanges: p50 0.27 ms, p95 0.35 ms, max 0.54 ms, 0 stale/errors | _pending_ | not measured (no CLI on Android); sweeps ran normally |
+| Identify matches the unit's screen | ✅ 2N5088: NPN, hFE 404, E=Green B=Red C=Blue, Vbe 769 mV @ 5 mA, Vce(sat) 22.8 mV (confirmed against the unit's display) | _pending_ | ✅ 2N5088, silicon diode, J201 — same results as macOS |
+| Unit-button test appears as a draft | ✅ app: identify, draft flow and tagging confirmed by the owner | _pending_ | ✅ |
 | Unplug mid-session → disconnected, replug → auto-connect | _pending_ | _pending_ | _pending_ |
-| Android: unit powers from OTG with battery removed | | | _pending_ |
+| Android: unit powers from OTG with battery removed | | | _not yet checked_ (worked with the phone as host; battery state not recorded) |
 
 ## Curves (Phase 6)
 
@@ -54,3 +54,9 @@ the TEST(2) reply into `test/golden/`.
 - J201 identify: N‑ch JFET, config 1, Vgs(off) −0.734 V, Idss 484 µA, gfs 1.56 **mS**. The
   raw gfs/gm fields are in mS (the reference client showed them as S); decoder fixed.
   Golden frame: `test/golden/jfet-j201.hex`.
+
+## Android (2026‑09‑06)
+
+Release APK sideloaded onto a phone over Wi‑Fi. The Kotlin `UsbBridge` worked first time:
+permission dialog, connect, identify, unit‑button drafts and the BJT, diode and JFET sweeps all
+behaved exactly as on macOS with the same three parts (2N5088, silicon diode, J201).

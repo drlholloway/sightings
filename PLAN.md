@@ -257,11 +257,11 @@ unknown.
 |---|---|
 | 0 Scaffolding | done — pub workspace, lints, CI workflow, justfile, udev rule |
 | 1 Protocol core | done — 55 tests |
-| 2 USB transport | done — libusb FFI verified on macOS with the unit (p95 0.35 ms); Android bridge compiles, untested on a phone |
+| 2 USB transport | done — libusb FFI verified on macOS (p95 0.35 ms); Android bridge verified on a phone over OTG (2026‑09‑06) |
 | 3 Device service | done — controller with polling/drafts, 30 tests with the sweep engine |
 | 4 Datastore | done — drift schema, repository, stats, CSV, backup — 18 tests |
 | 5 App UI | done — identify/drafts, history, detail, parts/bins/stats, settings, log; 6 widget tests incl. end‑to‑end flow |
-| 6 Curve tracer | Ic/Vce and hFE/Ic run on hardware (2N5088); FET and diode sweeps not yet exercised; no numeric comparison with Peak's app yet |
+| 6 Curve tracer | all five sweeps run on hardware on macOS and Android (2N5088, diode, J201); identify vs curve cross‑checks agree; reverse/zener sweep and a comparison with Peak's app still open |
 | 7 Packaging | partial — debug builds verified for macOS and Android APK; Linux build, signing, notarisation, release CI pending |
 
 ## 9. Risks and mitigations
