@@ -76,7 +76,7 @@ class IdentifyResult {
 
 /// Version of the decoder; stored with each reading so a later fix can
 /// re-decode raw frames.
-const int decoderVersion = 1;
+const int decoderVersion = 2; // 2: BJT Vbe test-current labels, gfs/gm in mS
 
 /// Decode a TEST(2) response. Port of `decodeResult` in the reference client.
 IdentifyResult decodeResult(Response r) {

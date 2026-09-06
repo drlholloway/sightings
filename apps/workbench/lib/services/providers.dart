@@ -66,9 +66,14 @@ final databaseProvider = FutureProvider<AppDatabase>((ref) async {
   return db;
 });
 
-final repositoryProvider = FutureProvider<ReadingsRepository>(
-  (ref) async => ReadingsRepository(await ref.watch(databaseProvider.future)),
-);
+final repositoryProvider = FutureProvider<ReadingsRepository>((ref) async {
+  final repo = ReadingsRepository(await ref.watch(databaseProvider.future));
+  // Readings written by an older decoder get their parameters regenerated
+  // from the stored raw frames; tags and notes are untouched.
+  final n = await repo.reDecodeAll();
+  if (n > 0) debugPrint('re-decoded $n readings with decoder v$decoderVersion');
+  return repo;
+});
 
 // ---------------------------------------------------------------- session
 
