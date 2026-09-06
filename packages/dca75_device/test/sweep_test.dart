@@ -46,6 +46,25 @@ void main() {
       expect((defaultsFor(SweepKind.idvgs, r) as IdVgsParams).vgsMin,
           closeTo(-2.4, 1e-6));
     });
+    test('diode identify sets PN I-V anode/cathode from the pinout', () {
+      // cfg 4: gate = red (anode), MT1 = green (cathode)
+      final r = decodeFrame(diodeFrame(cfg: 4));
+      final p = defaultsFor(SweepKind.pniv, r) as PnIvParams;
+      expect(p.anode, Lead.red);
+      expect(p.cathode, Lead.green);
+      expect(p.forward, isTrue);
+      // cfg 5: gate = green, MT1 = blue
+      final q = defaultsFor(SweepKind.pniv, decodeFrame(diodeFrame(cfg: 5)))
+          as PnIvParams;
+      expect(q.anode, Lead.green);
+      expect(q.cathode, Lead.blue);
+      // a BJT result leaves the plain defaults
+      expect(
+          (defaultsFor(SweepKind.pniv, decodeFrame(bjtFrame())) as PnIvParams)
+              .anode,
+          Lead.red);
+    });
+
     test('no result gives plain defaults; canRun gates by type', () {
       expect(defaultsFor(SweepKind.icvce, null), isA<IcVceParams>());
       expect(SweepKind.icvce.canRun(null), isFalse);

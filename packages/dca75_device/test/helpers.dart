@@ -31,3 +31,17 @@ Uint8List jfetFrame({int cfg = 5, double vgsOff = -2.4}) {
 }
 
 IdentifyResult decodeFrame(Uint8List b) => decodeResult(Response(b));
+
+/// A TEST(2) frame for a single PN diode; anode on the gate lead and
+/// cathode on the MT1 lead of [cfg].
+Uint8List diodeFrame({int cfg = 4, double vf = 0.62}) {
+  final b = Uint8List(64)..[0] = 0x85;
+  final d = ByteData.sublistView(b);
+  b[2] = 6;
+  b[3] = 1; // one junction
+  b[5] = 1; // PN
+  b[6] = cfg;
+  d.setFloat32(7, vf, Endian.little);
+  d.setFloat32(11, 5, Endian.little);
+  return b;
+}

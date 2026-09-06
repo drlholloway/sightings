@@ -296,6 +296,16 @@ SweepParams defaultsFor(SweepKind kind, IdentifyResult? last) {
       }
       return const IdVgsParams();
     case SweepKind.pniv:
+      // A diode identify tells us which clip holds the anode (gate lead)
+      // and the cathode (MT1 lead); start the sweep forward-biased.
+      final pins = last?.type == ComponentType.diode ? last?.pins : null;
+      if (pins != null && pins.length == 2) {
+        final a = pins.firstWhere((p) => p.terminal == 'A').lead;
+        final k = pins.firstWhere((p) => p.terminal == 'K').lead;
+        if (a != k && a != Lead.none && k != Lead.none) {
+          return PnIvParams(anode: a, cathode: k);
+        }
+      }
       return const PnIvParams();
   }
 }
