@@ -48,6 +48,7 @@ dependencies:
   sqlite3: ^3.0.0
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.0
   flutter_test:
     sdk: flutter
 
@@ -70,6 +71,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/EULA.md
+    - assets/icon/icon_256.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -101,3 +103,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon_1024.png
+  adaptive_icon_background: "#123C3A"
+  adaptive_icon_foreground: assets/icon/icon_android_fg.png
+  min_sdk_android: 26
+  macos:
+    generate: true
+    image_path: assets/icon/icon_macos.png
