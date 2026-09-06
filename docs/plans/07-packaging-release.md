@@ -41,10 +41,11 @@ signing, notarisation and store listings are part of this phase rather than opti
 - Version from `pubspec.yaml`; `app_version` written into every session row.
 
 ## Licence and attribution
-- Choose and add a licence file (MIT or Apache‑2.0 suggested) before the first public tag.
-- Keep the reverse‑engineered dossier out of the repository; `ref-docs/dca-bench.html`
-  may stay as the reference client now that distribution is cleared. State in the README
-  that the project is not affiliated with Peak Electronic Design.
+- Proprietary: `LICENSE` (all rights reserved) and `docs/EULA.md` (users' terms; shown in
+  About and bundled as `assets/EULA.md`, keep the two in sync). macOS/Linux free, Android
+  paid via Play. The repository is private; CI macOS jobs run only on tags or by hand.
+- Keep the reverse‑engineered dossier out of the repository. State in the README and the
+  App that the project is not affiliated with Peak Electronic Design.
 
 ## Docs
 - `README.md`: features, screenshots, install per platform, safety note, troubleshooting

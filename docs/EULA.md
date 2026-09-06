@@ -1,0 +1,62 @@
+# Sightings — End User Licence Agreement
+
+*Draft for review. Version 1, September 2026.*
+
+This agreement is between you and Cryptid Effects ("we", "us") and covers the
+Sightings application for macOS, Linux and Android (the "App").
+
+## 1. Licence
+
+- **macOS and Linux builds** are provided free of charge. You may install and use
+  them on any number of computers you own or control, for personal or commercial
+  purposes.
+- **The Android build** is licensed per copy through Google Play under Google's
+  terms and this agreement. You may install it on the Android devices linked to the
+  Google account that purchased it.
+- The App is licensed, not sold. We keep all rights not expressly granted here.
+
+## 2. What you may not do
+
+- Redistribute, sell, rent, sublicense or make the App available to third parties,
+  including re-uploading the free builds or the Android build to any store or site.
+- Reverse engineer, decompile or disassemble the App, except to the extent that
+  applicable law expressly permits.
+- Remove or alter any notices in the App.
+
+## 3. Your hardware and data
+
+- The App communicates with a Peak Atlas DCA75 over USB. It never writes to the
+  unit's firmware, calibration or serial number, and it returns the unit to a safe
+  state after every test. You are responsible for the components you connect and
+  for using the unit within its ratings.
+- Readings, sweeps and notes are stored only on your device, in a SQLite database
+  you can back up, restore or delete at any time. The App does not collect or
+  transmit any data and has no accounts or analytics.
+
+## 4. No warranty
+
+The App is provided "as is", without warranty of any kind. Measurements depend on
+your unit, its calibration and your setup; verify anything you rely on.
+
+## 5. Limitation of liability
+
+To the fullest extent permitted by law, we are not liable for any indirect,
+incidental or consequential damages, or for damage to components, equipment or
+data, arising from use of the App. Our total liability is limited to the amount
+you paid for the App.
+
+## 6. Termination
+
+This licence ends automatically if you breach it. On termination you must delete
+the App.
+
+## 7. Trademarks
+
+Peak Atlas, DCA Pro and DCA75 are trademarks of Peak Electronic Design Ltd.
+Sightings is not affiliated with, endorsed by or supported by Peak Electronic
+Design Ltd.
+
+## 8. Contact
+
+Questions about this agreement: Cryptid Effects, via the contact details on the
+download page.

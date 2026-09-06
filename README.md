@@ -98,4 +98,10 @@ Phases 0–6 of the plan are implemented and unit-tested against a fake
 transport. Hardware validation is tracked in
 [docs/hardware-notes.md](docs/hardware-notes.md).
 
+## Licence
+
+Proprietary. © 2026 Cryptid Effects, all rights reserved; see `LICENSE`. The macOS and
+Linux builds are free to use, the Android build is sold through Google Play, and all
+users are bound by the End User Licence Agreement in `docs/EULA.md`.
+
 Sightings is a Cryptid Effects project. Not affiliated with Peak Electronic Design Ltd.

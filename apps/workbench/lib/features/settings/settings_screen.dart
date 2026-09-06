@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -101,9 +102,20 @@ class SettingsScreen extends ConsumerWidget {
           title: const Text('Sightings — DCA75 Workbench'),
           subtitle: Text(
             'version ${info.value?.version ?? '…'} · ${Platform.operatingSystem}\n'
+            '© 2026 Cryptid Effects. All rights reserved. '
             'Not affiliated with Peak Electronic Design Ltd. Never writes to the unit\'s firmware or calibration.',
           ),
           isThreeLine: true,
+        ),
+        ListTile(
+          leading: const Icon(Icons.description_outlined),
+          title: const Text('End User Licence Agreement'),
+          subtitle: Text(
+            Platform.isAndroid
+                ? 'Licensed per copy through Google Play.'
+                : 'Free to use on macOS and Linux; not for redistribution.',
+          ),
+          onTap: () => _showEula(context),
         ),
         if (Platform.isLinux)
           const ListTile(
@@ -122,6 +134,27 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
       ],
+    );
+  }
+
+  Future<void> _showEula(BuildContext context) async {
+    final text = await rootBundle.loadString('assets/EULA.md');
+    if (!context.mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (c) => AlertDialog(
+        title: const Text('End User Licence Agreement'),
+        content: SizedBox(
+          width: 560,
+          child: SingleChildScrollView(child: SelectableText(text)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(c),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
     );
   }
 

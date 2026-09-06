@@ -71,9 +71,10 @@ library**. The HTML stays in `ref-docs/` as the reference implementation and as 
 hardware sanity‑check tool.
 
 Note on provenance: the reference client was built from a reverse‑engineered protocol
-dossier. **Permission to distribute has been granted** (decision recorded 2026‑09‑05), so
-public builds, signing, notarisation and store listings are in scope for Phase 7. Keep the
-original dossier itself out of the repository; the Dart protocol package is the published form.
+dossier. **Permission to distribute binaries has been granted** (decision recorded 2026‑09‑05):
+signing, notarisation and store listings are in scope for Phase 7. The **source stays private**
+(decided 2026‑09‑06): the repository is proprietary (see `LICENSE`), macOS and Linux builds are
+free, the Android build is sold through Google Play, and users are bound by `docs/EULA.md`.
 
 ---
 
@@ -280,9 +281,9 @@ unknown.
 ## 10. Decisions and open questions
 
 ### Decided (2026‑09‑05)
-1. **Distribution is public.** Permission has been given to distribute. Phase 7 includes
-   signed/notarised macOS builds, a Linux AppImage, and an Android APK plus Play Store
-   listing. See §2 for the provenance note.
+1. **Binaries public, source private.** Free macOS/Linux builds, paid Android build on
+   Google Play, proprietary repository with an EULA for users (2026‑09‑06). Phase 7 includes
+   signed/notarised macOS builds, a Linux AppImage and the Play listing. See §2.
 2. **Unit‑button results land as drafts.** A test started from the unit's own button is
    shown as a *draft* card that the user confirms (Save, optionally tagging first) or
    discards. Tests started from the app's Test button save immediately. Drafts are held in
