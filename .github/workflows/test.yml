@@ -76,4 +76,18 @@ jobs:
           channel: stable
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libusb-1.0-0-dev
       - run: dart pub get
-      - run: cd apps/workbench && flutter build linux --debug
+      - run: cd apps/workbench && flutter build linux --release
+      - name: package bundle
+        run: |
+          VERSION=$(grep '^version:' apps/workbench/pubspec.yaml | awk '{print $2}' | cut -d+ -f1)
+          STAGE=sightings-linux-x64-$VERSION
+          mkdir -p $STAGE
+          cp -r apps/workbench/build/linux/x64/release/bundle/. $STAGE/
+          cp packaging/linux/60-dca75.rules $STAGE/
+          cp packaging/linux/README-linux.md $STAGE/README.md
+          tar czf $STAGE.tar.gz $STAGE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sightings-linux-x64
+          path: sightings-linux-x64-*.tar.gz
+          retention-days: 14
