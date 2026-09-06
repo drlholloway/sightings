@@ -20,9 +20,11 @@ Sightings application for macOS, Linux and Android (the "App").
   including re-uploading the free builds to any store or site.
 - Create, sell or charge for any derivative, modified, rebranded or repackaged
   version of the App. Only Cryptid Effects may offer a paid edition of Sightings.
-- Reverse engineer, decompile or disassemble the App, except to the extent that
-  applicable law expressly permits.
 - Remove or alter any notices in the App.
+
+The source code of the App is published separately under the PolyForm Shield
+License 1.0.0; what you may do with the source is governed by that licence, not
+by this agreement.
 
 ## 3. Your hardware and data
 

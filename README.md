@@ -100,8 +100,10 @@ transport. Hardware validation is tracked in
 
 ## Licence
 
-Proprietary. © 2026 Cryptid Effects, all rights reserved; see `LICENSE`. The macOS and
-Linux and Android builds are all free to use, and users are bound by the End User
-Licence Agreement in `docs/EULA.md`.
+[PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0), see `LICENSE`.
+You may use, build, modify and share Sightings freely, including at work, but not use it
+to make or sell anything that competes with it; any commercial edition is Cryptid Effects'
+alone. The macOS, Linux and Android builds are free, and users of the builds are bound by
+the End User Licence Agreement in `docs/EULA.md`.
 
 Sightings is a Cryptid Effects project. Not affiliated with Peak Electronic Design Ltd.

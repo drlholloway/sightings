@@ -102,7 +102,7 @@ class SettingsScreen extends ConsumerWidget {
           title: const Text('Sightings — DCA75 Workbench'),
           subtitle: Text(
             'version ${info.value?.version ?? '…'} · ${Platform.operatingSystem}\n'
-            '© 2026 Cryptid Effects. All rights reserved. '
+            '© 2026 Cryptid Effects. Source available under PolyForm Shield 1.0.0. '
             'Not affiliated with Peak Electronic Design Ltd. Never writes to the unit\'s firmware or calibration.',
           ),
           isThreeLine: true,
