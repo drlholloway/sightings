@@ -74,7 +74,7 @@ Note on provenance: the reference client was built from a reverse‑engineered p
 dossier. **Permission to distribute binaries has been granted** (decision recorded 2026‑09‑05):
 signing, notarisation and store listings are in scope for Phase 7. The **source stays private**
 (decided 2026‑09‑06): the repository is proprietary (see `LICENSE`), macOS and Linux builds are
-free, the Android build is sold through Google Play, and users are bound by `docs/EULA.md`.
+free on every platform (decided 2026‑09‑06), and users are bound by `docs/EULA.md`.
 
 ---
 
@@ -281,8 +281,8 @@ unknown.
 ## 10. Decisions and open questions
 
 ### Decided (2026‑09‑05)
-1. **Binaries public, source private.** Free macOS/Linux builds, paid Android build on
-   Google Play, proprietary repository with an EULA for users (2026‑09‑06). Phase 7 includes
+1. **Binaries public and free, source private.** Free builds on macOS, Linux and Android
+   (all‑free decided 2026‑09‑06), proprietary repository with an EULA for users. Phase 7 includes
    signed/notarised macOS builds, a Linux AppImage and the Play listing. See §2.
 2. **Unit‑button results land as drafts.** A test started from the unit's own button is
    shown as a *draft* card that the user confirms (Save, optionally tagging first) or

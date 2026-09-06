@@ -7,12 +7,11 @@ Sightings application for macOS, Linux and Android (the "App").
 
 ## 1. Licence
 
-- **macOS and Linux builds** are provided free of charge. You may install and use
-  them on any number of computers you own or control, for personal or commercial
-  purposes.
-- **The Android build** is licensed per copy through Google Play under Google's
-  terms and this agreement. You may install it on the Android devices linked to the
-  Google account that purchased it.
+- The App is provided **free of charge** on every platform. You may install and use
+  it on any number of computers and devices you own or control, for personal or
+  commercial purposes.
+- Builds obtained through the Mac App Store or Google Play are also subject to the
+  store's terms.
 - The App is licensed, not sold. We keep all rights not expressly granted here.
 
 ## 2. What you may not do
@@ -42,8 +41,8 @@ your unit, its calibration and your setup; verify anything you rely on.
 
 To the fullest extent permitted by law, we are not liable for any indirect,
 incidental or consequential damages, or for damage to components, equipment or
-data, arising from use of the App. Our total liability is limited to the amount
-you paid for the App.
+data, arising from use of the App. As the App is free, our total liability is
+limited to zero to the extent the law allows.
 
 ## 6. Termination
 

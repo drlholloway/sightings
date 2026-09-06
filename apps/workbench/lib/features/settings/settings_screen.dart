@@ -111,9 +111,7 @@ class SettingsScreen extends ConsumerWidget {
           leading: const Icon(Icons.description_outlined),
           title: const Text('End User Licence Agreement'),
           subtitle: Text(
-            Platform.isAndroid
-                ? 'Licensed per copy through Google Play.'
-                : 'Free to use on macOS and Linux; not for redistribution.',
+            'Free to use on every platform; not for redistribution.',
           ),
           onTap: () => _showEula(context),
         ),

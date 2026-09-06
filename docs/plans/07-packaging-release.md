@@ -42,8 +42,8 @@ signing, notarisation and store listings are part of this phase rather than opti
 
 ## Licence and attribution
 - Proprietary: `LICENSE` (all rights reserved) and `docs/EULA.md` (users' terms; shown in
-  About and bundled as `assets/EULA.md`, keep the two in sync). macOS/Linux free, Android
-  paid via Play. The repository is private; CI macOS jobs run only on tags or by hand.
+  About and bundled as `assets/EULA.md`, keep the two in sync). Free on every platform;
+  a free Play listing cannot later become paid. The repository is private; CI macOS jobs run only on tags or by hand.
 - Keep the reverse‑engineered dossier out of the repository. State in the README and the
   App that the project is not affiliated with Peak Electronic Design.
 
