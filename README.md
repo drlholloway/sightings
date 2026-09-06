@@ -10,6 +10,16 @@ the database is planned; iPhones cannot talk to the unit directly.
 
 See [PLAN.md](PLAN.md) for the design and `docs/plans/` for the phase plans.
 
+## Download
+
+Ready-made builds are on the [Releases page](https://github.com/drlholloway/sightings/releases):
+
+| Platform | File | Notes |
+|---|---|---|
+| macOS | `sightings-macos-<version>.zip` | Not notarised yet: on first launch use System Settings → Privacy & Security → **Open Anyway** (older macOS: right-click → Open). No driver needed. |
+| Linux x86-64 | `sightings-linux-x64-<version>.tar.gz` | Extract, install the udev rule from the bundled README, run `./workbench`. Needs GTK 3 and libusb-1.0. |
+| Android | `sightings-android-<version>.apk` | Open the APK on the phone; needs a USB OTG cable. |
+
 ## Safety
 
 The app never writes to the unit's firmware, calibration or serial number.

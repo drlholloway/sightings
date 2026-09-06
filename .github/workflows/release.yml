@@ -1,0 +1,129 @@
+name: release
+# Tag a commit `vX.Y.Z` (matching apps/workbench/pubspec.yaml) to build the
+# macOS zip, Linux tarball and Android APK and attach them to a GitHub Release.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        run: echo "version=$(grep '^version:' apps/workbench/pubspec.yaml | awk '{print $2}' | cut -d+ -f1)" >> "$GITHUB_OUTPUT"
+
+  linux:
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libusb-1.0-0-dev
+      - run: dart pub get
+      - run: cd apps/workbench && flutter build linux --release
+      - name: package
+        run: |
+          STAGE=sightings-linux-x64-${{ needs.version.outputs.version }}
+          mkdir -p $STAGE
+          cp -r apps/workbench/build/linux/x64/release/bundle/. $STAGE/
+          cp packaging/linux/60-dca75.rules $STAGE/
+          cp packaging/linux/README-linux.md $STAGE/README.md
+          tar czf $STAGE.tar.gz $STAGE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: sightings-linux-x64-*.tar.gz
+
+  android:
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: dart pub get
+      - name: release signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          test -n "$KEYSTORE_BASE64" || { echo "ANDROID_KEYSTORE_BASE64 secret missing"; exit 1; }
+          echo "$KEYSTORE_BASE64" | base64 -d > apps/workbench/android/app/sightings-release.jks
+          cat > apps/workbench/android/key.properties <<EOF
+          storeFile=sightings-release.jks
+          storePassword=$KEYSTORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
+          EOF
+      - run: cd apps/workbench && flutter build apk --release
+      - run: cp apps/workbench/build/app/outputs/flutter-apk/app-release.apk sightings-android-${{ needs.version.outputs.version }}.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: sightings-android-*.apk
+
+  macos:
+    needs: version
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: brew install libusb
+      - run: dart pub get
+      - run: cd apps/workbench && flutter build macos --release
+      - name: bundle libusb and sign (ad hoc)
+        run: |
+          APP=apps/workbench/build/macos/Build/Products/Release/Sightings.app
+          LIBUSB_DYLIB=$(brew --prefix)/lib/libusb-1.0.0.dylib ./packaging/macos/bundle-libusb.sh "$APP"
+          codesign --force --deep --sign - "$APP"
+          codesign --verify --deep --strict "$APP"
+          ditto -c -k --keepParent "$APP" sightings-macos-${{ needs.version.outputs.version }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: sightings-macos-*.zip
+
+  publish:
+    needs: [version, linux, android, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - run: ls -la dist
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Sightings ${{ needs.version.outputs.version }}
+          generate_release_notes: true
+          files: dist/*
+          body: |
+            Companion app for the Peak Atlas DCA75. All builds are free; see the EULA in the app.
+
+            **macOS** (Apple silicon and Intel): unzip and open `Sightings.app`. The build is not notarised, so
+            on first launch macOS will refuse; open System Settings → Privacy & Security and click **Open Anyway**
+            (older macOS: right-click the app → Open). No driver needed.
+
+            **Linux** (x86-64): extract, install the udev rule from the README inside, run `./workbench`.
+            Needs GTK 3 and `libusb-1.0` from your distribution.
+
+            **Android**: download the APK on the phone and open it (allow installs from the browser once).
+            Needs a USB OTG cable. If an earlier debug-signed build is installed, uninstall it first.
