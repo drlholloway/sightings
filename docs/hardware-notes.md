@@ -23,7 +23,7 @@ platform is exercised with a real DCA75.
 | hFE vs Ic | 2N5088 | ✅ runs (not yet compared numerically) | 21 pts, Ib 0.49–25 µA, Vce 5 V, 16.5 s, no errors |
 | Id/Vds family | 2N7000 | _pending_ | |
 | Id/Vgs transfer | 2N7000 / J201 | _pending_ | |
-| PN I-V forward | 1N4148, red LED | _pending_ | |
+| PN I-V forward | silicon diode | ✅ classic knee; Vf 0.6935 V @ 4.84 mA on the curve vs 0.693 V @ 5.0 mA from identify (agree within 1 mV); leads pre-filled A=Red K=Blue from the identify | 51 pts to 5 V, 7.3 s, current reaches 7.1 mA (series R(MT2) limit) |
 | PN I-V reverse | 5.1 V zener | _pending_ | |
 | Cancel mid-family → immediate identify works | | _pending_ | |
 
@@ -48,3 +48,6 @@ the TEST(2) reply into `test/golden/`.
   default exchange timeout is 5 s. Captures: `docs/captures/identify-2n5088.dcalog`.
 - BJT result floats 3 and 4 are the collector test currents for the two Vbe measurements
   (5.00 mA and 1.00 mA), not base currents as the reference client labelled them; labels fixed.
+- Diode identify: PN junction, config 6, Vf 0.693 V @ 5.0 mA, reverse current 0. The first
+  PN I‑V attempt used the default Red/Green leads on a diode sitting Red/Blue and traced a flat
+  reverse line; the form now takes anode/cathode from the identify result.
