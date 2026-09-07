@@ -66,3 +66,9 @@ behaved exactly as on macOS with the same three parts (2N5088, silicon diode, J2
 2N5088: DCA75 identify hFE 405 @ 5 mA; DCA55‑equivalent hFE 410 @ Ic 2.53 mA, Vce 2.498 V,
 Ib 6.2 µA, converged; Vbe 648 mV at that point, 765 mV @ Ib 4.50 mA; leakage 0. Servo lands
 within tolerance in a few iterations from the identify's hFE as the starting guess.
+
+## Reverse leakage (macOS, 2026‑09‑07)
+
+Silicon diode (Vf 687 mV): Ir 5.1 nA @ 5.00 V, 30.6 nA @ 10.02 V through the 470 kΩ gate path
+with baseline subtraction; the DCA75 identify's own reverse‑current field reads 0. The 10 V value
+may include ADC gain mismatch (≈20 nA per 0.1 %); an open‑clip calibration would cancel it.
