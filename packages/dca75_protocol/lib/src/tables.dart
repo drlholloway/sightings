@@ -1,6 +1,6 @@
 import 'constants.dart';
 
-/// Lead colour assigned to each of the three terminal drivers for a
+/// Lead color assigned to each of the three terminal drivers for a
 /// configuration 1..6. Configs 7..12 use the same leads with P polarity.
 class LeadMap {
   const LeadMap({required this.mt1, required this.mt2, required this.gate});
@@ -54,7 +54,7 @@ const Map<int, (Lead, Lead)> vbeTab = {
   12: (Lead.blue, Lead.red),
 };
 
-/// A terminal label attached to a lead colour, e.g. ("B", green).
+/// A terminal label attached to a lead color, e.g. ("B", green).
 class PinAssignment {
   const PinAssignment({required this.lead, required this.terminal});
   final Lead lead;

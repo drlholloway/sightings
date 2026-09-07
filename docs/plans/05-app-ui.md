@@ -21,7 +21,7 @@ phones. Curves is Phase 6 but its navigation slot exists from Phase 0.
 - Big **Test** button (disabled while not connected or busy) and a “waiting for unit button”
   hint when idle.
 - Result card: component name (e.g. “NPN BJT”), flag chips (SILICON, DARLINGTON…),
-  **pinout by lead colour** — three circles in red/green/blue with the terminal letter under
+  **pinout by lead color** — three circles in red/green/blue with the terminal letter under
   each, exactly as the reference — then the parameter table (label, formatted value).
 - Tagging strip directly under the card: part number autocomplete (creates a part on the fly),
   bin dropdown (filtered by part), label, notes, star. Saves on change (debounced) to
@@ -86,7 +86,7 @@ phones. Curves is Phase 6 but its navigation slot exists from Phase 0.
 6. Parts & Bins pages; histogram/scatter; nearest‑match.
 7. Settings incl. backup/restore flows (file picker on desktop, share/SAF on Android).
 8. Log screen.
-9. Widget tests: result card renders every component type from golden frames; pinout colours
+9. Widget tests: result card renders every component type from golden frames; pinout colors
    match config tables; tagging writes to the repository (in‑memory DB).
 10. Accessibility pass: semantics on pinout circles (“Base on green lead”), keyboard
     navigation on desktop (Space = Test, Cmd/Ctrl‑S = save tag, Esc = cancel sweep).

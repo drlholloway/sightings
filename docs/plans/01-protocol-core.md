@@ -54,7 +54,7 @@ AdcSnapshot parseAdcs(Response r, {required bool direct});
 // result.dart — decodeResult port
 class IdentifyResult {
   ComponentType type; int config; int flags; String name; List<String> flagLabels;
-  List<PinAssignment>? pins;                 // (lead colour, terminal label)
+  List<PinAssignment>? pins;                 // (lead color, terminal label)
   List<Param> params;                        // (key, label, value (SI base units), unit, displayString)
   Map<String, double> headline;              // hfe, vbe_5ma, vgs_th, vf, idss, vgs_off, vout ...
   Uint8List raw;                             // 64 bytes

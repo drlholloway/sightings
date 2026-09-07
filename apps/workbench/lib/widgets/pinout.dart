@@ -10,7 +10,7 @@ Color leadColor(Lead l) => switch (l) {
   Lead.none => Colors.grey,
 };
 
-/// The three clip colours with their terminal letters, as on the unit.
+/// The three clip colors with their terminal letters, as on the unit.
 class PinoutWidget extends StatelessWidget {
   const PinoutWidget({super.key, required this.pins, this.compact = false});
   final List<PinAssignment>? pins;

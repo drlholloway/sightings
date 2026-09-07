@@ -4,7 +4,7 @@ Product name: **Sightings**, subtitle **DCA75 Workbench** (decided 2026‑09‑0
 identifiers (`workbench` Dart package, `dev.laneholloway.workbench` bundle id) are unchanged.
 
 Desktop (macOS, Linux) and Android application that talks to a Peak Atlas DCA75
-(“DCA Pro”) semiconductor analyser over USB, runs identify tests and curve
+(“DCA Pro”) semiconductor analyzer over USB, runs identify tests and curve
 sweeps, visualises the results, and stores every reading in a local SQLite
 database so parts can be reviewed, compared and binned later.
 
@@ -30,7 +30,7 @@ plan under `docs/plans/`.
 ### In scope (initial release)
 - Connect to a DCA75 over USB on **macOS**, **Linux** and **Android** (USB host / OTG).
 - **Identify**: run a test from the app or pick up a test started with the unit's own
-  button; show component type, pinout by lead colour, flags and all measured parameters.
+  button; show component type, pinout by lead color, flags and all measured parameters.
 - **Curves**: BJT Ic/Vce family, hFE vs Ic, FET Id/Vds family, Id/Vgs transfer, diode PN I‑V.
   Live plotting, cancel, CSV/PNG export.
 - **Datastore**: every identify result and every sweep is persisted to SQLite with the raw
@@ -72,7 +72,7 @@ hardware sanity‑check tool; it is not part of the repository.
 
 Note on provenance: the reference client was built from a reverse‑engineered protocol
 dossier. **Permission to distribute binaries has been granted** (decision recorded 2026‑09‑05):
-signing, notarisation and store listings are in scope for Phase 7. The **source is public under
+signing, notarization and store listings are in scope for Phase 7. The **source is public under
 PolyForm Shield 1.0.0** (decided 2026‑09‑06, see `LICENSE`): anyone may use, build and modify it
 but not compete with it; builds are free on every platform, and users are bound by `docs/EULA.md`.
 
@@ -124,7 +124,7 @@ pure Dart and work on every target.
 
 | Platform | How | Notes |
 |---|---|---|
-| macOS | libusb opens the vendor‑class device directly; no kext, no driver | Hardened runtime + notarisation for direct distribution. If ever sandboxed (App Store), add the `com.apple.security.device.usb` entitlement. |
+| macOS | libusb opens the vendor‑class device directly; no kext, no driver | Hardened runtime + notarization for direct distribution. If ever sandboxed (App Store), add the `com.apple.security.device.usb` entitlement. |
 | Linux | libusb; udev rule grants access | Ship `60-dca75.rules`: `SUBSYSTEM=="usb", ATTR{idVendor}=="04d8", ATTR{idProduct}=="f8ca", MODE="0660", TAG+="uaccess"`. Flatpak needs `--device=all`. |
 | Android | `UsbManager` + `UsbDeviceConnection.bulkTransfer`; USB Host + OTG cable | `device_filter.xml` (vendor 1240 / product 63690 decimal), `ACTION_USB_DEVICE_ATTACHED` intent so the app launches on plug‑in, runtime permission dialog. Phone must supply bus power; DCA75 runs from USB when connected. Verify with a real phone early (Phase 2 gate). |
 | iOS / iPadOS | **Not feasible for live USB.** iPhone has no third‑party USB host API. iPadOS DriverKit exists only on M‑series iPads and requires a per‑vendor‑ID entitlement from Apple. | iOS gets a **viewer‑only** app later (Phase 8) that opens the SQLite file. |
@@ -262,7 +262,7 @@ unknown.
 | 4 Datastore | done — drift schema, repository, stats, CSV, backup — 18 tests |
 | 5 App UI | done — identify/drafts, history, detail, parts/bins/stats, settings, log; 6 widget tests incl. end‑to‑end flow |
 | 6 Curve tracer | all five sweeps run on hardware on macOS and Android (2N5088, diode, J201); identify vs curve cross‑checks agree; reverse/zener sweep and a comparison with Peak's app still open |
-| 7 Packaging | partial — debug builds verified for macOS and Android APK; Linux build, signing, notarisation, release CI pending |
+| 7 Packaging | partial — debug builds verified for macOS and Android APK; Linux build, signing, notarization, release CI pending |
 
 ## 9. Risks and mitigations
 
@@ -283,7 +283,7 @@ unknown.
 1. **Everything public and free; source under PolyForm Shield.** Free builds on macOS, Linux
    and Android; the repository is public under PolyForm Shield 1.0.0 (no competing products),
    with an EULA for users of the builds (2026‑09‑06). Phase 7 includes
-   signed/notarised macOS builds, a Linux AppImage and the Play listing. See §2.
+   signed/notarized macOS builds, a Linux AppImage and the Play listing. See §2.
 2. **Unit‑button results land as drafts.** A test started from the unit's own button is
    shown as a *draft* card that the user confirms (Save, optionally tagging first) or
    discards. Tests started from the app's Test button save immediately. Drafts are held in

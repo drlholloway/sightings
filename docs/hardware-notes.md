@@ -47,7 +47,7 @@ the TEST(2) reply into `test/golden/`.
   2.5 s libusb timeout; the poll after TEST(1) now uses the full 15 s identify budget and the
   default exchange timeout is 5 s. Captures: `docs/captures/identify-2n5088.dcalog`.
 - BJT result floats 3 and 4 are the collector test currents for the two Vbe measurements
-  (5.00 mA and 1.00 mA), not base currents as the reference client labelled them; labels fixed.
+  (5.00 mA and 1.00 mA), not base currents as the reference client labeled them; labels fixed.
 - Diode identify: PN junction, config 6, Vf 0.693 V @ 5.0 mA, reverse current 0. The first
   PN I‑V attempt used the default Red/Green leads on a diode sitting Red/Blue and traced a flat
   reverse line; the form now takes anode/cathode from the identify result.

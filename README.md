@@ -1,7 +1,7 @@
 # Sightings — DCA75 Workbench
 
 Companion application for the **Peak Atlas DCA75 (DCA Pro)** semiconductor
-analyser. Connects over USB, runs identify tests and curve sweeps, shows the
+analyzer. Connects over USB, runs identify tests and curve sweeps, shows the
 results, and keeps every reading in a local SQLite database so parts can be
 compared, binned and reviewed later.
 
@@ -19,7 +19,7 @@ Ready-made builds are on the [Releases page](https://github.com/drlholloway/sigh
 
 | Platform | File | Notes |
 |---|---|---|
-| macOS | `sightings-macos-<version>.zip` | Not notarised yet: on first launch use System Settings → Privacy & Security → **Open Anyway** (older macOS: right-click → Open). No driver needed. |
+| macOS | `sightings-macos-<version>.zip` | Not notarized yet: on first launch use System Settings → Privacy & Security → **Open Anyway** (older macOS: right-click → Open). No driver needed. |
 | Linux x86-64 | `sightings-linux-x64-<version>.tar.gz` | Extract, install the udev rule from the bundled README, run `./workbench`. Needs GTK 3 and libusb-1.0. |
 | Android | `sightings-android-<version>.apk` | Open the APK on the phone; needs a USB OTG cable. |
 
@@ -61,7 +61,7 @@ Without `just`: `cd apps/workbench && flutter run -d macos`.
 ### macOS
 No driver needed. Run the app, plug the unit in, it connects automatically.
 For a distributable build, `just build-macos` copies libusb into the bundle;
-sign and notarise before sharing.
+sign and notarize before sharing.
 
 ### Linux
 Install the udev rule once so the app can open the device as a normal user:
@@ -110,12 +110,12 @@ Phases 0–6 of the plan are implemented and unit-tested against a fake
 transport. Hardware validation is tracked in
 [docs/hardware-notes.md](docs/hardware-notes.md).
 
-## Licence
+## License
 
 [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0), see `LICENSE`.
 You may use, build, modify and share Sightings freely, including at work, but not use it
 to make or sell anything that competes with it; any commercial edition is Cryptid Effects'
 alone. The macOS, Linux and Android builds are free, and users of the builds are bound by
-the End User Licence Agreement in `docs/EULA.md`.
+the End User License Agreement in `docs/EULA.md`.
 
 Sightings is a Cryptid Effects project. Not affiliated with Peak Electronic Design Ltd.

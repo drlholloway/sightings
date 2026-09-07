@@ -1,4 +1,4 @@
-/// Engineering-notation formatter, identical in behaviour to the reference
+/// Engineering-notation formatter, identical in behavior to the reference
 /// client's `eng()`: `212 mA`, `4.70 kΩ`, `1.23e-13 A`.
 String eng(double? v, String unit, {int digits = 3}) {
   if (v == null || v.isNaN) return '—';

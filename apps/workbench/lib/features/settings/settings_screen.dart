@@ -129,7 +129,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         ListTile(
           leading: const Icon(Icons.description_outlined),
-          title: const Text('End User Licence Agreement'),
+          title: const Text('End User License Agreement'),
           subtitle: Text(
             'Free to use on every platform; not for redistribution.',
           ),
@@ -173,7 +173,7 @@ class SettingsScreen extends ConsumerWidget {
     await showDialog<void>(
       context: context,
       builder: (c) => AlertDialog(
-        title: const Text('End User Licence Agreement'),
+        title: const Text('End User License Agreement'),
         content: SizedBox(
           width: 560,
           child: SingleChildScrollView(child: SelectableText(text)),

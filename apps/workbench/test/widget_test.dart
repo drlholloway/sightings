@@ -52,7 +52,7 @@ void main() {
     expect(find.text('No parameters.'), findsOneWidget);
   });
 
-  testWidgets('PinoutWidget colours follow the lead', (tester) async {
+  testWidgets('PinoutWidget colors follow the lead', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(

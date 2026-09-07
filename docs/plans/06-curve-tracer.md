@@ -42,8 +42,8 @@ the 300 ms boost wait) are kept as named constants.
 ## Plotting
 
 Port `drawPlot`/`niceTicks` to a `CustomPainter` (`CurvePlot`): auto‑ranging with the
-same zero‑snapping rules, grid, axis labels, legend, 8‑colour palette, hover/touch read‑out,
-theme‑aware colours. `RepaintBoundary` + `toImage` for PNG export. Overlay mode: any number
+same zero‑snapping rules, grid, axis labels, legend, 8‑color palette, hover/touch read‑out,
+theme‑aware colors. `RepaintBoundary` + `toImage` for PNG export. Overlay mode: any number
 of saved sweeps drawn together with distinct palettes and a legend grouped by sweep.
 
 ## UI (Curves screen)

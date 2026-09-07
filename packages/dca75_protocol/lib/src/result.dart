@@ -194,7 +194,7 @@ void _bjt(_Builder b, Response r, int cfg, int fl) {
   } else {
     // f[3] / f[4] are the collector test currents at which the two Vbe
     // values were measured (5 mA and 1 mA on a 2N5088 capture), not base
-    // currents as the reference client labelled them.
+    // currents as the reference client labeled them.
     b.volts('vbe_5ma', 'Vbe @ ${eng(f[3] / 1000, 'A')}', f[1]);
     b.volts('vbe_1ma', 'Vbe @ ${eng(f[4] / 1000, 'A')}', f[2]);
     b.milliamps('ic_vbe_hi', 'Ic for Vbe (hi)', f[3]);

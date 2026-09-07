@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../app/theme.dart';
 
-/// A plotted trace: label, colour, points.
+/// A plotted trace: label, color, points.
 class PlotTrace {
   const PlotTrace({
     required this.label,

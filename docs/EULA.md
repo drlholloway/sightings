@@ -1,11 +1,11 @@
-# Sightings — End User Licence Agreement
+# Sightings — End User License Agreement
 
 *Draft for review. Version 1, September 2026.*
 
 This agreement is between you and Cryptid Effects ("we", "us") and covers the
 Sightings application for macOS, Linux and Android (the "App").
 
-## 1. Licence
+## 1. License
 
 - The App is provided **free of charge** on every platform. You may install and use
   it on any number of computers and devices you own or control, for personal or
@@ -23,7 +23,7 @@ Sightings application for macOS, Linux and Android (the "App").
 - Remove or alter any notices in the App.
 
 The source code of the App is published separately under the PolyForm Shield
-License 1.0.0; what you may do with the source is governed by that licence, not
+License 1.0.0; what you may do with the source is governed by that license, not
 by this agreement.
 
 ## 3. Your hardware and data
@@ -50,7 +50,7 @@ limited to zero to the extent the law allows.
 
 ## 6. Termination
 
-This licence ends automatically if you breach it. On termination you must delete
+This license ends automatically if you breach it. On termination you must delete
 the App.
 
 ## 7. Trademarks

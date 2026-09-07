@@ -1,6 +1,6 @@
 # Sightings for Linux (x86-64)
 
-Companion app for the Peak Atlas DCA75 semiconductor analyser.
+Companion app for the Peak Atlas DCA75 semiconductor analyzer.
 
 ## Requirements
 
@@ -24,4 +24,4 @@ The app connects automatically when a unit is present. Readings are stored in
 
 The udev rule is not active for this plug-in. Re-run step 2 and replug the unit.
 
-Not affiliated with Peak Electronic Design Ltd. See the licence in Settings.
+Not affiliated with Peak Electronic Design Ltd. See the license in Settings.

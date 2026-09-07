@@ -46,7 +46,7 @@ device's request/response pairing intact when the poller and a sweep overlap.
 
 4. **`FakeTransport`** — two modes:
    - *Scripted*: a `Map<int opcode, List<Uint8List> responses>` FIFO plus an optional
-     `Response Function(Frame)` handler for stateful behaviour (e.g. STATE returns TESTED
+     `Response Function(Frame)` handler for stateful behavior (e.g. STATE returns TESTED
      after N polls). Used by unit tests of the device service and sweep engine.
    - *Replay*: loads a capture file (`.dcalog`, newline‑delimited `hex_out hex_in duration_ms`)
      recorded from the real transport and answers in order, asserting the outgoing frames match.

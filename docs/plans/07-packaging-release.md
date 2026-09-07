@@ -2,13 +2,13 @@
 
 **Goal:** publicly distributable builds for macOS, Linux and Android with the USB permissions
 in place, plus install docs. Distribution permission has been granted (PLAN.md §10), so
-signing, notarisation and store listings are part of this phase rather than optional.
+signing, notarization and store listings are part of this phase rather than optional.
 
 **Effort:** 3–4 days. **Hardware:** for smoke tests.
 
 ## macOS
 - `flutter build macos --release`; hardened runtime on; sign with a Developer ID
-  Application certificate; notarise with `notarytool`; staple; wrap in a DMG (`create-dmg`).
+  Application certificate; notarize with `notarytool`; staple; wrap in a DMG (`create-dmg`).
 - Sandbox: leave **off** for direct distribution (simplest for libusb). If App Store
   distribution is ever wanted, enable sandbox and add `com.apple.security.device.usb`;
   re‑test device enumeration.
@@ -36,11 +36,11 @@ signing, notarisation and store listings are part of this phase rather than opti
 
 ## CI/CD
 - Tag‑triggered workflow builds all three artefacts and attaches them to a GitHub release
-  (macOS job needs secrets for signing/notarisation; without them it produces an unsigned
+  (macOS job needs secrets for signing/notarization; without them it produces an unsigned
   build marked as such).
 - Version from `pubspec.yaml`; `app_version` written into every session row.
 
-## Licence and attribution
+## License and attribution
 - `LICENSE` is PolyForm Shield 1.0.0 with a Required Notice; `docs/EULA.md` holds the
   users' terms for the builds (shown in About and bundled as `assets/EULA.md`, keep the two
   in sync). Free on every platform; a free Play listing cannot later become paid. Once the

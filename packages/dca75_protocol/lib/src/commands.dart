@@ -49,7 +49,7 @@ Frame buildDacAllVolts(double mt1, double mt2, double gate) =>
       ..setF32(6, mt2)
       ..setF32(10, gate);
 
-/// MATRIXRGB 0x91 — drive per lead colour at [2..4].
+/// MATRIXRGB 0x91 — drive per lead color at [2..4].
 Frame buildMatrixRgb(Drive red, Drive green, Drive blue) =>
     Frame(Opcode.matrixRgb)
       ..setU8(2, red.code)

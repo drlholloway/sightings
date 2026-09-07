@@ -9,7 +9,7 @@ Tracked as GitHub issues; this file is the short index.
 
 Still open from the plan (no issue yet):
 
-- **Release polish:** macOS notarisation (needs an Apple Developer account); Mac App Store and
+- **Release polish:** macOS notarization (needs an Apple Developer account); Mac App Store and
   Google Play listings, which need a demo mode so reviewers can exercise the app without a unit.
 - **Hardware checks:** a reverse sweep on a zener; a numeric side‑by‑side of one sweep
   against Peak's own app. (Linux verified on Pop!_OS, 2026‑09‑07.)
