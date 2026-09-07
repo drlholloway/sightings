@@ -15,7 +15,8 @@ See [PLAN.md](PLAN.md) for the design and `docs/plans/` for the phase plans.
 
 ## Download
 
-Ready-made builds are on the [Releases page](https://github.com/drlholloway/sightings/releases):
+Ready-made builds are on the [Releases page](https://github.com/drlholloway/sightings/releases);
+what changed in each version is in [CHANGELOG.md](CHANGELOG.md):
 
 | Platform | File | Notes |
 |---|---|---|

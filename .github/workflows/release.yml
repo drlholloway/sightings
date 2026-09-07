@@ -105,25 +105,38 @@ jobs:
     needs: [version, linux, android, macos]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
       - run: ls -la dist
+      - name: release notes from CHANGELOG
+        run: |
+          V="${{ needs.version.outputs.version }}"
+          # Section for this version: from "## V" up to the next "## " heading.
+          awk -v v="$V" '
+            $0 ~ "^## "v"( |$)" {on=1; next}
+            on && /^## / {exit}
+            on {print}
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then echo "_No changelog entry for $V._" > notes.md; fi
+          cat >> notes.md <<'EOF'
+
+          ---
+          Companion app for the Peak Atlas DCA75. All builds are free; see the EULA in the app.
+
+
+          **macOS** (Apple silicon and Intel): unzip and open `Sightings.app`. The build is not notarized, so on first launch macOS will refuse; open System Settings → Privacy & Security and click **Open Anyway** (older macOS: right-click the app → Open). No driver needed.
+
+          **Linux** (x86-64): extract, install the udev rule from the README inside, run `./workbench`. Needs GTK 3 and `libusb-1.0` from your distribution.
+
+          **Android**: download the APK on the phone and open it (allow installs from the browser once). Needs a USB OTG cable. If an earlier debug-signed build is installed, uninstall it first.
+
+          Full history: [CHANGELOG.md](https://github.com/drlholloway/sightings/blob/main/CHANGELOG.md) · Help: [Wiki](https://github.com/drlholloway/sightings/wiki)
+          EOF
       - uses: softprops/action-gh-release@v2
         with:
           name: Sightings ${{ needs.version.outputs.version }}
-          generate_release_notes: true
+          body_path: notes.md
           files: dist/*
-          body: |
-            Companion app for the Peak Atlas DCA75. All builds are free; see the EULA in the app.
-
-            **macOS** (Apple silicon and Intel): unzip and open `Sightings.app`. The build is not notarized, so
-            on first launch macOS will refuse; open System Settings → Privacy & Security and click **Open Anyway**
-            (older macOS: right-click the app → Open). No driver needed.
-
-            **Linux** (x86-64): extract, install the udev rule from the README inside, run `./workbench`.
-            Needs GTK 3 and `libusb-1.0` from your distribution.
-
-            **Android**: download the APK on the phone and open it (allow installs from the browser once).
-            Needs a USB OTG cable. If an earlier debug-signed build is installed, uninstall it first.
