@@ -14,7 +14,9 @@ enum SweepKind {
   idvgs('Id / Vgs transfer', 'Vgs (V)', 'Id (mA)', SweepNeed.fet,
       'Transfer curve at a held Vds — reads pinch-off and Idss straight off the plot.'),
   pniv('PN junction I-V', 'Vf (V)', 'I (mA)', SweepNeed.none,
-      'Two-lead junction sweep. Pick which clips hold the part; current limits at ~12 mA.');
+      'Two-lead junction sweep. Pick which clips hold the part; current limits at ~12 mA.'),
+  revleak('Reverse leakage I-V', 'Vr (V)', 'Ir (nA)', SweepNeed.none,
+      'Reverse-bias a junction through the 470 kΩ gate path and read the leakage with nA resolution (current can never exceed ~25 µA).');
 
   const SweepKind(this.title, this.xLabel, this.yLabel, this.need, this.hint);
   final String title, xLabel, yLabel, hint;
@@ -85,8 +87,55 @@ sealed class SweepParams {
           cathode: Lead.fromLabel(j['cathode'] as String),
           thirdLead: ThirdLead.values.byName(j['thirdLead'] as String),
           forward: j['forward'] as bool),
+      SweepKind.revleak => RevLeakParams(
+          vMax: d('vMax'),
+          points: i('points'),
+          anode: Lead.fromLabel(j['anode'] as String),
+          cathode: Lead.fromLabel(j['cathode'] as String)),
     };
   }
+}
+
+/// Reverse-leakage sweep: cathode on the gate lead through 470 kΩ, anode on
+/// MT1, gate DAC stepped from 0 to [vMax] volts of reverse bias.
+class RevLeakParams extends SweepParams {
+  const RevLeakParams({
+    this.vMax = 10,
+    this.points = 21,
+    this.anode = Lead.red,
+    this.cathode = Lead.green,
+  });
+  final double vMax;
+  final int points;
+  final Lead anode, cathode;
+  @override
+  SweepKind get kind => SweepKind.revleak;
+  @override
+  Map<String, Object?> toJson() => {
+        'kind': kind.name,
+        'vMax': vMax,
+        'points': points,
+        'anode': anode.label,
+        'cathode': cathode.label,
+      };
+  RevLeakParams copyWith(
+          {double? vMax, int? points, Lead? anode, Lead? cathode}) =>
+      RevLeakParams(
+        vMax: vMax ?? this.vMax,
+        points: points ?? this.points,
+        anode: anode ?? this.anode,
+        cathode: cathode ?? this.cathode,
+      );
+}
+
+/// Anode/cathode leads from a diode identify result, or null.
+(Lead, Lead)? diodeLeadsOf(IdentifyResult? last) {
+  final pins = last?.type == ComponentType.diode ? last?.pins : null;
+  if (pins == null || pins.length != 2) return null;
+  final a = pins.firstWhere((p) => p.terminal == 'A').lead;
+  final k = pins.firstWhere((p) => p.terminal == 'K').lead;
+  if (a == k || a == Lead.none || k == Lead.none) return null;
+  return (a, k);
 }
 
 class IcVceParams extends SweepParams {
@@ -298,15 +347,15 @@ SweepParams defaultsFor(SweepKind kind, IdentifyResult? last) {
     case SweepKind.pniv:
       // A diode identify tells us which clip holds the anode (gate lead)
       // and the cathode (MT1 lead); start the sweep forward-biased.
-      final pins = last?.type == ComponentType.diode ? last?.pins : null;
-      if (pins != null && pins.length == 2) {
-        final a = pins.firstWhere((p) => p.terminal == 'A').lead;
-        final k = pins.firstWhere((p) => p.terminal == 'K').lead;
-        if (a != k && a != Lead.none && k != Lead.none) {
-          return PnIvParams(anode: a, cathode: k);
-        }
-      }
-      return const PnIvParams();
+      final ak = diodeLeadsOf(last);
+      return ak == null
+          ? const PnIvParams()
+          : PnIvParams(anode: ak.$1, cathode: ak.$2);
+    case SweepKind.revleak:
+      final ak = diodeLeadsOf(last);
+      return ak == null
+          ? const RevLeakParams()
+          : RevLeakParams(anode: ak.$1, cathode: ak.$2);
   }
 }
 

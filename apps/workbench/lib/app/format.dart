@@ -23,6 +23,7 @@ String fmtDate(DateTime t) {
 /// Unit for a headline key, for axis / table labels.
 String unitFor(String key) => switch (key) {
   'hfe' || 'hfe_dca55' => '',
+  'leak_ir_5v' || 'leak_ir_10v' => 'A',
   'gm' || 'gfs' => 'S',
   'rds_on' => 'Ω',
   'ic_leak' || 'idss' || 'igt' || 'id_off' => 'A',
@@ -33,6 +34,8 @@ String labelFor(String key) => switch (key) {
   'hfe' => 'hFE',
   'hfe_dca55' => 'hFE (DCA55)',
   'vbe_dca55' => 'Vbe (DCA55)',
+  'leak_ir_5v' => 'Ir @ 5 V',
+  'leak_ir_10v' => 'Ir @ 10 V',
   'vbe_5ma' => 'Vbe @ 5 mA',
   'ic_leak' => 'Ic leakage',
   'vce_sat' => 'Vce(sat)',
@@ -68,7 +71,7 @@ List<String> headlineKeysFor(ComponentType t) => switch (t) {
   ComponentType.mosfet ||
   ComponentType.igbt => const ['vgs_th', 'rds_on', 'gm', 'id_off'],
   ComponentType.jfet => const ['vgs_off', 'idss', 'gfs'],
-  ComponentType.diode => const ['vf', 'vz'],
+  ComponentType.diode => const ['vf', 'vz', 'leak_ir_5v', 'leak_ir_10v'],
   ComponentType.vreg => const ['vout', 'vdo'],
   ComponentType.scr => const ['igt', 'vgt'],
   ComponentType.triac => const ['v_hold'],

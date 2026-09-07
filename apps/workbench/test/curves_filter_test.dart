@@ -23,23 +23,26 @@ IdentifyResult res(int type, {int cfg = 1, int flags = 0}) =>
 
 void main() {
   test('sweep kinds are filtered by the identified component', () {
-    expect(sweepKindsFor(null), [SweepKind.pniv]);
+    expect(sweepKindsFor(null), [SweepKind.pniv, SweepKind.revleak]);
     expect(sweepKindsFor(res(1, flags: bjtFlagNpn)), [
       SweepKind.icvce,
       SweepKind.hfeic,
       SweepKind.pniv,
+      SweepKind.revleak,
     ]);
     expect(sweepKindsFor(res(8, flags: jfetFlagNChannel)), [
       SweepKind.idvds,
       SweepKind.idvgs,
       SweepKind.pniv,
+      SweepKind.revleak,
     ]);
     expect(sweepKindsFor(res(2, flags: fetFlagNChannel)), [
       SweepKind.idvds,
       SweepKind.idvgs,
       SweepKind.pniv,
+      SweepKind.revleak,
     ]);
-    expect(sweepKindsFor(res(6)), [SweepKind.pniv]);
-    expect(sweepKindsFor(res(9)), [SweepKind.pniv]);
+    expect(sweepKindsFor(res(6)), [SweepKind.pniv, SweepKind.revleak]);
+    expect(sweepKindsFor(res(9)), [SweepKind.pniv, SweepKind.revleak]);
   });
 }

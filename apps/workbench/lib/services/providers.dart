@@ -15,6 +15,7 @@ import 'package:path_provider/path_provider.dart';
 import '../platform/android_usb_transport.dart';
 import 'dca55.dart';
 import 'drafts.dart';
+import 'leakage.dart';
 import 'settings.dart';
 
 // ------------------------------------------------------------- transport
@@ -198,12 +199,18 @@ class ReadingIntake {
     _maybeDca55(id, e.result);
   }
 
-  /// Kick off the DCA55-equivalent measurement when enabled for BJTs.
+  /// Kick off the follow-up measurements that apply to this component:
+  /// DCA55-equivalent figures for BJTs, reverse leakage for diodes.
   void _maybeDca55(int readingId, IdentifyResult r) {
     if (dca55AutoApplies(ref, r)) {
       ref.read(dca55Provider.notifier).measure(readingId, r);
     } else {
       ref.read(dca55Provider.notifier).clear();
+    }
+    if (leakAutoApplies(ref, r)) {
+      ref.read(leakageProvider.notifier).measure(readingId, r);
+    } else {
+      ref.read(leakageProvider.notifier).clear();
     }
   }
 

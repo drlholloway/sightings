@@ -4,6 +4,7 @@ import 'package:dca75_protocol/dca75_protocol.dart';
 
 import '../client.dart';
 import '../timing.dart';
+import 'leakage.dart';
 import 'sweep.dart';
 
 /// Runs the five curve sweeps. Port of `SWEEPS.*` in the reference client;
@@ -34,6 +35,7 @@ class SweepEngine {
       IdVdsParams p => _idvds(p, cfg, tok),
       IdVgsParams p => _idvgs(p, cfg, tok),
       PnIvParams p => _pniv(p, tok),
+      RevLeakParams p => _revleak(p, tok),
     };
     try {
       // `yield*` would forward errors to the listener without running the
@@ -60,12 +62,14 @@ class SweepEngine {
 
   /// Parameter checks that must fail before any frame is sent.
   void _validate(SweepParams p) {
-    if (p is PnIvParams) {
-      if (p.anode == p.cathode ||
-          p.anode == Lead.none ||
-          p.cathode == Lead.none) {
-        throw ArgumentError('anode and cathode must be two different leads');
-      }
+    final (Lead, Lead)? ak = switch (p) {
+      PnIvParams x => (x.anode, x.cathode),
+      RevLeakParams x => (x.anode, x.cathode),
+      _ => null,
+    };
+    if (ak != null &&
+        (ak.$1 == ak.$2 || ak.$1 == Lead.none || ak.$2 == Lead.none)) {
+      throw ArgumentError('anode and cathode must be two different leads');
     }
   }
 
@@ -322,5 +326,19 @@ class SweepEngine {
     }
     await c.leadsSafe();
     await c.setMode(DeviceMode.none);
+  }
+
+  // ------------------------------------------------------- reverse leakage
+
+  Stream<SweepEvent> _revleak(RevLeakParams p, CancelToken tok) async* {
+    final leak = LeakageMeasurement(client);
+    yield SweepTraceStarted(0, '${p.cathode.label}→${p.anode.label} reverse');
+    final nPt = math.max(2, p.points);
+    final volts = [for (var i = 0; i < nPt; i++) p.vMax * i / (nPt - 1)];
+    var i = 0;
+    await for (final pt in leak.sweep(p.anode, p.cathode, volts, cancel: tok)) {
+      yield SweepPoint(0, pt.vrMeasured, pt.irAmps * 1e9);
+      yield SweepProgress(100 * (++i) / nPt);
+    }
   }
 }

@@ -46,6 +46,14 @@ class SettingsScreen extends ConsumerWidget {
           value: s.dca55Auto,
           onChanged: (v) => n.update(s.copyWith(dca55Auto: v)),
         ),
+        SwitchListTile(
+          title: const Text('Also measure diode reverse leakage'),
+          subtitle: const Text(
+            'After each saved diode identify, reverse-bias it through the 470 kΩ gate path at 5 V and 10 V and report the leakage with nA resolution.',
+          ),
+          value: s.leakAuto,
+          onChanged: (v) => n.update(s.copyWith(leakAuto: v)),
+        ),
         ListTile(
           title: const Text('Theme'),
           trailing: SegmentedButton<String>(

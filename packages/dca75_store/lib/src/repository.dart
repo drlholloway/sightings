@@ -132,7 +132,8 @@ class ReadingsRepository {
       );
 
   /// Keys written by [saveExtraParams] rather than the decoder.
-  static bool isExtraKey(String key) => key.endsWith('_dca55');
+  static bool isExtraKey(String key) =>
+      key.endsWith('_dca55') || key.startsWith('leak_');
 
   /// Re-run the decoder on stored raw frames written by an older decoder.
   /// Decoder-produced parameters are replaced; extra measurements are kept.
@@ -148,7 +149,10 @@ class ReadingsRepository {
       await db.transaction(() async {
         await (db.delete(db.readingParams)
               ..where(
-                (p) => p.readingId.equals(row.id) & p.key.like('%_dca55').not(),
+                (p) =>
+                    p.readingId.equals(row.id) &
+                    p.key.like('%_dca55').not() &
+                    p.key.like('leak_%').not(),
               ))
             .go();
         await _writeParams(row.id, r);

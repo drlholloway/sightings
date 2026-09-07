@@ -393,6 +393,18 @@ class _CurvesScreenState extends ConsumerState<CurvesScreen> {
           num('Vgs min', p.vgsMin, (v) => _params = p.copyWith(vgsMin: v)),
           num('Vgs max', p.vgsMax, (v) => _params = p.copyWith(vgsMax: v)),
         ];
+      case RevLeakParams p:
+        return [
+          num('Vr max', p.vMax, (v) => _params = p.copyWith(vMax: v)),
+          num(
+            'Points',
+            p.points.toDouble(),
+            (v) => _params = p.copyWith(points: v.toInt()),
+            integer: true,
+          ),
+          lead('Anode', p.anode, (l) => _params = p.copyWith(anode: l)),
+          lead('Cathode', p.cathode, (l) => _params = p.copyWith(cathode: l)),
+        ];
       case PnIvParams p:
         return [
           num('V min', p.vMin, (v) => _params = p.copyWith(vMin: v)),

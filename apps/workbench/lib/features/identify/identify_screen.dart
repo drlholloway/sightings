@@ -10,6 +10,7 @@ import '../../services/drafts.dart';
 import '../../services/providers.dart';
 import '../../widgets/dca55_card.dart';
 import '../../widgets/histogram.dart';
+import '../../widgets/leakage_card.dart';
 import '../../widgets/result_card.dart';
 import '../../widgets/tag_strip.dart';
 
@@ -264,6 +265,16 @@ class _IdentifyScreenState extends ConsumerState<IdentifyScreen> {
           if (r.type == ComponentType.bjt && last?.readingId != null) ...[
             const SizedBox(height: 12),
             Dca55Card(
+              readingId: last!.readingId!,
+              result: r,
+              stored: const {},
+              canMeasure:
+                  ref.watch(statusProvider).state == ConnectionState.idle,
+            ),
+          ],
+          if (r.type == ComponentType.diode && last?.readingId != null) ...[
+            const SizedBox(height: 12),
+            LeakageCard(
               readingId: last!.readingId!,
               result: r,
               stored: const {},

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/format.dart';
 import '../../services/providers.dart';
 import '../../widgets/dca55_card.dart';
+import '../../widgets/leakage_card.dart';
 import '../../widgets/result_card.dart';
 import '../../widgets/tag_strip.dart';
 
@@ -88,6 +89,19 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen> {
                   const SizedBox(height: 12),
                   Consumer(
                     builder: (context, ref, _) => Dca55Card(
+                      readingId: d.row.id,
+                      result: d.result,
+                      stored: d.extras,
+                      canMeasure:
+                          ref.watch(statusProvider).state ==
+                          ConnectionState.idle,
+                    ),
+                  ),
+                ],
+                if (d.result.type == ComponentType.diode) ...[
+                  const SizedBox(height: 12),
+                  Consumer(
+                    builder: (context, ref, _) => LeakageCard(
                       readingId: d.row.id,
                       result: d.result,
                       stored: d.extras,

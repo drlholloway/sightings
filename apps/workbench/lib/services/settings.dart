@@ -8,6 +8,7 @@ class Settings {
     this.themeMode = 'system',
     this.digits = 3,
     this.dca55Auto = true,
+    this.leakAuto = true,
   });
   final bool autoConnect;
   final bool unitButtonAsDraft;
@@ -17,18 +18,23 @@ class Settings {
   /// After every saved BJT identify, also measure at the DCA55's conditions.
   final bool dca55Auto;
 
+  /// After every saved diode identify, also measure reverse leakage at 5 V and 10 V.
+  final bool leakAuto;
+
   Settings copyWith({
     bool? autoConnect,
     bool? unitButtonAsDraft,
     String? themeMode,
     int? digits,
     bool? dca55Auto,
+    bool? leakAuto,
   }) => Settings(
     autoConnect: autoConnect ?? this.autoConnect,
     unitButtonAsDraft: unitButtonAsDraft ?? this.unitButtonAsDraft,
     themeMode: themeMode ?? this.themeMode,
     digits: digits ?? this.digits,
     dca55Auto: dca55Auto ?? this.dca55Auto,
+    leakAuto: leakAuto ?? this.leakAuto,
   );
 }
 
@@ -48,6 +54,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       themeMode: p.getString('themeMode') ?? 'system',
       digits: p.getInt('digits') ?? 3,
       dca55Auto: p.getBool('dca55Auto') ?? true,
+      leakAuto: p.getBool('leakAuto') ?? true,
     );
   }
 
@@ -59,6 +66,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await p.setString('themeMode', s.themeMode);
     await p.setInt('digits', s.digits);
     await p.setBool('dca55Auto', s.dca55Auto);
+    await p.setBool('leakAuto', s.leakAuto);
   }
 }
 
