@@ -81,7 +81,24 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen> {
         const SizedBox(height: 8),
         LayoutBuilder(
           builder: (context, c) {
-            final card = ResultCard(result: d.result);
+            final card = Column(
+              children: [
+                ResultCard(result: d.result),
+                if (d.result.type == ComponentType.bjt) ...[
+                  const SizedBox(height: 12),
+                  Consumer(
+                    builder: (context, ref, _) => Dca55Card(
+                      readingId: d.row.id,
+                      result: d.result,
+                      stored: d.extras,
+                      canMeasure:
+                          ref.watch(statusProvider).state ==
+                          ConnectionState.idle,
+                    ),
+                  ),
+                ],
+              ],
+            );
             final meta = _Meta(d: d, onChanged: _load);
             if (c.maxWidth >= 900) {
               return Row(
@@ -134,15 +151,6 @@ class _Meta extends ConsumerWidget {
           family: d.result.type.name,
           onChanged: (_) => onChanged(),
         ),
-        if (d.result.type == ComponentType.bjt) ...[
-          const SizedBox(height: 16),
-          Dca55Card(
-            readingId: d.row.id,
-            result: d.result,
-            stored: d.extras,
-            canMeasure: ref.watch(statusProvider).state == ConnectionState.idle,
-          ),
-        ],
         const SizedBox(height: 16),
         Card(
           child: Padding(
