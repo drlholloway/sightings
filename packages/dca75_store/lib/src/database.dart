@@ -154,6 +154,8 @@ const List<String> headlineKeys = [
   'vbe_dca55',
   'leak_ir_5v',
   'leak_ir_10v',
+  'leak_icbo_5v',
+  'leak_icbo_10v',
   'vbe_5ma',
   'ic_leak',
   'vce_sat',

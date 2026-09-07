@@ -1,4 +1,3 @@
-import 'package:dca75_device/dca75_device.dart';
 import 'package:dca75_protocol/dca75_protocol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,7 +28,10 @@ class LeakageCard extends ConsumerWidget {
         live?.result ??
         (stored.keys.any((k) => k.startsWith('leak_')) ? stored : null);
     final running = live?.running ?? false;
-    final ak = diodeLeadsOf(result);
+    final plan = LeakageNotifier.planFor(result);
+    final isBjt = result.type == ComponentType.bjt;
+    final ip = plan?.prefix ?? 'ir';
+    final vp = plan?.voltPrefix ?? 'vr';
 
     String amps(double a) => a.abs() < 5e-9 ? '< 5 nA' : eng(a, 'A');
     Widget row(String label, String value) => Padding(
@@ -74,7 +76,7 @@ class LeakageCard extends ConsumerWidget {
                     height: 16,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                else if (canMeasure && ak != null)
+                else if (canMeasure && plan != null)
                   TextButton.icon(
                     onPressed: () => ref
                         .read(leakageProvider.notifier)
@@ -85,9 +87,11 @@ class LeakageCard extends ConsumerWidget {
               ],
             ),
             Text(
-              ak == null
-                  ? 'Needs a single-junction result with both leads known.'
-                  : 'Cathode ${ak.$2.label} reverse-biased through 470 kΩ (max ~25 µA); resolution a few nA.',
+              plan == null
+                  ? 'Needs a result with the junction leads known.'
+                  : isBjt
+                  ? 'Icbo: collector–base junction reverse-biased through 470 kΩ, emitter open (max ~25 µA); resolution a few nA.'
+                  : 'Cathode ${plan.cathode.label} reverse-biased through 470 kΩ (max ~25 µA); resolution a few nA.',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -102,11 +106,21 @@ class LeakageCard extends ConsumerWidget {
               Text('Not measured yet.', style: theme.textTheme.bodySmall)
             else ...[
               for (final v in const ['5v', '10v'])
-                if (data?['leak_ir_$v'] != null)
+                if (data?['leak_${ip}_$v'] != null)
                   row(
-                    'Ir @ ${eng(data!['leak_vr_$v']?.$1 ?? 0, 'V')}',
-                    amps(data['leak_ir_$v']!.$1),
+                    '${isBjt ? 'Icbo' : 'Ir'} @ ${eng(data!['leak_${vp}_$v']?.$1 ?? 0, 'V')}',
+                    amps(data['leak_${ip}_$v']!.$1),
                   ),
+              if (isBjt && result.param('ic_leak') != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Text(
+                    'DCA75 identify Ic leakage (Iceo, base open): ${result.param('ic_leak')!.display}.',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
               if (result.param('d1_ir') != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 6),

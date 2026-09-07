@@ -104,16 +104,39 @@ class LeakageMeasurement {
   }
 
   /// Fixed-voltage points for the Identify card, keyed for `reading_params`
-  /// (`leak_ir_5v`, `leak_vr_5v`, ...). Keys start with `leak_` so re-decoding
-  /// keeps them.
-  Future<Map<String, (double, String)>> measurePoints(Lead anode, Lead cathode,
-      {List<double> volts = const [5, 10], CancelToken? cancel}) async {
+  /// as `leak_<prefix>_5v` / `leak_<vrprefix>`... e.g. `leak_ir_5v`,
+  /// `leak_vr_5v` for a diode or `leak_icbo_5v`, `leak_vcbo_5v` for a
+  /// transistor's collector-base junction. Keys start with `leak_` so
+  /// re-decoding keeps them.
+  Future<Map<String, (double, String)>> measurePoints(
+    Lead anode,
+    Lead cathode, {
+    List<double> volts = const [5, 10],
+    String prefix = 'ir',
+    String voltPrefix = 'vr',
+    CancelToken? cancel,
+  }) async {
     final out = <String, (double, String)>{};
     await for (final p in sweep(anode, cathode, volts, cancel: cancel)) {
       final tag = '${p.vrRequested.round()}v';
-      out['leak_ir_$tag'] = (p.irAmps, 'A');
-      out['leak_vr_$tag'] = (p.vrMeasured, 'V');
+      out['leak_${prefix}_$tag'] = (p.irAmps, 'A');
+      out['leak_${voltPrefix}_$tag'] = (p.vrMeasured, 'V');
     }
     return out;
   }
+}
+
+/// The collector-base junction of a BJT identify result as (anode, cathode)
+/// leads, for an Icbo measurement with the emitter open: NPN has a P base
+/// (anode) and N collector (cathode); PNP the other way round.
+(Lead, Lead)? bjtCbJunction(IdentifyResult? r) {
+  if (r == null || r.type != ComponentType.bjt) return null;
+  final pins = r.pins;
+  if (pins == null) return null;
+  Lead? lead(String t) =>
+      pins.where((p) => p.terminal == t).map((p) => p.lead).firstOrNull;
+  final b = lead('B'), c = lead('C');
+  if (b == null || c == null || b == c) return null;
+  final npn = (r.flags & bjtFlagNpn) != 0;
+  return npn ? (b, c) : (c, b);
 }

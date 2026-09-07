@@ -23,7 +23,7 @@ String fmtDate(DateTime t) {
 /// Unit for a headline key, for axis / table labels.
 String unitFor(String key) => switch (key) {
   'hfe' || 'hfe_dca55' => '',
-  'leak_ir_5v' || 'leak_ir_10v' => 'A',
+  'leak_ir_5v' || 'leak_ir_10v' || 'leak_icbo_5v' || 'leak_icbo_10v' => 'A',
   'gm' || 'gfs' => 'S',
   'rds_on' => 'Ω',
   'ic_leak' || 'idss' || 'igt' || 'id_off' => 'A',
@@ -36,6 +36,8 @@ String labelFor(String key) => switch (key) {
   'vbe_dca55' => 'Vbe (DCA55)',
   'leak_ir_5v' => 'Ir @ 5 V',
   'leak_ir_10v' => 'Ir @ 10 V',
+  'leak_icbo_5v' => 'Icbo @ 5 V',
+  'leak_icbo_10v' => 'Icbo @ 10 V',
   'vbe_5ma' => 'Vbe @ 5 mA',
   'ic_leak' => 'Ic leakage',
   'vce_sat' => 'Vce(sat)',
@@ -66,6 +68,8 @@ List<String> headlineKeysFor(ComponentType t) => switch (t) {
     'vbe_5ma',
     'vbe_dca55',
     'ic_leak',
+    'leak_icbo_5v',
+    'leak_icbo_10v',
     'vce_sat',
   ],
   ComponentType.mosfet ||

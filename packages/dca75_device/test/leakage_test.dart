@@ -100,6 +100,42 @@ void main() {
     await t.dispose();
   });
 
+  test('bjtCbJunction picks anode/cathode by polarity from the pinout', () {
+    Uint8List bjt(int cfg, int flags) {
+      final b = Uint8List(64)..[0] = 0x85;
+      b[2] = 1;
+      b[3] = cfg;
+      b[4] = flags;
+      return b;
+    }
+
+    // cfg 1: E=red, C=green, B=blue
+    final npn = decodeResult(Response(bjt(1, bjtFlagNpn | bjtFlagSilicon)));
+    expect(bjtCbJunction(npn), (Lead.blue, Lead.green)); // anode B, cathode C
+    final pnp = decodeResult(Response(bjt(7, bjtFlagGermanium)));
+    expect(bjtCbJunction(pnp), (Lead.green, Lead.blue)); // anode C, cathode B
+    expect(bjtCbJunction(null), isNull);
+  });
+
+  test('measurePoints prefixes keys for transistor junctions', () async {
+    final m = LeakyDiode(leakA: 2e-6);
+    final t = m.dca.transport;
+    await t.open((await t.listDevices()).single);
+    final p = await LeakageMeasurement(DcaClient(t, sleep: noSleep))
+        .measurePoints(Lead.red, Lead.green,
+            prefix: 'icbo', voltPrefix: 'vcbo');
+    expect(
+        p.keys,
+        containsAll([
+          'leak_icbo_5v',
+          'leak_vcbo_5v',
+          'leak_icbo_10v',
+          'leak_vcbo_10v'
+        ]));
+    expect(p['leak_icbo_5v']!.$1, closeTo(2e-6, 5e-9));
+    await t.dispose();
+  });
+
   test('defaults take the leads from a diode identify; same-lead rejected',
       () async {
     final b = Uint8List(64)..[0] = 0x85;

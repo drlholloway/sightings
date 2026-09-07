@@ -98,7 +98,8 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen> {
                     ),
                   ),
                 ],
-                if (d.result.type == ComponentType.diode) ...[
+                if ((d.result.type == ComponentType.diode ||
+                    d.result.type == ComponentType.bjt)) ...[
                   const SizedBox(height: 12),
                   Consumer(
                     builder: (context, ref, _) => LeakageCard(

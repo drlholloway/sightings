@@ -272,7 +272,8 @@ class _IdentifyScreenState extends ConsumerState<IdentifyScreen> {
                   ref.watch(statusProvider).state == ConnectionState.idle,
             ),
           ],
-          if (r.type == ComponentType.diode && last?.readingId != null) ...[
+          if ((r.type == ComponentType.diode || r.type == ComponentType.bjt) &&
+              last?.readingId != null) ...[
             const SizedBox(height: 12),
             LeakageCard(
               readingId: last!.readingId!,
