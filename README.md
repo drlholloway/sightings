@@ -8,6 +8,9 @@ compared, binned and reviewed later.
 Targets: **macOS**, **Linux**, **Android** (USB host / OTG). An iOS viewer of
 the database is planned; iPhones cannot talk to the unit directly.
 
+**Help and how-tos:** the [Wiki](https://github.com/drlholloway/sightings/wiki) covers installation, first
+steps, curves, the DCA55 and leakage measurements, parts and bins, troubleshooting and backups.
+
 See [PLAN.md](PLAN.md) for the design and `docs/plans/` for the phase plans.
 
 ## Download
