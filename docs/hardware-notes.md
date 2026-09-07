@@ -76,3 +76,6 @@ may include ADC gain mismatch (≈20 nA per 0.1 %); an open‑clip calibration w
   4.79 µA at 7.76 V (10 V requested). The shortfall equals I × 470 kΩ exactly, confirming the
   gate‑path measurement; the DCA75 identify's reverse‑current field still reads 0. The DAC is
   now servoed so the junction reaches the requested voltage where the 12.5 V ceiling allows.
+- D9B re‑run with the DAC servo: 2.89 µA at 4.99 V (target met) and 5.35 µA at 9.58 V (DAC
+  ceiling reached: 5.35 µA × 470 kΩ = 2.5 V drop). Leakage nearly flat with voltage, as
+  expected for germanium saturation current.
