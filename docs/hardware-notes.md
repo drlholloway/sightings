@@ -79,3 +79,10 @@ may include ADC gain mismatch (≈20 nA per 0.1 %); an open‑clip calibration w
 - D9B re‑run with the DAC servo: 2.89 µA at 4.99 V (target met) and 5.35 µA at 9.58 V (DAC
   ceiling reached: 5.35 µA × 470 kΩ = 2.5 V drop). Leakage nearly flat with voltage, as
   expected for germanium saturation current.
+
+## Germanium transistor (MP40A, PNP, macOS, 2026‑09‑07)
+
+DCA75 identify: hFE 29.3 @ 5 mA, Vbe 332 mV, Vce(sat) 56 mV, Iceo 31.2 µA. DCA55‑equivalent:
+hFE 25.0 @ Ic 2.48 mA, Vce 2.47 V, Ib 98 µA, converged; (2.48 mA − 30 µA) / 98 µA reproduces the
+stored value, so the leakage subtraction is verified. Icbo through the gate path: 2.85 µA @ 4.99 V,
+6.0 µA @ 9.24 V (DAC ceiling). Iceo/Icbo ≈ 11, the low‑current gain, as expected.
