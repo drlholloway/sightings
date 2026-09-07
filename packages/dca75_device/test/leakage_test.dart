@@ -45,8 +45,8 @@ void main() {
         reason: 'baseline cancels the 4 mV offset');
     expect(pts[1].irAmps, closeTo(50e-9, 2e-9));
     expect(pts[2].irAmps, closeTo(50e-9, 2e-9));
-    // Vr measured = cathode lead − anode lead ≈ 10 − 50 nA·470k − offset
-    expect(pts[2].vrMeasured, closeTo(10 - 0.0235 - 0.004, 1e-3));
+    // the servo raises the DAC so the junction sees the requested Vr
+    expect(pts[2].vrMeasured, closeTo(10, 0.05));
     // routing: green (cathode) → gate, red (anode) → MT1, blue open; 470k selected
     final m1 = t.sentFor(Opcode.matrixRgb).single;
     expect(
@@ -70,6 +70,8 @@ void main() {
             ['leak_ir_5v', 'leak_vr_5v', 'leak_ir_10v', 'leak_vr_10v']));
     expect(p['leak_ir_10v']!.$1, closeTo(1e-6, 5e-9));
     expect(p['leak_ir_10v']!.$2, 'A');
+    // 1 µA drops 0.47 V across 470 kΩ; the servo compensates (DAC ≈ 10.97 V)
+    expect(p['leak_vr_10v']!.$1, closeTo(10, 0.05));
 
     t.clearSent();
     final col = SweepCollector(const RevLeakParams(
@@ -80,6 +82,21 @@ void main() {
     expect(col.traces.single.points.length, 3);
     expect(col.traces.single.points.last.y, closeTo(1000, 5), reason: 'nA');
     expect(col.progress, 100);
+    await t.dispose();
+  });
+
+  test('servo stops at the 12.5 V DAC ceiling when leakage is too high',
+      () async {
+    final m = LeakyDiode(leakA: 10e-6); // 4.7 V drop: 10 V needs a 15.2 V DAC
+    final t = m.dca.transport;
+    await t.open((await t.listDevices()).single);
+    final p = await LeakageMeasurement(DcaClient(t, sleep: noSleep))
+        .measurePoints(Lead.red, Lead.green);
+    expect(p['leak_vr_5v']!.$1, closeTo(5, 0.05),
+        reason: '5 V is reachable (DAC 9.7 V)');
+    expect(p['leak_vr_10v']!.$1, lessThan(9.0),
+        reason: 'reports what the junction actually saw');
+    expect(p['leak_vr_10v']!.$1, closeTo(12.5 - 0.5 - 4.7 - 0.004, 0.05));
     await t.dispose();
   });
 

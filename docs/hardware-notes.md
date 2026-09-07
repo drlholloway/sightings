@@ -72,3 +72,7 @@ within tolerance in a few iterations from the identify's hFE as the starting gue
 Silicon diode (Vf 687 mV): Ir 5.1 nA @ 5.00 V, 30.6 nA @ 10.02 V through the 470 kΩ gate path
 with baseline subtraction; the DCA75 identify's own reverse‑current field reads 0. The 10 V value
 may include ADC gain mismatch (≈20 nA per 0.1 %); an open‑clip calibration would cancel it.
+- D9B germanium diode (Vf 455 mV): 2.98 µA with the junction at 3.60 V (5 V requested) and
+  4.79 µA at 7.76 V (10 V requested). The shortfall equals I × 470 kΩ exactly, confirming the
+  gate‑path measurement; the DCA75 identify's reverse‑current field still reads 0. The DAC is
+  now servoed so the junction reaches the requested voltage where the 12.5 V ceiling allows.

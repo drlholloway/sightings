@@ -38,6 +38,8 @@ class LeakageMeasurement {
 
   /// ADCS burst mask: SetGate, Gate and the three lead voltages.
   static const int _mask = 0xE3;
+  static const int _servoSteps = 4;
+  static const double _servoToleranceV = 0.05;
 
   /// Gate-path current in amps from the mirror (config 1: no sign flip).
   double _gateAmps() => client.ib(1) / 1000;
@@ -74,12 +76,23 @@ class LeakageMeasurement {
 
       for (final vr in volts) {
         if (tok.isCancelled) break;
-        await c.setDacVolts(DcaClient.clamp(0.5 + vr, 0.5, 12.5), Dac.gate);
-        await c.boostWait();
-        await c.sleep(settle);
-        await c.readAdcsBurst(_mask);
-        final ir = _gateAmps() - i0;
-        final vrMeas = c.mirror.leadVolts(cathode) - c.mirror.leadVolts(anode);
+        // The leakage current drops I·R across the 470 kΩ, so the junction
+        // sees less than the DAC setting. Servo the DAC (a few steps) until
+        // the measured reverse voltage meets the request, within the 12.5 V
+        // DAC ceiling.
+        var dac = 0.5 + vr;
+        var ir = 0.0, vrMeas = 0.0;
+        for (var k = 0; k < _servoSteps; k++) {
+          await c.setDacVolts(DcaClient.clamp(dac, 0.5, 12.5), Dac.gate);
+          await c.boostWait();
+          await c.sleep(settle);
+          await c.readAdcsBurst(_mask);
+          ir = _gateAmps() - i0;
+          vrMeas = c.mirror.leadVolts(cathode) - c.mirror.leadVolts(anode);
+          final err = vr - vrMeas;
+          if (err.abs() < _servoToleranceV || dac >= 12.5) break;
+          dac = DcaClient.clamp(dac + err, 0.5, 12.5);
+        }
         yield LeakPoint(vrRequested: vr, vrMeasured: vrMeas, irAmps: ir);
       }
       await c.leadsSafe();
