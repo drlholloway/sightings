@@ -259,6 +259,18 @@ class _IdentifyScreenState extends ConsumerState<IdentifyScreen> {
       children: [
         ResultCard(result: r, header: header, trailing: trailing),
         if (r != null && r.type.isComponent) ...[
+          // DCA55-equivalent figures sit directly under the DCA75 result,
+          // before the tagging strip.
+          if (r.type == ComponentType.bjt && last?.readingId != null) ...[
+            const SizedBox(height: 12),
+            Dca55Card(
+              readingId: last!.readingId!,
+              result: r,
+              stored: const {},
+              canMeasure:
+                  ref.watch(statusProvider).state == ConnectionState.idle,
+            ),
+          ],
           const SizedBox(height: 12),
           if (draft != null)
             TagStrip(
@@ -273,16 +285,6 @@ class _IdentifyScreenState extends ConsumerState<IdentifyScreen> {
               family: r.type.name,
               onChanged: (_) => setState(() {}),
             ),
-          if (r.type == ComponentType.bjt && last?.readingId != null) ...[
-            const SizedBox(height: 12),
-            Dca55Card(
-              readingId: last!.readingId!,
-              result: r,
-              stored: const {},
-              canMeasure:
-                  ref.watch(statusProvider).state == ConnectionState.idle,
-            ),
-          ],
         ],
       ],
     );
