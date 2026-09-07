@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../services/providers.dart';
 import '../../services/settings.dart';
+
+/// Tip link shown in About.
+const tipUrl = 'https://buymeacoffee.com/drlholloway';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -130,6 +134,18 @@ class SettingsScreen extends ConsumerWidget {
             'Free to use on every platform; not for redistribution.',
           ),
           onTap: () => _showEula(context),
+        ),
+        ListTile(
+          leading: const Icon(Icons.coffee_outlined),
+          title: const Text('Buy me a coffee'),
+          subtitle: const Text(
+            'Sightings is free. If it saved you time, a tip keeps the DCA75 fed.',
+          ),
+          trailing: const Icon(Icons.open_in_new, size: 18),
+          onTap: () => launchUrl(
+            Uri.parse(tipUrl),
+            mode: LaunchMode.externalApplication,
+          ),
         ),
         if (Platform.isLinux)
           const ListTile(
