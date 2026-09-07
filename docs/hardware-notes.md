@@ -7,11 +7,11 @@ platform is exercised with a real DCA75.
 
 | Check | macOS | Linux | Android |
 |---|---|---|---|
-| Device enumerates (`just probe`) | ✅ 2026‑09‑05, bus 1 addr 1; USB string descriptors empty (product/serial come from STATE) | _pending_ | ✅ 2026‑09‑06, USB OTG, release APK sideloaded |
-| STATE serial / firmware match the unit | ✅ s/n 225000, hw 0001, fw 0023, R(MT2) 559.5 Ω; CAL 1012 / 8110 / 59409 / 470261 Ω | _pending_ | ✅ |
-| STATE exchange loop (`just bench`): p50 / p95 / errors | ✅ 300 exchanges: p50 0.27 ms, p95 0.35 ms, max 0.54 ms, 0 stale/errors | _pending_ | not measured (no CLI on Android); sweeps ran normally |
-| Identify matches the unit's screen | ✅ 2N5088: NPN, hFE 404, E=Green B=Red C=Blue, Vbe 769 mV @ 5 mA, Vce(sat) 22.8 mV (confirmed against the unit's display) | _pending_ | ✅ 2N5088, silicon diode, J201 — same results as macOS |
-| Unit-button test appears as a draft | ✅ app: identify, draft flow and tagging confirmed by the owner | _pending_ | ✅ |
+| Device enumerates (`just probe`) | ✅ 2026‑09‑05, bus 1 addr 1; USB string descriptors empty (product/serial come from STATE) | ✅ 2026‑09‑07, Pop!_OS laptop, 0.1.0 release tarball + udev rule | ✅ 2026‑09‑06, USB OTG, release APK sideloaded |
+| STATE serial / firmware match the unit | ✅ s/n 225000, hw 0001, fw 0023, R(MT2) 559.5 Ω; CAL 1012 / 8110 / 59409 / 470261 Ω | ✅ | ✅ |
+| STATE exchange loop (`just bench`): p50 / p95 / errors | ✅ 300 exchanges: p50 0.27 ms, p95 0.35 ms, max 0.54 ms, 0 stale/errors | not measured | not measured (no CLI on Android); sweeps ran normally |
+| Identify matches the unit's screen | ✅ 2N5088: NPN, hFE 404, E=Green B=Red C=Blue, Vbe 769 mV @ 5 mA, Vce(sat) 22.8 mV (confirmed against the unit's display) | ✅ | ✅ 2N5088, silicon diode, J201 — same results as macOS |
+| Unit-button test appears as a draft | ✅ app: identify, draft flow and tagging confirmed by the owner | ✅ | ✅ |
 | Unplug mid-session → disconnected, replug → auto-connect | _pending_ | _pending_ | _pending_ |
 | Android: unit powers from OTG with battery removed | | | _not yet checked_ (worked with the phone as host; battery state not recorded) |
 
@@ -86,3 +86,9 @@ DCA75 identify: hFE 29.3 @ 5 mA, Vbe 332 mV, Vce(sat) 56 mV, Iceo 31.2 µA. DCA5
 hFE 25.0 @ Ic 2.48 mA, Vce 2.47 V, Ib 98 µA, converged; (2.48 mA − 30 µA) / 98 µA reproduces the
 stored value, so the leakage subtraction is verified. Icbo through the gate path: 2.85 µA @ 4.99 V,
 6.0 µA @ 9.24 V (DAC ceiling). Iceo/Icbo ≈ 11, the low‑current gain, as expected.
+
+## Linux (Pop!_OS, 2026‑09‑07)
+
+The 0.1.0 release tarball (x86‑64) ran on a Pop!_OS laptop with the bundled udev rule
+installed; the app connected, identified and swept as on macOS. All three target platforms
+are now verified on hardware.

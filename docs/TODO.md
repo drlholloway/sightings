@@ -11,7 +11,7 @@ Still open from the plan (no issue yet):
 
 - **Release polish:** macOS notarisation (needs an Apple Developer account); Mac App Store and
   Google Play listings, which need a demo mode so reviewers can exercise the app without a unit.
-- **Hardware checks:** Linux USB access with the udev rule; a reverse sweep on a zener; a
-  numeric side‑by‑side of one sweep against Peak's own app.
+- **Hardware checks:** a reverse sweep on a zener; a numeric side‑by‑side of one sweep
+  against Peak's own app. (Linux verified on Pop!_OS, 2026‑09‑07.)
 - **Measurement refinement:** open‑clip calibration for the leakage measurement to cancel ADC
   gain mismatch (≈20 nA per 0.1 % at 10 V).

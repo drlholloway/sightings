@@ -257,7 +257,7 @@ unknown.
 |---|---|
 | 0 Scaffolding | done — pub workspace, lints, CI workflow, justfile, udev rule |
 | 1 Protocol core | done — 55 tests |
-| 2 USB transport | done — libusb FFI verified on macOS (p95 0.35 ms); Android bridge verified on a phone over OTG (2026‑09‑06) |
+| 2 USB transport | done — verified on macOS (p95 0.35 ms), Android over OTG (2026‑09‑06) and Linux/Pop!_OS with the udev rule (2026‑09‑07) |
 | 3 Device service | done — controller with polling/drafts, 30 tests with the sweep engine |
 | 4 Datastore | done — drift schema, repository, stats, CSV, backup — 18 tests |
 | 5 App UI | done — identify/drafts, history, detail, parts/bins/stats, settings, log; 6 widget tests incl. end‑to‑end flow |
