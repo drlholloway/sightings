@@ -38,6 +38,14 @@ class SettingsScreen extends ConsumerWidget {
           value: s.unitButtonAsDraft,
           onChanged: (v) => n.update(s.copyWith(unitButtonAsDraft: v)),
         ),
+        SwitchListTile(
+          title: const Text('Also measure at DCA55 conditions'),
+          subtitle: const Text(
+            'After each saved BJT identify, hold Vce at 2.5 V, servo Ic to 2.50 mA and report hFE the DCA55 way (plus Vbe at Ib ≈ 4.5 mA). Adds a few seconds per test.',
+          ),
+          value: s.dca55Auto,
+          onChanged: (v) => n.update(s.copyWith(dca55Auto: v)),
+        ),
         ListTile(
           title: const Text('Theme'),
           trailing: SegmentedButton<String>(

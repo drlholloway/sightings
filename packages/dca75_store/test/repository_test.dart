@@ -252,6 +252,29 @@ void main() {
     expect(await (db.select(db.readingTags)).get(), isEmpty);
   });
 
+  test('extra params survive re-decode and appear in detail and headlines',
+      () async {
+    final id = await repo.saveReading(session, bjt(hfe: 150),
+        source: ReadingSource.app);
+    await repo.saveExtraParams(
+        id, {'hfe_dca55': (140.5, ''), 'vbe_dca55': (0.68, 'V')});
+    var d = (await repo.loadReading(id))!;
+    expect(d.extras['hfe_dca55']!.$1, closeTo(140.5, 1e-6));
+    expect(d.extras['vbe_dca55']!.$2, 'V');
+    expect(d.row.headline['hfe_dca55'], closeTo(140.5, 1e-6));
+    await db.customStatement('UPDATE readings SET decoder_version = 0');
+    expect(await repo.reDecodeAll(), 1);
+    d = (await repo.loadReading(id))!;
+    expect(d.extras['hfe_dca55']!.$1, closeTo(140.5, 1e-6),
+        reason: 'kept by re-decode');
+    expect(d.row.headline['hfe'], closeTo(150, 1e-3),
+        reason: 'decoder params rewritten');
+    final part = await repo.upsertPart(partNumber: 'X');
+    final bin = await repo.createBin(part, 'b');
+    await repo.tagReading(id, partId: part, binId: bin);
+    expect((await repo.binStats('hfe_dca55', binId: bin)).n, 1);
+  });
+
   test('reDecodeAll refreshes params for old decoder versions', () async {
     final id = await repo.saveReading(session, bjt(hfe: 123),
         source: ReadingSource.app);

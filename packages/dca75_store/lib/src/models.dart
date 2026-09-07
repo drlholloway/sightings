@@ -73,11 +73,15 @@ class ReadingDetail {
     this.v12V,
     this.vrefV,
     this.deviceSerial,
+    this.extras = const {},
   });
   final ReadingRow row;
   final IdentifyResult result;
   final ReadingTag tag;
   final List<SweepRow> sweeps;
+
+  /// Measurements attached after the identify (e.g. `*_dca55`), key → (value, unit).
+  final Map<String, (double, String)> extras;
   final double? battV, v12V, vrefV;
   final String? deviceSerial;
 }

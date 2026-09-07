@@ -13,6 +13,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../platform/android_usb_transport.dart';
+import 'dca55.dart';
 import 'drafts.dart';
 import 'settings.dart';
 
@@ -194,6 +195,16 @@ class ReadingIntake {
     }
     final id = await save(e);
     _setSaved(LastResult(event: e, readingId: id));
+    _maybeDca55(id, e.result);
+  }
+
+  /// Kick off the DCA55-equivalent measurement when enabled for BJTs.
+  void _maybeDca55(int readingId, IdentifyResult r) {
+    if (dca55AutoApplies(ref, r)) {
+      ref.read(dca55Provider.notifier).measure(readingId, r);
+    } else {
+      ref.read(dca55Provider.notifier).clear();
+    }
   }
 
   Future<int> save(IdentifyEvent e) async {
@@ -216,6 +227,7 @@ class ReadingIntake {
     final saved = LastResult(event: d.event, readingId: id);
     if (last?.draft?.seq == d.seq) {
       _setSaved(saved);
+      _maybeDca55(id, d.event.result);
     } else {
       _lastSaved = saved;
     }

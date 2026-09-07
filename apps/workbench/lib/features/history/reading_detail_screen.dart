@@ -1,11 +1,13 @@
 import 'package:dca75_device/dca75_device.dart';
+import 'package:dca75_protocol/dca75_protocol.dart';
 import 'package:dca75_store/dca75_store.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/format.dart';
 import '../../services/providers.dart';
+import '../../widgets/dca55_card.dart';
 import '../../widgets/result_card.dart';
 import '../../widgets/tag_strip.dart';
 
@@ -132,6 +134,15 @@ class _Meta extends ConsumerWidget {
           family: d.result.type.name,
           onChanged: (_) => onChanged(),
         ),
+        if (d.result.type == ComponentType.bjt) ...[
+          const SizedBox(height: 16),
+          Dca55Card(
+            readingId: d.row.id,
+            result: d.result,
+            stored: d.extras,
+            canMeasure: ref.watch(statusProvider).state == ConnectionState.idle,
+          ),
+        ],
         const SizedBox(height: 16),
         Card(
           child: Padding(

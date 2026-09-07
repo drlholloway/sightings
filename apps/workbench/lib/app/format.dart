@@ -22,7 +22,7 @@ String fmtDate(DateTime t) {
 
 /// Unit for a headline key, for axis / table labels.
 String unitFor(String key) => switch (key) {
-  'hfe' => '',
+  'hfe' || 'hfe_dca55' => '',
   'gm' || 'gfs' => 'S',
   'rds_on' => 'Ω',
   'ic_leak' || 'idss' || 'igt' || 'id_off' => 'A',
@@ -31,6 +31,8 @@ String unitFor(String key) => switch (key) {
 
 String labelFor(String key) => switch (key) {
   'hfe' => 'hFE',
+  'hfe_dca55' => 'hFE (DCA55)',
+  'vbe_dca55' => 'Vbe (DCA55)',
   'vbe_5ma' => 'Vbe @ 5 mA',
   'ic_leak' => 'Ic leakage',
   'vce_sat' => 'Vce(sat)',
@@ -51,11 +53,18 @@ String labelFor(String key) => switch (key) {
 };
 
 String fmtValue(String key, double v) =>
-    key == 'hfe' ? sig(v) : eng(v, unitFor(key));
+    key.startsWith('hfe') ? sig(v) : eng(v, unitFor(key));
 
 /// Headline keys that make sense for a component type, in display order.
 List<String> headlineKeysFor(ComponentType t) => switch (t) {
-  ComponentType.bjt => const ['hfe', 'vbe_5ma', 'ic_leak', 'vce_sat'],
+  ComponentType.bjt => const [
+    'hfe',
+    'hfe_dca55',
+    'vbe_5ma',
+    'vbe_dca55',
+    'ic_leak',
+    'vce_sat',
+  ],
   ComponentType.mosfet ||
   ComponentType.igbt => const ['vgs_th', 'rds_on', 'gm', 'id_off'],
   ComponentType.jfet => const ['vgs_off', 'idss', 'gfs'],

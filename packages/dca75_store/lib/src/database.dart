@@ -150,6 +150,8 @@ class SchemaMeta extends Table {
 /// Headline keys pivoted by the `reading_headlines` view.
 const List<String> headlineKeys = [
   'hfe',
+  'hfe_dca55',
+  'vbe_dca55',
   'vbe_5ma',
   'ic_leak',
   'vce_sat',

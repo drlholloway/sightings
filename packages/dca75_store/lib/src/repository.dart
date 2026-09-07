@@ -108,25 +108,58 @@ class ReadingsRepository {
         mode: InsertMode.insertOrReplace));
   }
 
+  /// Extra measurements attached to a reading after the identify (for
+  /// example the DCA55-equivalent point). Keys must end in `_dca55` or
+  /// another `_` suffix so [reDecodeAll] leaves them alone.
+  Future<void> saveExtraParams(
+    int readingId,
+    Map<String, (double, String)> params,
+  ) =>
+      db.batch(
+        (b) => b.insertAll(
+          db.readingParams,
+          [
+            for (final e in params.entries)
+              ReadingParamsCompanion.insert(
+                readingId: readingId,
+                key: e.key,
+                value: e.value.$1,
+                unit: e.value.$2,
+              ),
+          ],
+          mode: InsertMode.insertOrReplace,
+        ),
+      );
+
+  /// Keys written by [saveExtraParams] rather than the decoder.
+  static bool isExtraKey(String key) => key.endsWith('_dca55');
+
   /// Re-run the decoder on stored raw frames written by an older decoder.
+  /// Decoder-produced parameters are replaced; extra measurements are kept.
   Future<int> reDecodeAll({int? olderThan}) async {
     final rows = await (db.select(db.readings)
-          ..where((r) =>
-              r.decoderVersion.isSmallerThanValue(olderThan ?? decoderVersion)))
+          ..where(
+            (r) => r.decoderVersion
+                .isSmallerThanValue(olderThan ?? decoderVersion),
+          ))
         .get();
     for (final row in rows) {
       final r = decodeResult(Response(row.rawFrame));
       await db.transaction(() async {
         await (db.delete(db.readingParams)
-              ..where((p) => p.readingId.equals(row.id)))
+              ..where(
+                (p) => p.readingId.equals(row.id) & p.key.like('%_dca55').not(),
+              ))
             .go();
         await _writeParams(row.id, r);
         await (db.update(db.readings)..where((x) => x.id.equals(row.id))).write(
-            ReadingsCompanion(
-                decoderVersion: const Value(decoderVersion),
-                type: Value(r.typeCode),
-                config: Value(r.config),
-                flags: Value(r.flags)));
+          ReadingsCompanion(
+            decoderVersion: const Value(decoderVersion),
+            type: Value(r.typeCode),
+            config: Value(r.config),
+            flags: Value(r.flags),
+          ),
+        );
       });
     }
     return rows.length;
@@ -327,6 +360,12 @@ WHERE r.id = ?''', variables: [Variable(id)]).get();
         updatedAt: updated == null ? null : _dt(updated),
       ),
       sweeps: await listSweeps(readingId: id),
+      extras: {
+        for (final p in await (db.select(db.readingParams)
+              ..where((p) => p.readingId.equals(id)))
+            .get())
+          if (isExtraKey(p.key)) p.key: (p.value, p.unit),
+      },
       battV: r.battV,
       v12V: r.v12V,
       vrefV: r.vrefV,
