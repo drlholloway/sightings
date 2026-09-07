@@ -60,3 +60,9 @@ the TEST(2) reply into `test/golden/`.
 Release APK sideloaded onto a phone over Wi‑Fi. The Kotlin `UsbBridge` worked first time:
 permission dialog, connect, identify, unit‑button drafts and the BJT, diode and JFET sweeps all
 behaved exactly as on macOS with the same three parts (2N5088, silicon diode, J201).
+
+## DCA55‑equivalent measurement (macOS, 2026‑09‑07)
+
+2N5088: DCA75 identify hFE 405 @ 5 mA; DCA55‑equivalent hFE 410 @ Ic 2.53 mA, Vce 2.498 V,
+Ib 6.2 µA, converged; Vbe 648 mV at that point, 765 mV @ Ib 4.50 mA; leakage 0. Servo lands
+within tolerance in a few iterations from the identify's hFE as the starting guess.
