@@ -18,6 +18,7 @@
   <url type="donation">https://buymeacoffee.com/drlholloway</url>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="0.3.1" date="2026-09-08" />
     <release version="0.3.0" date="2026-09-07" />
   </releases>
 </component>

@@ -3,7 +3,7 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
-## Unreleased
+## 0.3.1 — 2026-09-08
 
 ### Added
 - **Linux Flatpak bundle** on the Releases page alongside the tarball: installs with
