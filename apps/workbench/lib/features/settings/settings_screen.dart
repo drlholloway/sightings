@@ -29,17 +29,6 @@ class SettingsScreen extends ConsumerWidget {
         Text('Settings', style: theme.textTheme.titleLarge),
         const SizedBox(height: 8),
         SwitchListTile(
-          title: const Text('Demo device (no DCA75 needed)'),
-          subtitle: const Text(
-            'Run against a simulated unit built from real captured parts: a 2N5088, an MP40A, a J201, a silicon and a germanium diode. Identify, drafts, every sweep and the follow-up measurements all work. Demo readings are marked and can be deleted below.',
-          ),
-          value: s.demoMode,
-          onChanged: (v) async {
-            await ref.read(controllerProvider).disconnect();
-            await n.update(s.copyWith(demoMode: v));
-          },
-        ),
-        SwitchListTile(
           title: const Text('Connect automatically'),
           subtitle: const Text('When exactly one DCA75 is plugged in.'),
           value: s.autoConnect,
@@ -191,6 +180,25 @@ class SettingsScreen extends ConsumerWidget {
               'Use a USB OTG cable. Accept the permission dialog when the unit is plugged in. If the unit does not power up, use a powered OTG hub.',
             ),
           ),
+        const Divider(height: 32),
+        Text(
+          'DEMO',
+          style: theme.textTheme.labelMedium?.copyWith(
+            letterSpacing: 1,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        SwitchListTile(
+          title: const Text('Demo device (no DCA75 needed)'),
+          subtitle: const Text(
+            'Run against a simulated unit built from real captured parts: a 2N5088, an MP40A, a J201, a silicon and a germanium diode. Identify, drafts, every sweep and the follow-up measurements all work. Demo readings are marked and can be deleted with the button under Database.',
+          ),
+          value: s.demoMode,
+          onChanged: (v) async {
+            await ref.read(controllerProvider).disconnect();
+            await n.update(s.copyWith(demoMode: v));
+          },
+        ),
       ],
     );
   }
