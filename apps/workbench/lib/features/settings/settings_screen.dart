@@ -239,27 +239,33 @@ class SettingsScreen extends ConsumerWidget {
         .replaceAll(':', '-')
         .substring(0, 19);
     final name = 'dca75-backup-$stamp.sqlite';
-    String? path;
-    if (Platform.isAndroid) {
-      final dir = Directory.systemTemp;
-      path = '${dir.path}/$name';
-    } else {
-      path = await FilePicker.saveFile(
-        dialogTitle: 'Save backup',
-        fileName: name,
-      );
-      if (path == null) return;
-    }
-    final f = File(path);
-    if (await f.exists()) await f.delete();
-    await db.backupTo(path);
+    // SQLite's online backup needs a path, so snapshot into the temp
+    // directory first; the save dialog then writes those bytes wherever the
+    // user chooses (file_picker >= 12 does the write itself).
+    final tmp = File('${Directory.systemTemp.path}/$name');
+    if (await tmp.exists()) await tmp.delete();
+    await db.backupTo(tmp.path);
     if (Platform.isAndroid) {
       await SharePlus.instance.share(
-        ShareParams(files: [XFile(path, mimeType: 'application/vnd.sqlite3')]),
+        ShareParams(
+          files: [XFile(tmp.path, mimeType: 'application/vnd.sqlite3')],
+        ),
       );
-    } else if (context.mounted) {
+      return;
+    }
+    final saved = await FilePicker.saveFile(
+      dialogTitle: 'Save backup',
+      fileName: name,
+      bytes: await tmp.readAsBytes(),
+      mimeType: 'application/vnd.sqlite3',
+    );
+    if (saved == null) return;
+    final shown = saved.scheme == 'file'
+        ? saved.toFilePath()
+        : saved.toString();
+    if (context.mounted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Backup written to $path')));
+          .showSnackBar(SnackBar(content: Text('Backup written to $shown')));
     }
   }
 
@@ -284,8 +290,8 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
     if (ok != true) return;
-    final picked = await FilePicker.pickFiles(dialogTitle: 'Choose backup');
-    final src = picked?.files.single.path;
+    final picked = await FilePicker.pickFile(dialogTitle: 'Choose backup');
+    final src = picked?.path;
     if (src == null) return;
     final target = await ref.read(databasePathProvider.future);
     final db = await ref.read(databaseProvider.future);
