@@ -97,6 +97,7 @@ def main():
     full_img = render(N, full)
     full_img.save(os.path.join(OUT, "icon_1024.png"))
     full_img.resize((256, 256), Image.LANCZOS).save(os.path.join(OUT, "icon_256.png"))
+    full_img.resize((512, 512), Image.LANCZOS).save(os.path.join(OUT, "icon_512.png"))
 
     # 2. Android adaptive foreground: launchers mask the inner 72/108 of the
     #    canvas and the safe zone is a 66/108 circle, so keep the art in the
