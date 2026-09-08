@@ -244,7 +244,7 @@ class SettingsScreen extends ConsumerWidget {
       final dir = Directory.systemTemp;
       path = '${dir.path}/$name';
     } else {
-      path = await FilePicker.platform.saveFile(
+      path = await FilePicker.saveFile(
         dialogTitle: 'Save backup',
         fileName: name,
       );
@@ -284,9 +284,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
     if (ok != true) return;
-    final picked = await FilePicker.platform.pickFiles(
-      dialogTitle: 'Choose backup',
-    );
+    final picked = await FilePicker.pickFiles(dialogTitle: 'Choose backup');
     final src = picked?.files.single.path;
     if (src == null) return;
     final target = await ref.read(databasePathProvider.future);

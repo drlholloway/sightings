@@ -8,6 +8,7 @@ import 'package:dca75_transport/dca75_transport.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -299,20 +300,24 @@ class AutoConnector {
       if (e.kind == TransportEventKind.attached) _maybeConnect();
     });
     // Initial attempt shortly after startup.
-    Future<void>.delayed(const Duration(milliseconds: 300), _maybeConnect);
+    _initial = Timer(const Duration(milliseconds: 300), _maybeConnect);
   }
 
   final Ref ref;
   StreamSubscription<TransportEvent>? _sub;
+  Timer? _initial;
   bool _busy = false;
+  bool _disposed = false;
 
   Future<void> _maybeConnect() async {
-    if (_busy || !ref.read(settingsProvider).autoConnect) return;
+    if (_disposed || _busy) return;
+    if (!ref.read(settingsProvider).autoConnect) return;
     final c = ref.read(controllerProvider);
     if (c.status.state != ConnectionState.disconnected) return;
     _busy = true;
     try {
       final devs = await ref.read(transportProvider).listDevices();
+      if (_disposed) return;
       if (devs.length == 1) await c.connect(devs.single);
     } catch (e) {
       debugPrint('auto-connect: $e');
@@ -321,7 +326,11 @@ class AutoConnector {
     }
   }
 
-  void dispose() => _sub?.cancel();
+  void dispose() {
+    _disposed = true;
+    _initial?.cancel();
+    _sub?.cancel();
+  }
 }
 
 final autoConnectorProvider = Provider<AutoConnector>((ref) {
