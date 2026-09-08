@@ -3,18 +3,29 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
-## Unreleased
+## 0.3.2 — 2026-09-08
 
-### Changed
-- Dependency refresh: riverpod 3, go_router 18, file_picker 12, share_plus 13,
-  package_info_plus 10; Android build moved to AGP 9.4 / Gradle 9.7 with built-in
-  Kotlin. Backup now snapshots the database to a temporary file and hands the
-  bytes to the save dialog, which writes them itself.
+Maintenance release driven by Dependabot: every dependency and GitHub Action it flagged
+is now current, and one of those bumps carries a security fix.
+
+### Security
+- **file_picker 10.3 → 12.2** includes the upstream fix for a path-traversal
+  vulnerability (CWE-22) when resolving file paths handed over by Android content
+  providers. Sightings uses that path when you pick a backup file to restore on Android.
+- GitHub Actions used by the CI and release pipelines updated to their current majors
+  (checkout 7, upload-artifact 7, download-artifact 8, setup-java 6, action-gh-release 3).
+- No open Dependabot security alerts against the project at the time of release.
 
 ### Fixed
 - macOS release builds keep their entitlements when the app is ad-hoc re-signed after
   bundling libusb. Previous releases lost them, which made the file picker refuse to
   open the Backup and Restore dialogs on macOS.
+
+### Changed
+- Dependency refresh: riverpod 3, go_router 18, share_plus 13, package_info_plus 10;
+  Android build moved to AGP 9.4 / Gradle 9.7 / Kotlin 2.4.10 with built-in Kotlin.
+- Backup now snapshots the database to a temporary file and hands the bytes to the save
+  dialog, which writes them itself. Behavior is unchanged from the user's side.
 
 ## 0.3.1 — 2026-09-08
 
