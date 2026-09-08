@@ -103,7 +103,7 @@ jobs:
         run: |
           APP=apps/workbench/build/macos/Build/Products/Release/Sightings.app
           LIBUSB_DYLIB=$(brew --prefix)/lib/libusb-1.0.0.dylib ./packaging/macos/bundle-libusb.sh "$APP"
-          codesign --force --deep --sign - "$APP"
+          codesign --force --deep --preserve-metadata=entitlements --sign - "$APP"
           codesign --verify --deep --strict "$APP"
           ditto -c -k --keepParent "$APP" sightings-macos-${{ needs.version.outputs.version }}.zip
       - uses: actions/upload-artifact@v7

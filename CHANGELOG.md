@@ -11,6 +11,11 @@ GitHub Release notes.
   Kotlin. Backup now snapshots the database to a temporary file and hands the
   bytes to the save dialog, which writes them itself.
 
+### Fixed
+- macOS release builds keep their entitlements when the app is ad-hoc re-signed after
+  bundling libusb. Previous releases lost them, which made the file picker refuse to
+  open the Backup and Restore dialogs on macOS.
+
 ## 0.3.1 — 2026-09-08
 
 ### Added
