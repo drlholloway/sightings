@@ -3,6 +3,14 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Changed
+- Dependency refresh: riverpod 3, go_router 18, file_picker 12, share_plus 13,
+  package_info_plus 10; Android build moved to AGP 9.4 / Gradle 9.7 with built-in
+  Kotlin. Backup now snapshots the database to a temporary file and hands the
+  bytes to the save dialog, which writes them itself.
+
 ## 0.3.1 — 2026-09-08
 
 ### Added

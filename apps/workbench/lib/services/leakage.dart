@@ -1,6 +1,7 @@
 import 'package:dca75_device/dca75_device.dart';
 import 'package:dca75_protocol/dca75_protocol.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import 'dca55.dart' show Dca55State;
 import 'providers.dart';

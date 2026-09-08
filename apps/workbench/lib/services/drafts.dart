@@ -1,6 +1,6 @@
 import 'package:dca75_device/dca75_device.dart';
 import 'package:dca75_protocol/dca75_protocol.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 /// An identify result picked up from the unit's own button that has not
 /// been saved yet. Held in memory only.
