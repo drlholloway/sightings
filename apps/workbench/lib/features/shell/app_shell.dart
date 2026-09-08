@@ -55,11 +55,16 @@ class AppShell extends ConsumerWidget {
   final Widget child;
 
   List<({String path, IconData icon, IconData selected, String label})>
-  _destinations(WidgetRef ref) => [
-    ..._baseDestinations,
-    if (ref.watch(settingsProvider.select((s) => s.pedalBuilder)))
-      _circuitsDestination,
-  ];
+  _destinations(WidgetRef ref) {
+    final pedal = ref.watch(settingsProvider.select((s) => s.pedalBuilder));
+    // Circuits sits between Parts and Settings.
+    final settings = _baseDestinations.last;
+    return [
+      ..._baseDestinations.sublist(0, _baseDestinations.length - 1),
+      if (pedal) _circuitsDestination,
+      settings,
+    ];
+  }
 
   int _index(
     BuildContext context,
