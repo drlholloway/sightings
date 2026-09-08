@@ -83,8 +83,18 @@ jobs:
           cp packaging/linux/60-dca75.rules $STAGE/
           cp packaging/linux/README-linux.md $STAGE/README.md
           tar czf $STAGE.tar.gz $STAGE
+      - name: flatpak bundle
+        run: |
+          sudo apt-get install -y flatpak flatpak-builder
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          flatpak install --user -y flathub org.freedesktop.Platform//24.08 org.freedesktop.Sdk//24.08
+          flatpak-builder --user --force-clean --repo=flatpak-repo flatpak-build packaging/flatpak/dev.laneholloway.Sightings.yml
+          flatpak build-bundle flatpak-repo sightings-linux-x64-dev.flatpak dev.laneholloway.Sightings
+          ls -la *.flatpak
       - uses: actions/upload-artifact@v4
         with:
           name: sightings-linux-x64
-          path: sightings-linux-x64-*.tar.gz
+          path: |
+            sightings-linux-x64-*.tar.gz
+            sightings-linux-x64-*.flatpak
           retention-days: 14

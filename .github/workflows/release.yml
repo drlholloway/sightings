@@ -38,10 +38,20 @@ jobs:
           cp packaging/linux/60-dca75.rules $STAGE/
           cp packaging/linux/README-linux.md $STAGE/README.md
           tar czf $STAGE.tar.gz $STAGE
+      - name: flatpak bundle
+        run: |
+          sudo apt-get install -y flatpak flatpak-builder
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          flatpak install --user -y flathub org.freedesktop.Platform//24.08 org.freedesktop.Sdk//24.08
+          flatpak-builder --user --force-clean --repo=flatpak-repo flatpak-build packaging/flatpak/dev.laneholloway.Sightings.yml
+          flatpak build-bundle flatpak-repo sightings-linux-x64-${{ needs.version.outputs.version }}.flatpak dev.laneholloway.Sightings
+          ls -la *.flatpak
       - uses: actions/upload-artifact@v4
         with:
           name: linux
-          path: sightings-linux-x64-*.tar.gz
+          path: |
+            sightings-linux-x64-*.tar.gz
+            sightings-linux-x64-*.flatpak
 
   android:
     needs: version
@@ -129,7 +139,7 @@ jobs:
 
           **macOS** (Apple silicon and Intel): unzip and open `Sightings.app`. The build is not notarized, so on first launch macOS will refuse; open System Settings → Privacy & Security and click **Open Anyway** (older macOS: right-click the app → Open). No driver needed.
 
-          **Linux** (x86-64): extract, install the udev rule from the README inside, run `./workbench`. Needs GTK 3 and `libusb-1.0` from your distribution.
+          **Linux** (x86-64), two options. Flatpak: `flatpak install --user sightings-linux-x64-<version>.flatpak` (add the Flathub remote first if you haven't: `flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`), then install the udev rule from the repo's `packaging/linux/60-dca75.rules`. Tarball: extract, install the udev rule from the README inside, run `./workbench`; needs GTK 3 and `libusb-1.0` from your distribution.
 
           **Android**: download the APK on the phone and open it (allow installs from the browser once). Needs a USB OTG cable. If an earlier debug-signed build is installed, uninstall it first.
 

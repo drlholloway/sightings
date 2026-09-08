@@ -3,6 +3,13 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Added
+- **Linux Flatpak bundle** on the Releases page alongside the tarball: installs with
+  `flatpak install --user`, brings GTK and libusb with the Freedesktop runtime; the udev rule is
+  still installed by hand.
+
 ## 0.3.0 — 2026-09-07
 
 ### Added
