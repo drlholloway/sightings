@@ -29,6 +29,17 @@ class SettingsScreen extends ConsumerWidget {
         Text('Settings', style: theme.textTheme.titleLarge),
         const SizedBox(height: 8),
         SwitchListTile(
+          title: const Text('Demo device (no DCA75 needed)'),
+          subtitle: const Text(
+            'Run against a simulated unit built from real captured parts: a 2N5088, an MP40A, a J201, a silicon and a germanium diode. Identify, drafts, every sweep and the follow-up measurements all work. Demo readings are marked and can be deleted below.',
+          ),
+          value: s.demoMode,
+          onChanged: (v) async {
+            await ref.read(controllerProvider).disconnect();
+            await n.update(s.copyWith(demoMode: v));
+          },
+        ),
+        SwitchListTile(
           title: const Text('Connect automatically'),
           subtitle: const Text('When exactly one DCA75 is plugged in.'),
           value: s.autoConnect,
@@ -94,6 +105,23 @@ class SettingsScreen extends ConsumerWidget {
               onPressed: () => _restore(context, ref),
               icon: const Icon(Icons.restore),
               label: const Text('Restore…'),
+            ),
+            OutlinedButton.icon(
+              onPressed: () async {
+                final repo = await ref.read(repositoryProvider.future);
+
+                final n = await repo.deleteSessionsOfPlatform('demo');
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Deleted $n demo readings')),
+                  );
+                }
+              },
+
+              icon: const Icon(Icons.science_outlined),
+
+              label: const Text('Delete demo readings'),
             ),
             OutlinedButton.icon(
               onPressed: () async {

@@ -3,6 +3,15 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Added
+- **Demo device.** A Settings switch runs the app against a simulated DCA75 built from real
+  captured parts (2N5088, MP40A, J201, silicon and germanium diodes): identify, unit-button
+  drafts, every sweep, the DCA55-equivalent and leakage measurements all work with no
+  hardware. A banner shows the part "clipped in" with **Press unit button** and **Next part**
+  controls; demo readings are recorded under a demo session and can be deleted in one go.
+
 ## 0.2.1 — 2026-09-07
 
 ### Added

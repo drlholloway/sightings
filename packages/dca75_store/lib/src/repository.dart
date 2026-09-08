@@ -172,6 +172,23 @@ class ReadingsRepository {
   Future<void> deleteReadings(Iterable<int> ids) =>
       (db.delete(db.readings)..where((r) => r.id.isIn(ids))).go();
 
+  /// Remove every reading, sweep and session recorded on [platform]
+  /// (used for `demo`). Returns the number of readings deleted.
+  Future<int> deleteSessionsOfPlatform(String platform) =>
+      db.transaction(() async {
+        final sessions = await (db.select(db.sessions)
+              ..where((s) => s.platform.equals(platform)))
+            .get();
+        if (sessions.isEmpty) return 0;
+        final ids = sessions.map((s) => s.id).toList();
+        final n = await (db.delete(db.readings)
+              ..where((r) => r.sessionId.isIn(ids)))
+            .go();
+        await (db.delete(db.sweeps)..where((s) => s.sessionId.isIn(ids))).go();
+        await (db.delete(db.sessions)..where((s) => s.id.isIn(ids))).go();
+        return n;
+      });
+
   // ------------------------------------------------------------------- tags
 
   Future<void> tagReading(

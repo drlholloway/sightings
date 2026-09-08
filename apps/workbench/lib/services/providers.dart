@@ -21,10 +21,26 @@ import 'settings.dart';
 // ------------------------------------------------------------- transport
 
 /// Overridable for tests / hardware-free demo mode.
+/// Whether the app runs against the simulated unit. Watched by the
+/// transport so flipping the Settings switch swaps the whole device stack.
+final demoModeProvider = Provider<bool>(
+  (ref) => ref.watch(settingsProvider.select((s) => s.demoMode)),
+);
+
 final transportProvider = Provider<DcaTransport>((ref) {
-  final t = Platform.isAndroid ? AndroidUsbTransport() : LibusbTransport();
+  final DcaTransport t = ref.watch(demoModeProvider)
+      ? DemoTransport()
+      : Platform.isAndroid
+      ? AndroidUsbTransport()
+      : LibusbTransport();
   ref.onDispose(t.dispose);
   return t;
+});
+
+/// The simulated unit when demo mode is on, for the banner's controls.
+final demoUnitProvider = Provider<DemoUnit?>((ref) {
+  final t = ref.watch(transportProvider);
+  return t is DemoTransport ? t.unit : null;
 });
 
 final controllerProvider = Provider<DeviceController>((ref) {
@@ -82,9 +98,12 @@ final repositoryProvider = FutureProvider<ReadingsRepository>((ref) async {
 /// Starts a database session when the device connects and ends it on
 /// disconnect. Exposes the current session id.
 class SessionNotifier extends StateNotifier<int?> {
-  SessionNotifier(this.ref) : super(null) {
-    _sub = ref.read(controllerProvider).statusStream.listen(_onStatus);
+  SessionNotifier(this.ref, DeviceController controller) : super(null) {
+    _sub = controller.statusStream.listen(_onStatus);
   }
+
+  String get _platform =>
+      ref.read(settingsProvider).demoMode ? 'demo' : Platform.operatingSystem;
 
   final Ref ref;
   StreamSubscription<DeviceStatus>? _sub;
@@ -99,7 +118,7 @@ class SessionNotifier extends StateNotifier<int?> {
         identity: s.identity,
         calibration: s.calibration,
         rMt2: s.rails?.rMt2,
-        platform: Platform.operatingSystem,
+        platform: _platform,
         appVersion: info.version,
       );
     } else if (!s.isConnected && state != null) {
@@ -117,7 +136,7 @@ class SessionNotifier extends StateNotifier<int?> {
     final repo = await ref.read(repositoryProvider.future);
     final info = await ref.read(appInfoProvider.future);
     state = await repo.startSession(
-      platform: Platform.operatingSystem,
+      platform: _platform,
       appVersion: info.version,
     );
     return state!;
@@ -131,7 +150,9 @@ class SessionNotifier extends StateNotifier<int?> {
 }
 
 final sessionProvider = StateNotifierProvider<SessionNotifier, int?>(
-  (ref) => SessionNotifier(ref),
+  // Watching the controller re-creates the session tracker when the
+  // transport is swapped (demo mode on/off).
+  (ref) => SessionNotifier(ref, ref.watch(controllerProvider)),
 );
 
 // ----------------------------------------------------------------- intake
@@ -164,8 +185,8 @@ final lastResultProvider =
 /// Routes identify events: app-initiated results are saved immediately;
 /// unit-button results become drafts (unless the setting says otherwise).
 class ReadingIntake {
-  ReadingIntake(this.ref) {
-    _sub = ref.read(controllerProvider).identifyEvents.listen(_onEvent);
+  ReadingIntake(this.ref, DeviceController controller) {
+    _sub = controller.identifyEvents.listen(_onEvent);
   }
 
   final Ref ref;
@@ -260,7 +281,7 @@ class ReadingIntake {
 }
 
 final intakeProvider = Provider<ReadingIntake>((ref) {
-  final i = ReadingIntake(ref);
+  final i = ReadingIntake(ref, ref.watch(controllerProvider));
   ref.onDispose(i.dispose);
   return i;
 });
@@ -272,8 +293,7 @@ final bannerProvider = StateProvider<String?>((ref) => null);
 
 /// Watches for attach events and connects when exactly one unit is present.
 class AutoConnector {
-  AutoConnector(this.ref) {
-    final t = ref.read(transportProvider);
+  AutoConnector(this.ref, DcaTransport t) {
     if (t is LibusbTransport) t.startWatching();
     _sub = t.events.listen((e) {
       if (e.kind == TransportEventKind.attached) _maybeConnect();
@@ -305,7 +325,7 @@ class AutoConnector {
 }
 
 final autoConnectorProvider = Provider<AutoConnector>((ref) {
-  final a = AutoConnector(ref);
+  final a = AutoConnector(ref, ref.watch(transportProvider));
   ref.onDispose(a.dispose);
   return a;
 });

@@ -288,6 +288,18 @@ void main() {
     expect(await repo.reDecodeAll(), 0);
   });
 
+  test('deleteSessionsOfPlatform removes demo data only', () async {
+    final demo = await repo.startSession(platform: 'demo', appVersion: '0');
+    await repo.saveReading(demo, bjt(), source: ReadingSource.app);
+    await repo.saveSweep(demo,
+        params: const IcVceParams(), traces: [], startedAt: DateTime.now());
+    await repo.saveReading(session, bjt(), source: ReadingSource.app);
+    expect(await repo.deleteSessionsOfPlatform('demo'), 1);
+    expect(await repo.countReadings(), 1);
+    expect(await repo.listSweeps(), isEmpty);
+    expect(await (db.select(db.sessions)).get(), hasLength(1));
+  });
+
   test('readings CSV', () async {
     final id = await repo.saveReading(session, bjt(hfe: 150),
         source: ReadingSource.app);

@@ -257,6 +257,44 @@ class _Banners extends ConsumerWidget {
           ),
         );
 
+    final demo = ref.watch(demoUnitProvider);
+    if (demo != null) {
+      items.add(
+        Material(
+          color: theme.colorScheme.primaryContainer,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Row(
+              children: [
+                const Icon(Icons.science_outlined, size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Demo device — readings are simulated. Clipped in: ${demo.part.name}',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
+                TextButton(
+                  onPressed: status.state == ConnectionState.idle
+                      ? demo.pressButton
+                      : null,
+                  child: const Text('Press unit button'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    demo.nextPart();
+                    ref.read(bannerProvider.notifier).state = null;
+                    // Re-read so the banner text updates.
+                    ref.invalidate(demoUnitProvider);
+                  },
+                  child: const Text('Next part'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     if (status.lastError != null && !status.isConnected) {
       var text = status.lastError!;
       if (Platform.isLinux && text.toLowerCase().contains('access')) {

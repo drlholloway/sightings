@@ -49,6 +49,11 @@ class _WorkbenchAppState extends ConsumerState<WorkbenchApp>
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
+    // Keep the long-lived services alive; watching them means they follow
+    // the transport when demo mode is toggled.
+    ref.watch(intakeProvider);
+    ref.watch(sessionProvider);
+    ref.watch(autoConnectorProvider);
     return MaterialApp.router(
       title: 'Sightings',
       debugShowCheckedModeBanner: false,

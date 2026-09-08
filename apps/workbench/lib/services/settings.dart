@@ -9,6 +9,7 @@ class Settings {
     this.digits = 3,
     this.dca55Auto = true,
     this.leakAuto = true,
+    this.demoMode = false,
   });
   final bool autoConnect;
   final bool unitButtonAsDraft;
@@ -21,6 +22,9 @@ class Settings {
   /// After every saved diode identify, also measure reverse leakage at 5 V and 10 V.
   final bool leakAuto;
 
+  /// Run against a simulated DCA75 (no hardware needed).
+  final bool demoMode;
+
   Settings copyWith({
     bool? autoConnect,
     bool? unitButtonAsDraft,
@@ -28,6 +32,7 @@ class Settings {
     int? digits,
     bool? dca55Auto,
     bool? leakAuto,
+    bool? demoMode,
   }) => Settings(
     autoConnect: autoConnect ?? this.autoConnect,
     unitButtonAsDraft: unitButtonAsDraft ?? this.unitButtonAsDraft,
@@ -35,6 +40,7 @@ class Settings {
     digits: digits ?? this.digits,
     dca55Auto: dca55Auto ?? this.dca55Auto,
     leakAuto: leakAuto ?? this.leakAuto,
+    demoMode: demoMode ?? this.demoMode,
   );
 }
 
@@ -55,6 +61,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       digits: p.getInt('digits') ?? 3,
       dca55Auto: p.getBool('dca55Auto') ?? true,
       leakAuto: p.getBool('leakAuto') ?? true,
+      demoMode: p.getBool('demoMode') ?? false,
     );
   }
 
@@ -67,6 +74,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await p.setInt('digits', s.digits);
     await p.setBool('dca55Auto', s.dca55Auto);
     await p.setBool('leakAuto', s.leakAuto);
+    await p.setBool('demoMode', s.demoMode);
   }
 }
 
