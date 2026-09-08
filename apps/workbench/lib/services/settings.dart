@@ -10,6 +10,9 @@ class Settings {
     this.dca55Auto = true,
     this.leakAuto = true,
     this.demoMode = false,
+    this.pedalBuilder = false,
+    this.activeCircuits = const {},
+    this.circuitOverridesJson = '{}',
   });
   final bool autoConnect;
   final bool unitButtonAsDraft;
@@ -25,6 +28,16 @@ class Settings {
   /// Run against a simulated DCA75 (no hardware needed).
   final bool demoMode;
 
+  /// Pedal Builder: circuit profiles, the Circuits tab and the fit card.
+  final bool pedalBuilder;
+
+  /// Ids of circuits that are active (evaluated on readings). Empty means
+  /// "all built-in circuits" until the user changes something.
+  final Set<String> activeCircuits;
+
+  /// JSON map of circuit id → edited profile JSON.
+  final String circuitOverridesJson;
+
   Settings copyWith({
     bool? autoConnect,
     bool? unitButtonAsDraft,
@@ -33,6 +46,9 @@ class Settings {
     bool? dca55Auto,
     bool? leakAuto,
     bool? demoMode,
+    bool? pedalBuilder,
+    Set<String>? activeCircuits,
+    String? circuitOverridesJson,
   }) => Settings(
     autoConnect: autoConnect ?? this.autoConnect,
     unitButtonAsDraft: unitButtonAsDraft ?? this.unitButtonAsDraft,
@@ -41,6 +57,9 @@ class Settings {
     dca55Auto: dca55Auto ?? this.dca55Auto,
     leakAuto: leakAuto ?? this.leakAuto,
     demoMode: demoMode ?? this.demoMode,
+    pedalBuilder: pedalBuilder ?? this.pedalBuilder,
+    activeCircuits: activeCircuits ?? this.activeCircuits,
+    circuitOverridesJson: circuitOverridesJson ?? this.circuitOverridesJson,
   );
 }
 
@@ -62,6 +81,9 @@ class SettingsNotifier extends StateNotifier<Settings> {
       dca55Auto: p.getBool('dca55Auto') ?? true,
       leakAuto: p.getBool('leakAuto') ?? true,
       demoMode: p.getBool('demoMode') ?? false,
+      pedalBuilder: p.getBool('pedalBuilder') ?? false,
+      activeCircuits: (p.getStringList('activeCircuits') ?? const []).toSet(),
+      circuitOverridesJson: p.getString('circuitOverridesJson') ?? '{}',
     );
   }
 
@@ -75,6 +97,9 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await p.setBool('dca55Auto', s.dca55Auto);
     await p.setBool('leakAuto', s.leakAuto);
     await p.setBool('demoMode', s.demoMode);
+    await p.setBool('pedalBuilder', s.pedalBuilder);
+    await p.setStringList('activeCircuits', s.activeCircuits.toList());
+    await p.setString('circuitOverridesJson', s.circuitOverridesJson);
   }
 }
 

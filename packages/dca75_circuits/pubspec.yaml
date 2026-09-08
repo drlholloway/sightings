@@ -1,0 +1,12 @@
+name: dca75_circuits
+description: Circuit profiles (Fuzz Face, Tone Bender, Rangemaster, Big Muff, clipping diodes) and the rules that decide which measured parts fit which position. Pure Dart.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+environment:
+  sdk: ^3.6.0
+dependencies:
+  dca75_protocol: ^0.1.0
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

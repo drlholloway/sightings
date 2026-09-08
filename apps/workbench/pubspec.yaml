@@ -34,6 +34,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   dca75_device: ^0.1.0
   dca75_protocol: ^0.1.0
+  dca75_circuits: ^0.1.0
   dca75_store: ^0.1.0
   dca75_transport: ^0.1.0
   drift: ^2.32.0

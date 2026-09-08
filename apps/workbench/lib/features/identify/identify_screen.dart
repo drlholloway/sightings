@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/format.dart';
 import '../../services/drafts.dart';
 import '../../services/providers.dart';
+import '../../widgets/circuit_fit_card.dart';
 import '../../widgets/dca55_card.dart';
 import '../../widgets/histogram.dart';
 import '../../widgets/leakage_card.dart';
@@ -281,6 +282,14 @@ class _IdentifyScreenState extends ConsumerState<IdentifyScreen> {
               stored: const {},
               canMeasure:
                   ref.watch(statusProvider).state == ConnectionState.idle,
+            ),
+          ],
+          if (last?.readingId != null) ...[
+            const SizedBox(height: 12),
+            CircuitFitCard(
+              readingId: last!.readingId!,
+              result: r,
+              stored: const {},
             ),
           ],
           const SizedBox(height: 12),

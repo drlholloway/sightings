@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/circuits/circuits_screen.dart';
 import '../features/curves/curves_screen.dart';
 import '../features/history/history_screen.dart';
 import '../features/history/reading_detail_screen.dart';
@@ -56,6 +57,7 @@ final router = GoRouter(
         ),
         GoRoute(path: '/settings', builder: (c, s) => const SettingsScreen()),
         GoRoute(path: '/log', builder: (c, s) => const LogScreen()),
+        GoRoute(path: '/circuits', builder: (c, s) => const CircuitsScreen()),
       ],
     ),
   ],

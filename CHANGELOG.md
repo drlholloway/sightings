@@ -6,6 +6,12 @@ GitHub Release notes.
 ## Unreleased
 
 ### Added
+- **Pedal Builder.** A Settings switch adds a Circuits tab with classic pedal circuits (germanium
+  and silicon Fuzz Face, Tone Bender MkII, Rangemaster, Big Muff, silicon/germanium/LED clipping
+  diodes), each with its positions and the accepted ranges for gain, leakage and Vf, editable with
+  reset to defaults and an active switch per circuit. Every transistor and diode reading then gets a
+  "Pedal circuits" card listing the positions it is valid for, and why it misses the others.
+  Germanium gain rules read the DCA55-equivalent hFE when it has been measured.
 - **Demo device.** A Settings switch runs the app against a simulated DCA75 built from real
   captured parts (2N5088, MP40A, J201, silicon and germanium diodes): identify, unit-button
   drafts, every sweep, the DCA55-equivalent and leakage measurements all work with no

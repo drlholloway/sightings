@@ -3,7 +3,7 @@
 set shell := ["bash", "-cu"]
 export PATH := "/opt/homebrew/bin:" + env_var("PATH")
 
-packages := "packages/dca75_protocol packages/dca75_transport packages/dca75_device packages/dca75_store tools/dca75_cli"
+packages := "packages/dca75_protocol packages/dca75_transport packages/dca75_device packages/dca75_circuits packages/dca75_store tools/dca75_cli"
 
 # fetch dependencies for the whole workspace
 get:

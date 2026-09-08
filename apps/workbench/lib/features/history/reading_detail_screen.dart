@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/format.dart';
 import '../../services/providers.dart';
+import '../../widgets/circuit_fit_card.dart';
 import '../../widgets/dca55_card.dart';
 import '../../widgets/leakage_card.dart';
 import '../../widgets/result_card.dart';
@@ -112,6 +113,12 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen> {
                     ),
                   ),
                 ],
+                const SizedBox(height: 12),
+                CircuitFitCard(
+                  readingId: d.row.id,
+                  result: d.result,
+                  stored: d.extras,
+                ),
               ],
             );
             final meta = _Meta(d: d, onChanged: _load);

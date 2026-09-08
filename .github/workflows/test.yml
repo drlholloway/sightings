@@ -28,7 +28,7 @@ jobs:
       - run: dart analyze
       - name: test packages
         run: |
-          for p in packages/dca75_protocol packages/dca75_transport packages/dca75_device packages/dca75_store tools/dca75_cli; do
+          for p in packages/dca75_protocol packages/dca75_transport packages/dca75_device packages/dca75_circuits packages/dca75_store tools/dca75_cli; do
             (cd $p && dart test)
           done
       - name: app widget tests
@@ -59,7 +59,7 @@ jobs:
       - run: dart pub get
       - name: test packages
         run: |
-          for p in packages/dca75_protocol packages/dca75_transport packages/dca75_device packages/dca75_store tools/dca75_cli; do
+          for p in packages/dca75_protocol packages/dca75_transport packages/dca75_device packages/dca75_circuits packages/dca75_store tools/dca75_cli; do
             (cd $p && dart test)
           done
       - run: cd apps/workbench && flutter build macos --debug

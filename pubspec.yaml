@@ -7,6 +7,7 @@ workspace:
   - packages/dca75_protocol
   - packages/dca75_transport
   - packages/dca75_device
+  - packages/dca75_circuits
   - packages/dca75_store
   - tools/dca75_cli
   - apps/workbench

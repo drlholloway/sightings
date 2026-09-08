@@ -29,6 +29,14 @@ class SettingsScreen extends ConsumerWidget {
         Text('Settings', style: theme.textTheme.titleLarge),
         const SizedBox(height: 8),
         SwitchListTile(
+          title: const Text('Pedal Builder'),
+          subtitle: const Text(
+            'Adds a Circuits tab with classic pedal circuits (Fuzz Face, Tone Bender, Rangemaster, Big Muff, clipping diodes) and shows on each transistor or diode reading which positions it is valid for. Ranges are editable.',
+          ),
+          value: s.pedalBuilder,
+          onChanged: (v) => n.update(s.copyWith(pedalBuilder: v)),
+        ),
+        SwitchListTile(
           title: const Text('Connect automatically'),
           subtitle: const Text('When exactly one DCA75 is plugged in.'),
           value: s.autoConnect,

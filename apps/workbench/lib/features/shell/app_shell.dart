@@ -8,8 +8,16 @@ import 'package:go_router/go_router.dart';
 
 import '../../services/drafts.dart';
 import '../../services/providers.dart';
+import '../../services/settings.dart';
 
-const _destinations = [
+const _circuitsDestination = (
+  path: '/circuits',
+  icon: Icons.memory_outlined,
+  selected: Icons.memory,
+  label: 'Circuits',
+);
+
+const _baseDestinations = [
   (
     path: '/identify',
     icon: Icons.bolt_outlined,
@@ -46,19 +54,30 @@ class AppShell extends ConsumerWidget {
   const AppShell({super.key, required this.child});
   final Widget child;
 
-  int _index(BuildContext context) {
+  List<({String path, IconData icon, IconData selected, String label})>
+  _destinations(WidgetRef ref) => [
+    ..._baseDestinations,
+    if (ref.watch(settingsProvider.select((s) => s.pedalBuilder)))
+      _circuitsDestination,
+  ];
+
+  int _index(
+    BuildContext context,
+    List<({String path, IconData icon, IconData selected, String label})> dests,
+  ) {
     final loc = GoRouterState.of(context).uri.path;
     if (loc.startsWith('/bins')) return 3;
-    final i = _destinations.indexWhere((d) => loc.startsWith(d.path));
+    final i = dests.indexWhere((d) => loc.startsWith(d.path));
     return i < 0 ? 0 : i;
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wide = MediaQuery.sizeOf(context).width >= 840;
-    final index = _index(context);
+    final dests = _destinations(ref);
+    final index = _index(context, dests);
     final drafts = ref.watch(draftsProvider).length;
-    void go(int i) => context.go(_destinations[i].path);
+    void go(int i) => context.go(dests[i].path);
 
     Widget badge(Widget icon, int i) => i == 0 && drafts > 0
         ? Badge(label: Text('$drafts'), child: icon)
@@ -82,7 +101,7 @@ class AppShell extends ConsumerWidget {
               onDestinationSelected: go,
               labelType: NavigationRailLabelType.all,
               destinations: [
-                for (final (i, d) in _destinations.indexed)
+                for (final (i, d) in dests.indexed)
                   NavigationRailDestination(
                     icon: badge(Icon(d.icon), i),
                     selectedIcon: badge(Icon(d.selected), i),
@@ -102,7 +121,7 @@ class AppShell extends ConsumerWidget {
         selectedIndex: index,
         onDestinationSelected: go,
         destinations: [
-          for (final (i, d) in _destinations.indexed)
+          for (final (i, d) in dests.indexed)
             NavigationDestination(
               icon: badge(Icon(d.icon), i),
               selectedIcon: badge(Icon(d.selected), i),
