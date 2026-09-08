@@ -46,7 +46,7 @@ jobs:
           flatpak-builder --user --force-clean --repo=flatpak-repo flatpak-build packaging/flatpak/dev.laneholloway.Sightings.yml
           flatpak build-bundle flatpak-repo sightings-linux-x64-${{ needs.version.outputs.version }}.flatpak dev.laneholloway.Sightings
           ls -la *.flatpak
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: linux
           path: |
@@ -83,7 +83,7 @@ jobs:
           EOF
       - run: cd apps/workbench && flutter build apk --release
       - run: cp apps/workbench/build/app/outputs/flutter-apk/app-release.apk sightings-android-${{ needs.version.outputs.version }}.apk
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: android
           path: sightings-android-*.apk
@@ -106,7 +106,7 @@ jobs:
           codesign --force --deep --sign - "$APP"
           codesign --verify --deep --strict "$APP"
           ditto -c -k --keepParent "$APP" sightings-macos-${{ needs.version.outputs.version }}.zip
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: macos
           path: sightings-macos-*.zip
