@@ -145,7 +145,7 @@ jobs:
 
           Full history: [CHANGELOG.md](https://github.com/drlholloway/sightings/blob/main/CHANGELOG.md) · Help: [Wiki](https://github.com/drlholloway/sightings/wiki)
           EOF
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           name: Sightings ${{ needs.version.outputs.version }}
           body_path: notes.md
