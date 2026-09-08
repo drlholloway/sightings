@@ -3,7 +3,7 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
-## Unreleased
+## 0.3.0 — 2026-09-07
 
 ### Added
 - **Pedal Builder.** A Settings switch adds a Circuits tab with classic pedal circuits (germanium
