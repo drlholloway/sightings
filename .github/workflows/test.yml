@@ -18,7 +18,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -41,8 +41,8 @@ jobs:
     name: Android debug APK
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
@@ -55,7 +55,7 @@ jobs:
     name: macOS package tests and debug app
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -71,7 +71,7 @@ jobs:
     name: Linux debug app
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -95,7 +95,7 @@ jobs:
           flatpak-builder --user --force-clean --repo=flatpak-repo flatpak-build packaging/flatpak/dev.laneholloway.Sightings.yml
           flatpak build-bundle flatpak-repo sightings-linux-x64-dev.flatpak dev.laneholloway.Sightings
           ls -la *.flatpak
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: sightings-linux-x64
           path: |

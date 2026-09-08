@@ -15,7 +15,7 @@ jobs:
     outputs:
       version: ${{ steps.v.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - id: v
         run: echo "version=$(grep '^version:' apps/workbench/pubspec.yaml | awk '{print $2}' | cut -d+ -f1)" >> "$GITHUB_OUTPUT"
 
@@ -23,7 +23,7 @@ jobs:
     needs: version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -46,7 +46,7 @@ jobs:
           flatpak-builder --user --force-clean --repo=flatpak-repo flatpak-build packaging/flatpak/dev.laneholloway.Sightings.yml
           flatpak build-bundle flatpak-repo sightings-linux-x64-${{ needs.version.outputs.version }}.flatpak dev.laneholloway.Sightings
           ls -la *.flatpak
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: linux
           path: |
@@ -57,8 +57,8 @@ jobs:
     needs: version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
@@ -83,7 +83,7 @@ jobs:
           EOF
       - run: cd apps/workbench && flutter build apk --release
       - run: cp apps/workbench/build/app/outputs/flutter-apk/app-release.apk sightings-android-${{ needs.version.outputs.version }}.apk
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: android
           path: sightings-android-*.apk
@@ -92,7 +92,7 @@ jobs:
     needs: version
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -106,7 +106,7 @@ jobs:
           codesign --force --deep --sign - "$APP"
           codesign --verify --deep --strict "$APP"
           ditto -c -k --keepParent "$APP" sightings-macos-${{ needs.version.outputs.version }}.zip
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: macos
           path: sightings-macos-*.zip
@@ -115,7 +115,7 @@ jobs:
     needs: [version, linux, android, macos]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/download-artifact@v8
         with:
           path: dist
@@ -145,7 +145,7 @@ jobs:
 
           Full history: [CHANGELOG.md](https://github.com/drlholloway/sightings/blob/main/CHANGELOG.md) · Help: [Wiki](https://github.com/drlholloway/sightings/wiki)
           EOF
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           name: Sightings ${{ needs.version.outputs.version }}
           body_path: notes.md
