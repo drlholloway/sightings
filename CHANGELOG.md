@@ -3,7 +3,7 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
-## Unreleased
+## 0.3.3 — 2026-09-09
 
 ### Added
 - **Outlier warnings in bin statistics.** Percentiles stay raw, but readings outside Tukey's
