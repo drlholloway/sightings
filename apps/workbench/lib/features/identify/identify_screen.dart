@@ -567,6 +567,31 @@ class _BinContextState extends ConsumerState<_BinContext> {
                               ],
                             ),
                           ),
+                          if (e.value.isOutlier(v)) ...[
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.warning_amber_rounded,
+                                  size: 16,
+                                  color: theme.colorScheme.error,
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    'Looks like an outlier: outside '
+                                    '${fmtValue(e.key, e.value.lowerFence!)} – '
+                                    '${fmtValue(e.key, e.value.upperFence!)} '
+                                    '(1.5 × IQR beyond the quartiles). Check the clip '
+                                    'contact and the pinout before trusting it.',
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.error,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                           const SizedBox(height: 4),
                           HistogramChart(stats: e.value, marker: v, height: 64),
                         ],

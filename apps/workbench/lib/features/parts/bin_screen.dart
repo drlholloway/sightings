@@ -220,6 +220,7 @@ class _BinStatsPanelState extends ConsumerState<BinStatsPanel> {
               DataColumn(label: Text('max'), numeric: true),
               DataColumn(label: Text('mean'), numeric: true),
               DataColumn(label: Text('σ'), numeric: true),
+              DataColumn(label: Text('outliers'), numeric: true),
             ],
             rows: [
               for (final e in _stats.entries)
@@ -250,6 +251,28 @@ class _BinStatsPanelState extends ConsumerState<BinStatsPanel> {
                       e.value.stddev,
                     ])
                       DataCell(Text(fmtValue(e.key, v))),
+                    DataCell(
+                      e.value.outlierCount == 0
+                          ? Text(e.value.upperFence == null ? '–' : '0')
+                          : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.warning_amber_rounded,
+                                  size: 14,
+                                  color: theme.colorScheme.error,
+                                ),
+                                const SizedBox(width: 3),
+                                Text(
+                                  '${e.value.outlierCount}',
+                                  style: TextStyle(
+                                    color: theme.colorScheme.error,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
                   ],
                 ),
             ],
@@ -260,6 +283,17 @@ class _BinStatsPanelState extends ConsumerState<BinStatsPanel> {
           '${labelFor(key)} distribution',
           style: theme.textTheme.titleSmall,
         ),
+        if (s.outlierCount > 0) ...[
+          Text(
+            '${s.outlierCount} of ${s.n} readings fall outside '
+            '${fmtValue(key, s.lowerFence!)} – ${fmtValue(key, s.upperFence!)} '
+            '(1.5 × IQR beyond the quartiles) and are marked below. Percentiles '
+            'are computed from all readings, outliers included.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.error,
+            ),
+          ),
+        ],
         const SizedBox(height: 4),
         HistogramChart(
           stats: s,
@@ -284,6 +318,16 @@ class _BinStatsPanelState extends ConsumerState<BinStatsPanel> {
             for (final m in sorted)
               if (m.headline[key] != null)
                 ChoiceChip(
+                  avatar: s.isOutlier(m.headline[key]!)
+                      ? Icon(
+                          Icons.warning_amber_rounded,
+                          size: 16,
+                          color: theme.colorScheme.error,
+                        )
+                      : null,
+                  tooltip: s.isOutlier(m.headline[key]!)
+                      ? 'Outlier for ${labelFor(key)} in this bin'
+                      : null,
                   label: Text(
                     '#${m.id} ${fmtValue(key, m.headline[key]!)}${m.label?.isNotEmpty ?? false ? ' ${m.label}' : ''}',
                   ),

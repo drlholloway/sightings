@@ -289,10 +289,17 @@ unknown.
    discards. Tests started from the app's Test button save immediately. Drafts are held in
    memory with their raw frame; multiple drafts queue in a tray. See Phases 3 and 5.
 
+### Decided (2026‑09‑08)
+3. **Bin statistics stay raw, with an outlier warning.** Percentiles, median, mean and σ are
+   computed from every reading in the bin; nothing is rejected. Readings outside Tukey's
+   fences (1.5 × IQR beyond the quartiles, only evaluated once a bin has 5+ values with some
+   spread) are flagged: a warning on the "Where does this fall?" panel, an outliers column
+   in the bin table and a marker on the member chips.
+4. **Linux ships as AppImage and Flatpak** (plus the plain tarball). The AppImage bundles
+   libusb and expects GTK from the host; the Flatpak brings both. The udev rule is manual for
+   all three.
+5. **Drafts are in‑memory only and dropped on exit**, without a confirmation prompt. They
+   survive backgrounding on Android (the process stays alive) but not a quit or a kill.
+
 ### Still open
-1. Should the “part bins” statistics include outlier rejection, or just raw percentiles?
-   Plan assumes raw percentiles.
-2. Preferred Linux packaging: AppImage (simplest, works with udev rule) or Flatpak?
-   Plan assumes AppImage first.
-3. Should drafts survive an app restart (persist to a `drafts` table) or be discarded on
-   exit? Plan assumes **in‑memory only**, with a confirmation prompt if drafts exist on quit.
+None.

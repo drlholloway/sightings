@@ -87,6 +87,11 @@ jobs:
           cp packaging/linux/60-dca75.rules $STAGE/
           cp packaging/linux/README-linux.md $STAGE/README.md
           tar czf $STAGE.tar.gz $STAGE
+      - name: appimage
+        run: |
+          curl -sSL -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool
+          APPIMAGETOOL=$PWD/appimagetool packaging/appimage/build-appimage.sh apps/workbench/build/linux/x64/release/bundle dev .
       - name: flatpak bundle
         run: |
           sudo apt-get install -y flatpak flatpak-builder
@@ -101,4 +106,5 @@ jobs:
           path: |
             sightings-linux-x64-*.tar.gz
             sightings-linux-x64-*.flatpak
+            sightings-linux-x64-*.AppImage
           retention-days: 14

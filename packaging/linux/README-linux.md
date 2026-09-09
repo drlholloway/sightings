@@ -2,9 +2,10 @@
 
 Companion app for the Peak Atlas DCA75 semiconductor analyzer.
 
-This is the plain tarball build. A Flatpak bundle (`sightings-linux-x64-<version>.flatpak`) is
-also on the Releases page; it brings its own GTK and libusb and installs with
-`flatpak install --user <file>`. The udev rule below is needed either way.
+This is the plain tarball build. The Releases page also has an AppImage
+(`sightings-linux-x64-<version>.AppImage`: make it executable and run it; libusb is bundled)
+and a Flatpak bundle (`sightings-linux-x64-<version>.flatpak`: brings its own GTK and libusb,
+installs with `flatpak install --user <file>`). The udev rule below is needed in every case.
 
 ## Requirements
 

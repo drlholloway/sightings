@@ -1,0 +1,5 @@
+#!/bin/sh
+# AppImage entry point: run the Flutter bundle from inside the mounted image.
+HERE="$(dirname "$(readlink -f "$0")")"
+export LD_LIBRARY_PATH="$HERE/usr/lib:$HERE/usr/bin/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec "$HERE/usr/bin/workbench" "$@"

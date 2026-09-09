@@ -26,6 +26,30 @@ class BinStats {
   /// Sorted values.
   final List<double> values;
 
+  /// Fewest values for which the outlier fences mean anything.
+  static const outlierMinN = 5;
+
+  /// Interquartile range.
+  double get iqr => p75 - p25;
+
+  /// Tukey fences: values outside [lowerFence, upperFence] (1.5 × IQR beyond
+  /// the quartiles) are flagged as outliers. Null when there are too few
+  /// values or the bin has no spread.
+  double? get lowerFence =>
+      n < outlierMinN || iqr <= 0 ? null : p25 - 1.5 * iqr;
+  double? get upperFence =>
+      n < outlierMinN || iqr <= 0 ? null : p75 + 1.5 * iqr;
+
+  /// Whether [v] falls outside the fences. Never true for tiny bins.
+  bool isOutlier(double v) {
+    final lo = lowerFence, hi = upperFence;
+    if (lo == null || hi == null) return false;
+    return v < lo || v > hi;
+  }
+
+  /// How many of the bin's own values are outliers.
+  int get outlierCount => values.where(isOutlier).length;
+
   static const empty = BinStats(
       key: '',
       n: 0,

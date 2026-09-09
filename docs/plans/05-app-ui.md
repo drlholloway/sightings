@@ -37,7 +37,7 @@ phones. Curves is Phase 6 but its navigation slot exists from Phase 0.
   bag of parts), they queue in a tray shown as a count badge on the Identify tab and a
   horizontal strip of small draft chips above the card. “Save all with current tag” and
   “Discard all” act on the queue. Keyboard: Enter = Save, Backspace/Delete = Discard.
-- Drafts live in memory only; quitting with unsaved drafts asks for confirmation.
+- Drafts live in memory only and are dropped on exit without a prompt (decided 2026‑09‑08).
 
 ### History
 - Filter bar: type (multi), part, bin, date range, text (label/notes), “untagged only”, star.

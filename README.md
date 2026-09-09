@@ -21,6 +21,7 @@ what changed in each version is in [CHANGELOG.md](CHANGELOG.md):
 | Platform | File | Notes |
 |---|---|---|
 | macOS | `sightings-macos-<version>.zip` | Not notarized yet: on first launch use System Settings → Privacy & Security → **Open Anyway** (older macOS: right-click → Open). No driver needed. |
+| Linux x86-64 (AppImage) | `sightings-linux-x64-<version>.AppImage` | `chmod +x`, run. Bundles libusb; needs GTK 3 (and `libfuse2` on some distributions). Install the udev rule from `packaging/linux/60-dca75.rules`. |
 | Linux x86-64 (Flatpak) | `sightings-linux-x64-<version>.flatpak` | `flatpak install --user <file>` (needs the Flathub remote for the runtime), then install the udev rule from `packaging/linux/60-dca75.rules`. GTK and libusb come with the runtime. |
 | Linux x86-64 (tarball) | `sightings-linux-x64-<version>.tar.gz` | Extract, install the udev rule from the bundled README, run `./workbench`. Needs GTK 3 and libusb-1.0. |
 | Android | `sightings-android-<version>.apk` | Open the APK on the phone; needs a USB OTG cable. |
@@ -66,8 +67,8 @@ For a distributable build, `just build-macos` copies libusb into the bundle;
 sign and notarize before sharing.
 
 ### Linux
-Two builds: a **Flatpak** bundle (recommended; brings its own GTK and libusb) and a plain
-**tarball**. Either way, install the udev rule once so the app can open the device as a normal user:
+Three builds: an **AppImage** (single file, bundles libusb), a **Flatpak** bundle (brings its own
+GTK and libusb) and a plain **tarball**. Either way, install the udev rule once so the app can open the device as a normal user:
 
 ```sh
 sudo cp packaging/linux/60-dca75.rules /etc/udev/rules.d/

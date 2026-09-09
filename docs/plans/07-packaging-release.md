@@ -20,7 +20,9 @@ signing, notarization and store listings are part of this phase rather than opti
   bundled or declared; desktop file + icon.
 - Ship `packaging/linux/60-dca75.rules` and a `install-udev-rule.sh`; the app shows a banner
   with the exact commands when it sees the device but gets `EACCES`.
-- Optional Flatpak manifest (`--device=all`, `--share=ipc`, `--socket=wayland|x11`).
+- Flatpak manifest (`--device=all`, `--share=ipc`, `--socket=wayland|x11`); both AppImage and
+  Flatpak are shipped (decided 2026‑09‑08), built by `packaging/appimage/build-appimage.sh`
+  and `packaging/flatpak/`.
 - Test on Ubuntu LTS and Fedora current, X11 and Wayland.
 
 ## Android

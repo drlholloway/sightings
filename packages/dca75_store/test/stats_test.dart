@@ -35,4 +35,15 @@ void main() {
         nearest({1: 10.0, 2: 12.0, 3: 30.0, 4: 11.0}, 11.0, 2, excludeId: 4);
     expect(n.map((e) => e.$1), [1, 2]);
   });
+  test('outlier fences need enough values and some spread', () {
+    expect(
+        BinStats.compute('hfe', [100, 200, 300, 900]).isOutlier(900), isFalse);
+    expect(
+        BinStats.compute('hfe', [100, 100, 100, 100, 100]).upperFence, isNull);
+    final s = BinStats.compute('hfe', [100, 110, 120, 130, 140, 150, 400]);
+    expect(s.outlierCount, 1);
+    expect(s.isOutlier(400), isTrue);
+    expect(s.isOutlier(150), isFalse);
+    expect(BinStats.empty.isOutlier(1), isFalse);
+  });
 }

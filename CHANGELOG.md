@@ -3,6 +3,16 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Added
+- **Outlier warnings in bin statistics.** Percentiles stay raw, but readings outside Tukey's
+  fences (1.5 × IQR beyond the quartiles, once a bin has five or more values) are flagged:
+  a warning under "Where does this fall?" on a reading, an outliers column in the bin table
+  and a marker on the affected member chips.
+- **Linux AppImage** on the Releases page next to the Flatpak and tarball: one executable file
+  with libusb bundled; needs GTK 3 from the distribution.
+
 ## 0.3.2 — 2026-09-08
 
 Maintenance release driven by Dependabot: every dependency and GitHub Action it flagged

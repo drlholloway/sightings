@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Sightings
+GenericName=DCA75 Workbench
+Comment=Companion for the Peak Atlas DCA75 semiconductor analyzer
+Exec=workbench
+Icon=sightings
+Terminal=false
+Categories=Electronics;Science;Utility;
+Keywords=DCA75;transistor;diode;curve tracer;semiconductor;

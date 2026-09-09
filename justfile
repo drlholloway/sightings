@@ -42,6 +42,10 @@ build-macos:
 build-linux:
     cd apps/workbench && flutter build linux --release
 
+# Linux only: wrap the release bundle as an AppImage (needs appimagetool on PATH)
+build-appimage VERSION: build-linux
+    ./packaging/appimage/build-appimage.sh apps/workbench/build/linux/x64/release/bundle {{VERSION}} dist
+
 build-apk:
     cd apps/workbench && flutter build apk --release
 

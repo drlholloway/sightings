@@ -38,6 +38,11 @@ jobs:
           cp packaging/linux/60-dca75.rules $STAGE/
           cp packaging/linux/README-linux.md $STAGE/README.md
           tar czf $STAGE.tar.gz $STAGE
+      - name: appimage
+        run: |
+          curl -sSL -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool
+          APPIMAGETOOL=$PWD/appimagetool packaging/appimage/build-appimage.sh apps/workbench/build/linux/x64/release/bundle ${{ needs.version.outputs.version }} .
       - name: flatpak bundle
         run: |
           sudo apt-get install -y flatpak flatpak-builder
@@ -52,6 +57,7 @@ jobs:
           path: |
             sightings-linux-x64-*.tar.gz
             sightings-linux-x64-*.flatpak
+            sightings-linux-x64-*.AppImage
 
   android:
     needs: version
@@ -139,7 +145,7 @@ jobs:
 
           **macOS** (Apple silicon and Intel): unzip and open `Sightings.app`. The build is not notarized, so on first launch macOS will refuse; open System Settings → Privacy & Security and click **Open Anyway** (older macOS: right-click the app → Open). No driver needed.
 
-          **Linux** (x86-64), two options. Flatpak: `flatpak install --user sightings-linux-x64-<version>.flatpak` (add the Flathub remote first if you haven't: `flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`), then install the udev rule from the repo's `packaging/linux/60-dca75.rules`. Tarball: extract, install the udev rule from the README inside, run `./workbench`; needs GTK 3 and `libusb-1.0` from your distribution.
+          **Linux** (x86-64), three options. AppImage: `chmod +x sightings-linux-x64-<version>.AppImage` and run it (needs GTK 3 from your distribution and `libfuse2` on some systems; libusb is bundled), then install the udev rule from the repo's `packaging/linux/60-dca75.rules`. Flatpak: `flatpak install --user sightings-linux-x64-<version>.flatpak` (add the Flathub remote first if you haven't: `flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`), then install the udev rule from the repo's `packaging/linux/60-dca75.rules`. Tarball: extract, install the udev rule from the README inside, run `./workbench`; needs GTK 3 and `libusb-1.0` from your distribution.
 
           **Android**: download the APK on the phone and open it (allow installs from the browser once). Needs a USB OTG cable. If an earlier debug-signed build is installed, uninstall it first.
 

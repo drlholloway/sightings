@@ -201,6 +201,15 @@ void main() {
     expect(s.stddev, closeTo(60.55, 0.01));
     expect(s.histogram.fold(0, (n, b) => n + b.count), 10);
     expect(await repo.percentileOf('hfe', 200, binId: bin), closeTo(55, 1e-6));
+    // Tukey fences: q1 145, q3 235, iqr 90 -> [10, 370]; nothing inside is
+    // flagged, a stray 500 would be.
+    expect(s.iqr, closeTo(90, 1e-6));
+    expect(s.lowerFence, closeTo(10, 1e-6));
+    expect(s.upperFence, closeTo(370, 1e-6));
+    expect(s.outlierCount, 0);
+    expect(s.isOutlier(500), isTrue);
+    expect(s.isOutlier(5), isTrue);
+    expect(s.isOutlier(280), isFalse);
     expect(await repo.percentileOf('hfe', 50, binId: bin), 0);
     expect(await repo.percentileOf('hfe', 1000, binId: bin), 100);
     final near = await repo.nearestReadings('hfe', ids[5], 2, binId: bin);
