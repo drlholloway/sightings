@@ -1,0 +1,44 @@
+name: Wrong reading
+description: The app shows a different result than the unit's screen or Peak's own software.
+labels: [decoder]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Decoder bugs are fixed from captures. A `.dcalog` capture of the identify plus what the unit or Peak's app showed for the same part is usually all that is needed.
+  - type: input
+    id: version
+    attributes:
+      label: Sightings version
+      placeholder: "0.3.3"
+    validations:
+      required: true
+  - type: input
+    id: part
+    attributes:
+      label: Part
+      description: Part number and family, and germanium or silicon if you know.
+      placeholder: "MP40A, germanium PNP"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What the unit or Peak's app shows
+      description: Every value it displays, including the pinout.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What Sightings shows
+      description: The values on the card. A screenshot is fine.
+    validations:
+      required: true
+  - type: textarea
+    id: capture
+    attributes:
+      label: Capture
+      description: Open **Log**, export the `.dcalog` and drag it here. Without it the report can rarely be acted on.
+    validations:
+      required: true

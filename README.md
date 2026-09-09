@@ -114,6 +114,14 @@ Phases 0–6 of the plan are implemented and unit-tested against a fake
 transport. Hardware validation is tracked in
 [docs/hardware-notes.md](docs/hardware-notes.md).
 
+## Contributing
+
+Bug reports with a `.dcalog` capture, wrong-reading reports, fixes with tests and wiki
+corrections are all welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the setup, the pull
+request checklist and the hard safety rules; the project follows the
+[Contributor Covenant](CODE_OF_CONDUCT.md). Security problems go through
+[private reporting](SECURITY.md), not public issues.
+
 ## License
 
 [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0), see `LICENSE`.

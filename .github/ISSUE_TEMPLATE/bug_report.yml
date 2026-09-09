@@ -1,0 +1,64 @@
+name: Bug report
+description: Something in the app misbehaves, crashes or will not connect.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the [Troubleshooting](https://github.com/drlholloway/sightings/wiki/Troubleshooting) page first; the common connection problems are there.
+  - type: input
+    id: version
+    attributes:
+      label: Sightings version
+      description: Settings → About, or the release you downloaded.
+      placeholder: "0.3.3"
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - macOS
+        - Linux (AppImage)
+        - Linux (Flatpak)
+        - Linux (tarball)
+        - Android
+        - Built from source
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS version and device
+      placeholder: "macOS 15.6 on M2 MacBook Air / Pop!_OS 24.04 / Pixel 8, Android 15"
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you saw instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Plug in the unit
+        2. Clip in a 2N3904
+        3. Press Test
+  - type: dropdown
+    id: unit
+    attributes:
+      label: Was a DCA75 involved?
+      options:
+        - Yes, a real unit
+        - No, the demo device
+        - No unit, the bug is elsewhere
+    validations:
+      required: true
+  - type: textarea
+    id: capture
+    attributes:
+      label: Log or capture
+      description: Open **Log** (terminal icon in the header), export a `.dcalog` capture and drag it here. It holds only the USB exchange with the unit. Paste error text as well if there was any.
