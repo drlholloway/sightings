@@ -13,7 +13,8 @@ mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/lib" "$APPDIR/usr/share/applications" \
          "$APPDIR/usr/share/icons/hicolor/512x512/apps" "$APPDIR/usr/share/metainfo"
 cp -r "$BUNDLE/." "$APPDIR/usr/bin/"
 LIBUSB="$(ldconfig -p | awk '/libusb-1.0.so.0 /{print $NF; exit}')"
-[ -n "$LIBUSB" ] && cp -L "$LIBUSB" "$APPDIR/usr/lib/"
+if [ -n "$LIBUSB" ]; then cp -L "$LIBUSB" "$APPDIR/usr/lib/"; else echo "warning: libusb-1.0.so.0 not found on the build host; not bundled" >&2; fi
+echo "AppDir libs:"; ls -la "$APPDIR/usr/lib"
 install -m755 "$ROOT/packaging/appimage/AppRun" "$APPDIR/AppRun"
 install -m644 "$ROOT/packaging/appimage/sightings.desktop" "$APPDIR/usr/share/applications/sightings.desktop"
 install -m644 "$ROOT/packaging/appimage/sightings.desktop" "$APPDIR/sightings.desktop"
