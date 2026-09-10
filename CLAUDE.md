@@ -65,8 +65,8 @@ Run `dart format .`, `just analyze` and `just test` before finishing a change.
 ## Conventions
 
 - American spelling in code, UI text, docs and the wiki.
-- Strings, colors and leads: results are shown by lead color (red, green,
-  blue); config tables map them to E/B/C, MT1/MT2/GATE and so on.
+- Pinouts are shown by lead color (red, green, blue); the config tables in
+  `dca75_protocol` map lead colors to E/B/C, MT1/MT2/GATE and so on.
 - Decoder changes need a golden frame captured from a real part, plus what
   the unit's screen or Peak's app showed for it.
 - Identify results from the unit's own button land as **drafts**; tests
