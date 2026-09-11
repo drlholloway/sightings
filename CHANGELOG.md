@@ -3,6 +3,20 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Fixed
+- With both *Also measure at DCA55 conditions* and *Also measure reverse leakage* on, a
+  saved transistor identify started the two follow-ups at once and the leakage one failed
+  with "device is busy". They now run one after the other.
+- The Circuits page no longer claims diode profiles judge gain by hFE.
+
+### Changed
+- Demo device: an optional part-to-part spread (used by the screenshot tour; off in the
+  app) so repeated identifies of the same demo part vary like a bag of real ones.
+- Developer: `just tour` builds the app with a screenshot tour that walks every screen
+  against the demo device and writes PNGs for the wiki.
+
 ## 0.3.3 — 2026-09-09
 
 ### Added

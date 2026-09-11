@@ -66,7 +66,7 @@ class _CircuitTile extends ConsumerWidget {
         title: Text(circuit.name + (edited ? '  (edited)' : '')),
         subtitle: Text(
           '${circuit.family} · ${circuit.positions.length} position${circuit.positions.length == 1 ? '' : 's'}'
-          '${circuit.hfeKey == 'hfe_dca55' ? ' · gain judged by the DCA55-equivalent hFE when measured' : ''}',
+          '${circuit.hfeKey == 'hfe_dca55' && circuit.positions.any((p) => p.kind == PartKind.bjt) ? ' · gain judged by the DCA55-equivalent hFE when measured' : ''}',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
         children: [

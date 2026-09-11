@@ -120,7 +120,18 @@ class DemoUnit {
 
   /// Simulate a press of the button on the unit: the next STATE poll reports
   /// TESTED, as when the user runs a test from the unit itself.
-  void pressButton() => _tested = true;
+  void pressButton() {
+    _rollSpread();
+    _tested = true;
+  }
+
+  /// Part-to-part variation: each identify of a BJT scales its hFE (in the
+  /// result frame and in the sweep model) by a random factor within
+  /// ±[spread]. Zero, the default, replays the captured frame exactly.
+  double spread = 0;
+  double _factor = 1;
+  void _rollSpread() =>
+      _factor = spread == 0 ? 1 : 1 + spread * (_rnd.nextDouble() * 2 - 1);
 
   static const double rMt2 = 559.5;
   static const double vRef = 1.243;
@@ -189,9 +200,15 @@ class DemoUnit {
         }
       case 0x85: // TEST
         if (out[1] == 1) {
+          _rollSpread();
           _pollsSinceTest = 0;
         } else {
           b.setAll(0, part.frame);
+          if (part.kind == DemoModelKind.bjt && _factor != 1) {
+            // hFE is the sixth float of the BJT payload (byte 25).
+            final hfe = d.getFloat32(25, Endian.little);
+            d.setFloat32(25, hfe * _factor, Endian.little);
+          }
         }
       case 0x83: // ADCS
         _solve();
@@ -366,7 +383,8 @@ class DemoUnit {
       for (var i = 0; i < 60; i++) {
         vce = vAvail - ic / 1000 * rMt2;
         final active =
-            p.hfe * ib * (1 + math.max(0, vce) / p.earlyV) + p.icLeakMa;
+            p.hfe * _factor * ib * (1 + math.max(0, vce) / p.earlyV) +
+                p.icLeakMa;
         final sat = math.max(0, vce) / 25 * 1000; // ~25 Ω saturation
         final target = vce <= 0 ? 0.0 : math.min(active, sat);
         ic += (target - ic) * 0.5;

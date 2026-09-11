@@ -1,13 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'app/router.dart';
 import 'app/theme.dart';
+import 'app/tour.dart';
 import 'services/providers.dart';
 import 'services/settings.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  if (tourEnabled) {
+    // Screenshot tour: in-memory settings and a scratch database, so the
+    // user's real preferences and readings are untouched.
+    // ignore: invalid_use_of_visible_for_testing_member
+    SharedPreferences.setMockInitialValues({});
+    runApp(
+      ProviderScope(
+        overrides: [
+          databasePathProvider.overrideWith(
+            (ref) async => '$tourDir/tour.sqlite',
+          ),
+        ],
+        child: RepaintBoundary(
+          key: tourBoundaryKey,
+          child: const WorkbenchApp(),
+        ),
+      ),
+    );
+    return;
+  }
   runApp(const ProviderScope(child: WorkbenchApp()));
 }
 
@@ -28,6 +51,9 @@ class _WorkbenchAppState extends ConsumerState<WorkbenchApp>
     ref.read(intakeProvider);
     ref.read(sessionProvider);
     ref.read(autoConnectorProvider);
+    if (tourEnabled) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => Tour(ref).run());
+    }
   }
 
   @override

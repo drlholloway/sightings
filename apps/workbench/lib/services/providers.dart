@@ -218,19 +218,22 @@ class ReadingIntake {
     }
     final id = await save(e);
     _setSaved(LastResult(event: e, readingId: id));
-    _maybeDca55(id, e.result);
+    unawaited(_maybeDca55(id, e.result));
   }
 
   /// Kick off the follow-up measurements that apply to this component:
-  /// DCA55-equivalent figures for BJTs, reverse leakage for diodes.
-  void _maybeDca55(int readingId, IdentifyResult r) {
+  /// DCA55-equivalent figures for BJTs, then reverse leakage for diodes and
+  /// transistors. They run one after the other: both need the device lock,
+  /// and starting the second while the first holds it fails with
+  /// "device is busy".
+  Future<void> _maybeDca55(int readingId, IdentifyResult r) async {
     if (dca55AutoApplies(ref, r)) {
-      ref.read(dca55Provider.notifier).measure(readingId, r);
+      await ref.read(dca55Provider.notifier).measure(readingId, r);
     } else {
       ref.read(dca55Provider.notifier).clear();
     }
     if (leakAutoApplies(ref, r)) {
-      ref.read(leakageProvider.notifier).measure(readingId, r);
+      await ref.read(leakageProvider.notifier).measure(readingId, r);
     } else {
       ref.read(leakageProvider.notifier).clear();
     }

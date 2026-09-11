@@ -140,4 +140,24 @@ void main() {
         .measurePoints(cb.$1, cb.$2, prefix: 'icbo', voltPrefix: 'vcbo');
     expect(p['leak_icbo_5v']!.$1, closeTo(2.9e-6 * 1.75, 1.5e-6));
   });
+
+  test('spread varies hFE between identifies; zero replays exactly', () async {
+    final u = DemoUnit(testPolls: 1)..spread = 0.05;
+    final tt = DemoTransport(unit: u);
+    await tt.open((await tt.listDevices()).single);
+    final ctl = DeviceController(tt, sleep: noSleep, autoPoll: false);
+    await ctl.connect();
+    final seen = <double>{};
+    for (var i = 0; i < 6; i++) {
+      final r = await ctl.identify();
+      seen.add(r.hfe!);
+      expect(r.hfe, closeTo(405.5, 405.5 * 0.05 + 0.1));
+    }
+    expect(seen.length, greaterThan(1));
+    u.spread = 0;
+    final r = await ctl.identify();
+    expect(r.hfe, closeTo(405.5, 0.1));
+    await ctl.dispose();
+    await tt.dispose();
+  });
 }

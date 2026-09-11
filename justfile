@@ -58,3 +58,9 @@ identify *ARGS:
 
 bench *ARGS:
     cd tools/dca75_cli && dart run bin/dca75_cli.dart bench {{ARGS}}
+
+# Screenshot tour for the wiki (macOS): writes PNGs of every screen to OUT
+tour OUT="dist/tour":
+    cd apps/workbench && flutter build macos --debug --dart-define=SIGHTINGS_TOUR="$(pwd)/../../{{OUT}}"
+    mkdir -p {{OUT}}
+    SIGHTINGS_WINDOW=1280x840 apps/workbench/build/macos/Build/Products/Debug/Sightings.app/Contents/MacOS/Sightings
