@@ -21,7 +21,10 @@ jobs:
 
   linux:
     needs: version
-    runs-on: ubuntu-latest
+    # Oldest supported base: the bundle links against the host GTK/GLib, so
+    # building on 22.04 (GLib 2.72) runs on Ubuntu 22.04, Debian 12, Mint 21
+    # and newer. Bumping this runner raises the minimum for every user.
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
@@ -43,6 +46,24 @@ jobs:
           curl -sSL -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool
           APPIMAGETOOL=$PWD/appimagetool packaging/appimage/build-appimage.sh apps/workbench/build/linux/x64/release/bundle ${{ needs.version.outputs.version }} .
+      - uses: actions/upload-artifact@v7
+        with:
+          name: linux
+          path: |
+            sightings-linux-x64-*.tar.gz
+            sightings-linux-x64-*.AppImage
+
+  flatpak:
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libusb-1.0-0-dev
+      - run: dart pub get
+      - run: cd apps/workbench && flutter build linux --release
       - name: flatpak bundle
         run: |
           sudo apt-get install -y flatpak flatpak-builder
@@ -53,11 +74,8 @@ jobs:
           ls -la *.flatpak
       - uses: actions/upload-artifact@v7
         with:
-          name: linux
-          path: |
-            sightings-linux-x64-*.tar.gz
-            sightings-linux-x64-*.flatpak
-            sightings-linux-x64-*.AppImage
+          name: flatpak
+          path: sightings-linux-x64-*.flatpak
 
   android:
     needs: version
@@ -118,7 +136,7 @@ jobs:
           path: sightings-macos-*.zip
 
   publish:
-    needs: [version, linux, android, macos]
+    needs: [version, linux, flatpak, android, macos]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

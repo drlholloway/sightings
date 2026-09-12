@@ -1,6 +1,6 @@
 # Flatpak manifest. Packages the prebuilt Linux bundle (apps/workbench/build/
-# linux/x64/release/bundle) into the Freedesktop runtime, which provides GTK 3
-# and libusb-1.0. Build (from the repo root, after `flutter build linux --release`):
+# linux/x64/release/bundle) into the Freedesktop runtime, which provides GTK 3;
+# libusb-1.0 is built below because the runtime does not include it. Build (from the repo root, after `flutter build linux --release`):
 #   flatpak-builder --user --install-deps-from=flathub --force-clean --repo=repo \
 #       build-dir packaging/flatpak/dev.laneholloway.Sightings.yml
 #   flatpak build-bundle repo sightings.flatpak dev.laneholloway.Sightings
@@ -17,6 +17,22 @@ finish-args:
   # Raw USB access to the DCA75; Flatpak has no finer-grained USB permission.
   - --device=all
 modules:
+  # The Freedesktop runtime does not ship libusb, so build it. Without the
+  # udev backend it enumerates /dev/bus/usb directly and needs nothing from
+  # /run/udev, which the sandbox does not expose.
+  - name: libusb
+    buildsystem: autotools
+    config-opts:
+      - --disable-static
+      - --disable-udev
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /lib/*.la
+    sources:
+      - type: archive
+        url: https://github.com/libusb/libusb/releases/download/v1.0.27/libusb-1.0.27.tar.bz2
+        sha256: ffaa41d741a8a3bee244ac8e54a72ea05bf2879663c098c82fc5757853441575
   - name: sightings
     buildsystem: simple
     build-commands:

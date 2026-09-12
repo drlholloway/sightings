@@ -249,6 +249,8 @@ class Libusb {
       candidates.addAll([
         '$exeDir/lib/libusb-1.0.so.0',
         '$exeDir/libusb-1.0.so.0',
+        // Flatpak: libraries built by the manifest land in /app/lib.
+        '/app/lib/libusb-1.0.so.0',
         'libusb-1.0.so.0',
         'libusb-1.0.so',
         '/usr/lib/x86_64-linux-gnu/libusb-1.0.so.0',
@@ -267,8 +269,10 @@ class Libusb {
         last = e;
       }
     }
+    final hint = Platform.environment.containsKey('FLATPAK_ID')
+        ? 'The Flatpak is meant to bundle it in /app/lib; please report this.'
+        : 'Install it (brew install libusb / apt install libusb-1.0-0) or set DCA75_LIBUSB_PATH.';
     throw StateError(
-        'libusb-1.0 not found (tried ${candidates.length} locations; last error: $last). '
-        'Install it (brew install libusb / apt install libusb-1.0-0) or set DCA75_LIBUSB_PATH.');
+        'libusb-1.0 not found (tried ${candidates.length} locations; last error: $last). $hint');
   }
 }

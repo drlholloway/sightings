@@ -9,7 +9,7 @@ installs with `flatpak install --user <file>`). The udev rule below is needed in
 
 ## Requirements
 
-- A 64-bit Intel/AMD Linux with GTK 3 and `libusb-1.0` installed
+- A 64-bit Intel/AMD Linux from 2022 or later (GLib 2.72+: Ubuntu 22.04, Debian 12, Mint 21 or newer) with GTK 3 and `libusb-1.0` installed
   (Debian/Ubuntu: `sudo apt install libgtk-3-0 libusb-1.0-0`; Fedora: `sudo dnf install gtk3 libusb1`).
 
 ## Install

@@ -6,6 +6,12 @@ GitHub Release notes.
 ## Unreleased
 
 ### Fixed
+- **Linux packaging** (issue #13, thanks to KnatterKnilch): the AppImage and tarball are
+  now built on Ubuntu 22.04, so they run on distributions with GLib 2.72 or newer (Ubuntu
+  22.04, Debian 12, Linux Mint 21, Pop!_OS 22.04) instead of requiring GLib 2.80. The
+  Flatpak now really bundles libusb (built without the udev backend, so the sandbox needs
+  nothing from /run/udev), the loader looks in /app/lib, and the "install libusb" hint no
+  longer appears inside a Flatpak where it cannot help.
 - With both *Also measure at DCA55 conditions* and *Also measure reverse leakage* on, a
   saved transistor identify started the two follow-ups at once and the leakage one failed
   with "device is busy". They now run one after the other.
