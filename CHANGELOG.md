@@ -3,7 +3,7 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
-## Unreleased
+## 0.3.4 — 2026-09-12
 
 ### Fixed
 - **Linux packaging** (issue #13, thanks to KnatterKnilch): the AppImage and tarball are
