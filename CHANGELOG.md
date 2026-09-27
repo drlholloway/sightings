@@ -3,7 +3,7 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
-## Unreleased
+## 0.3.5 — 2026-09-27
 
 ### Changed
 - **Linux udev rule instructions.** The "access denied" banner and Settings → Linux USB access
@@ -12,6 +12,7 @@ GitHub Release notes.
   so AppImage and Flatpak users no longer have to fetch it from the repository, and the Linux
   README has troubleshooting steps (including SSH and remote sessions, where `uaccess` does
   not apply).
+- Dependencies: file_picker 13, newer Android Gradle plugin and Kotlin.
 
 ## 0.3.4 — 2026-09-12
 
