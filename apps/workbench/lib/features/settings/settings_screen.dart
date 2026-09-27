@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../services/linux_usb.dart';
 import '../../services/providers.dart';
 import '../../services/settings.dart';
 
@@ -173,11 +174,17 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
         if (Platform.isLinux)
-          const ListTile(
-            leading: Icon(Icons.info_outline),
-            title: Text('Linux USB access'),
-            subtitle: Text(
-              'Install packaging/linux/60-dca75.rules into /etc/udev/rules.d/ and replug the unit.',
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('Linux USB access'),
+            subtitle: const Text(
+              'Run this once in a terminal to install the udev rule, then replug the unit:\n'
+              '$udevInstallCommand',
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.copy, size: 18),
+              tooltip: 'Copy command',
+              onPressed: () => copyToClipboard(context, udevInstallCommand),
             ),
           ),
         if (Platform.isAndroid)

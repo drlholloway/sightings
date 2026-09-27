@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../services/drafts.dart';
+import '../../services/linux_usb.dart';
 import '../../services/providers.dart';
 import '../../services/settings.dart';
 
@@ -256,30 +257,39 @@ class _Banners extends ConsumerWidget {
     final theme = Theme.of(context);
     final items = <Widget>[];
 
-    Widget bar(String text, {bool error = false, VoidCallback? onClose}) =>
-        Material(
-          color: error
-              ? theme.colorScheme.errorContainer
-              : theme.colorScheme.tertiaryContainer,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            child: Row(
-              children: [
-                Icon(
-                  error ? Icons.error_outline : Icons.info_outline,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Expanded(child: Text(text, style: theme.textTheme.bodySmall)),
-                if (onClose != null)
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 16),
-                    onPressed: onClose,
-                  ),
-              ],
+    Widget bar(
+      String text, {
+      bool error = false,
+      VoidCallback? onClose,
+      String? copy,
+    }) => Material(
+      color: error
+          ? theme.colorScheme.errorContainer
+          : theme.colorScheme.tertiaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        child: Row(
+          children: [
+            Icon(error ? Icons.error_outline : Icons.info_outline, size: 18),
+            const SizedBox(width: 8),
+            Expanded(
+              child: SelectableText(text, style: theme.textTheme.bodySmall),
             ),
-          ),
-        );
+            if (copy != null)
+              IconButton(
+                icon: const Icon(Icons.copy, size: 16),
+                tooltip: 'Copy command',
+                onPressed: () => copyToClipboard(context, copy),
+              ),
+            if (onClose != null)
+              IconButton(
+                icon: const Icon(Icons.close, size: 16),
+                onPressed: onClose,
+              ),
+          ],
+        ),
+      ),
+    );
 
     final demo = ref.watch(demoUnitProvider);
     if (demo != null) {
@@ -321,15 +331,17 @@ class _Banners extends ConsumerWidget {
     }
     if (status.lastError != null && !status.isConnected) {
       var text = status.lastError!;
+      String? copy;
       if (Platform.isLinux && text.toLowerCase().contains('access')) {
         text =
-            '$text — install the udev rule: sudo cp packaging/linux/60-dca75.rules /etc/udev/rules.d/ && sudo udevadm control --reload && sudo udevadm trigger';
+            '$text — install the udev rule once, then replug the unit:\n$udevInstallCommand';
+        copy = udevInstallCommand;
       }
       if (Platform.isAndroid && text.toLowerCase().contains('permission')) {
         text =
             '$text — unplug and replug the DCA75 and accept the USB permission dialog.';
       }
-      items.add(bar(text, error: true));
+      items.add(bar(text, error: true, copy: copy));
     } else if (status.lastError != null) {
       items.add(bar(status.lastError!, error: true));
     }

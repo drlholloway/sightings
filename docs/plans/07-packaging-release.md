@@ -18,8 +18,10 @@ signing, notarization and store listings are part of this phase rather than opti
 ## Linux
 - `flutter build linux --release`; package as **AppImage** (`appimagetool`) with `libusb-1.0`
   bundled or declared; desktop file + icon.
-- Ship `packaging/linux/60-dca75.rules` and a `install-udev-rule.sh`; the app shows a banner
-  with the exact commands when it sees the device but gets `EACCES`.
+- Ship `packaging/linux/60-dca75.rules` (in the tarball and as a release asset); the app shows
+  a banner with a copyable one-line install command when it sees the device but gets
+  `EACCES`. The one-liner (`echo … | sudo tee`) replaced the planned `install-udev-rule.sh`:
+  AppImage and Flatpak users have no file to run.
 - Flatpak manifest (`--device=all`, `--share=ipc`, `--socket=wayland|x11`); both AppImage and
   Flatpak are shipped (decided 2026‑09‑08), built by `packaging/appimage/build-appimage.sh`
   and `packaging/flatpak/`.

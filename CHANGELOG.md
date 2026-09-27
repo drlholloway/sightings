@@ -3,6 +3,16 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Changed
+- **Linux udev rule instructions.** The "access denied" banner and Settings → Linux USB access
+  now show a single copyable command that writes the rule and reloads udev, instead of a
+  path that only existed in a source checkout. `60-dca75.rules` is attached to every release,
+  so AppImage and Flatpak users no longer have to fetch it from the repository, and the Linux
+  README has troubleshooting steps (including SSH and remote sessions, where `uaccess` does
+  not apply).
+
 ## 0.3.4 — 2026-09-12
 
 ### Fixed
