@@ -3,6 +3,17 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Changed
+- **AppImage** is now named `Sightings-<version>-x86_64.AppImage` (was
+  `sightings-linux-x64-<version>.AppImage`) and carries update information, so
+  AppImageUpdate and compatible tools can update it in place; the
+  matching `.zsync` file is published with each release. Its desktop file, icon and AppStream
+  metadata now use the app id `dev.laneholloway.Sightings`, like the Flatpak.
+- AppStream metadata now states the license as PolyForm Shield 1.0.0 instead of
+  "proprietary".
+
 ## 0.3.5 — 2026-09-27
 
 ### Changed

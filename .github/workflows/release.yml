@@ -51,7 +51,8 @@ jobs:
           name: linux
           path: |
             sightings-linux-x64-*.tar.gz
-            sightings-linux-x64-*.AppImage
+            Sightings-*-x86_64.AppImage
+            Sightings-*-x86_64.AppImage.zsync
 
   flatpak:
     needs: version
@@ -164,7 +165,7 @@ jobs:
 
           **macOS** (Apple silicon and Intel): unzip and open `Sightings.app`. The build is not notarized, so on first launch macOS will refuse; open System Settings → Privacy & Security and click **Open Anyway** (older macOS: right-click the app → Open). No driver needed.
 
-          **Linux** (x86-64), three options. AppImage: `chmod +x sightings-linux-x64-<version>.AppImage` and run it (needs GTK 3 from your distribution and `libfuse2` on some systems; libusb is bundled), then install the udev rule (below). Flatpak: `flatpak install --user sightings-linux-x64-<version>.flatpak` (add the Flathub remote first if you haven't: `flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`), then install the udev rule (below). Tarball: extract, install the udev rule, run `./workbench`; needs GTK 3 and `libusb-1.0` from your distribution.
+          **Linux** (x86-64), three options. AppImage: `chmod +x Sightings-<version>-x86_64.AppImage` and run it (needs GTK 3 from your distribution and `libfuse2` on some systems; libusb is bundled), then install the udev rule (below). Flatpak: `flatpak install --user sightings-linux-x64-<version>.flatpak` (add the Flathub remote first if you haven't: `flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`), then install the udev rule (below). Tarball: extract, install the udev rule, run `./workbench`; needs GTK 3 and `libusb-1.0` from your distribution.
 
           **Linux udev rule** (once, every build): download `60-dca75.rules` from this release and run `sudo cp 60-dca75.rules /etc/udev/rules.d/ && sudo udevadm control --reload && sudo udevadm trigger`, then replug the unit. The app shows the same step as a single copyable command under Settings → Linux USB access. Still "access denied"? See [the Linux troubleshooting steps](https://github.com/drlholloway/sightings/blob/main/packaging/linux/README-linux.md#if-it-shows-access-denied).
 

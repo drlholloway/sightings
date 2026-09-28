@@ -118,10 +118,21 @@ jobs:
           curl -sSL -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool
           APPIMAGETOOL=$PWD/appimagetool packaging/appimage/build-appimage.sh apps/workbench/build/linux/x64/release/bundle dev .
+      - name: check appimage metadata
+        run: |
+          sudo apt-get install -y appstream
+          appstreamcli validate --no-net --explain packaging/flatpak/dev.laneholloway.Sightings.metainfo.xml
+          ./Sightings-dev-x86_64.AppImage --appimage-updateinformation | grep -F 'gh-releases-zsync|drlholloway|sightings|latest|'
+          ./Sightings-dev-x86_64.AppImage --appimage-extract >/dev/null
+          ls squashfs-root squashfs-root/usr/share/metainfo
+          test -f squashfs-root/dev.laneholloway.Sightings.desktop
+          test -f squashfs-root/usr/share/metainfo/dev.laneholloway.Sightings.appdata.xml
+          rm -rf squashfs-root
       - uses: actions/upload-artifact@v7
         with:
           name: sightings-linux-x64
           path: |
             sightings-linux-x64-*.tar.gz
-            sightings-linux-x64-*.AppImage
+            Sightings-*-x86_64.AppImage
+            Sightings-*-x86_64.AppImage.zsync
           retention-days: 14

@@ -16,13 +16,22 @@ LIBUSB="$(ldconfig -p | awk '/libusb-1.0.so.0 /{print $NF; exit}')"
 if [ -n "$LIBUSB" ]; then cp -L "$LIBUSB" "$APPDIR/usr/lib/"; else echo "warning: libusb-1.0.so.0 not found on the build host; not bundled" >&2; fi
 echo "AppDir libs:"; ls -la "$APPDIR/usr/lib"
 install -m755 "$ROOT/packaging/appimage/AppRun" "$APPDIR/AppRun"
-install -m644 "$ROOT/packaging/appimage/sightings.desktop" "$APPDIR/usr/share/applications/sightings.desktop"
-install -m644 "$ROOT/packaging/appimage/sightings.desktop" "$APPDIR/sightings.desktop"
-install -m644 "$ROOT/apps/workbench/assets/icon/icon_512.png" "$APPDIR/usr/share/icons/hicolor/512x512/apps/sightings.png"
-install -m644 "$ROOT/apps/workbench/assets/icon/icon_512.png" "$APPDIR/sightings.png"
-install -m644 "$ROOT/packaging/flatpak/dev.laneholloway.Sightings.metainfo.xml" "$APPDIR/usr/share/metainfo/sightings.appdata.xml"
+# Desktop file, icon and metainfo share the Flatpak's app id so AppStream
+# tools can match them (appimagetool looks for <desktop id>.appdata.xml).
+ID=dev.laneholloway.Sightings
+install -m644 "$ROOT/packaging/appimage/$ID.desktop" "$APPDIR/usr/share/applications/$ID.desktop"
+install -m644 "$ROOT/packaging/appimage/$ID.desktop" "$APPDIR/$ID.desktop"
+install -m644 "$ROOT/apps/workbench/assets/icon/icon_512.png" "$APPDIR/usr/share/icons/hicolor/512x512/apps/$ID.png"
+install -m644 "$ROOT/apps/workbench/assets/icon/icon_512.png" "$APPDIR/$ID.png"
+install -m644 "$ROOT/packaging/flatpak/$ID.metainfo.xml" "$APPDIR/usr/share/metainfo/$ID.appdata.xml"
 install -m644 "$ROOT/packaging/linux/60-dca75.rules" "$APPDIR/60-dca75.rules"
 mkdir -p "$OUT"
-ARCH=x86_64 VERSION="$VERSION" "$TOOL" --appimage-extract-and-run -n "$APPDIR" "$OUT/sightings-linux-x64-$VERSION.AppImage" 2>/dev/null \
-  || ARCH=x86_64 VERSION="$VERSION" "$TOOL" -n "$APPDIR" "$OUT/sightings-linux-x64-$VERSION.AppImage"
-ls -la "$OUT"/sightings-linux-x64-"$VERSION".AppImage
+# Embedded update information lets AppImageUpdate fetch the newest release;
+# appimagetool writes the matching .zsync next to the image, and both are
+# published with the release.
+NAME="Sightings-$VERSION-x86_64.AppImage"
+UPDATE="gh-releases-zsync|drlholloway|sightings|latest|Sightings-*x86_64.AppImage.zsync"
+cd "$OUT"
+ARCH=x86_64 VERSION="$VERSION" "$TOOL" --appimage-extract-and-run -n -u "$UPDATE" "$APPDIR" "$NAME" 2>/dev/null \
+  || ARCH=x86_64 VERSION="$VERSION" "$TOOL" -n -u "$UPDATE" "$APPDIR" "$NAME"
+ls -la "$NAME" "$NAME.zsync"

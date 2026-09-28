@@ -5,7 +5,7 @@
   <summary>DCA75 Workbench: identify, curve-trace and catalogue semiconductors</summary>
   <developer_name>Cryptid Effects</developer_name>
   <metadata_license>CC0-1.0</metadata_license>
-  <project_license>LicenseRef-proprietary</project_license>
+  <project_license>LicenseRef-PolyForm-Shield-1.0.0</project_license>
   <description>
     <p>Companion app for the Peak Atlas DCA75 (DCA Pro) semiconductor analyzer. Connects over USB, runs identify tests and curve sweeps, and keeps every reading in a local database so parts can be compared, binned and matched.</p>
     <p>Includes DCA55-equivalent gain figures, nanoamp reverse-leakage measurement, and Pedal Builder, which tells you which classic pedal circuit positions a transistor or diode is valid for. A demo device lets you try everything without a unit.</p>
