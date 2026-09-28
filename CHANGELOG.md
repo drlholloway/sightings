@@ -3,7 +3,7 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
-## Unreleased
+## 0.3.6 — 2026-09-28
 
 ### Changed
 - **AppImage** is now named `Sightings-<version>-x86_64.AppImage` (was
