@@ -3,7 +3,7 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
-## Unreleased
+## 0.3.7 — 2026-09-30
 
 ### Fixed
 - The app summary in the AppStream metadata no longer contains a colon, which kept Sightings'
