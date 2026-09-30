@@ -3,6 +3,15 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Fixed
+- The app summary in the AppStream metadata no longer contains a colon, which kept Sightings'
+  page in the [AppImage catalog](https://appimage.github.io/) from being generated.
+
+### Changed
+- Developer: Android builds use Gradle 9.8.0.
+
 ## 0.3.6 — 2026-09-28
 
 ### Changed

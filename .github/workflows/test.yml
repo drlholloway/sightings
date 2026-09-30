@@ -122,6 +122,11 @@ jobs:
         run: |
           sudo apt-get install -y appstream
           appstreamcli validate --no-net --explain packaging/flatpak/dev.laneholloway.Sightings.metainfo.xml
+          # The AppImage catalog copies the summary and desktop Comment into unquoted
+          # YAML, so a ": " in either drops our page from appimage.github.io.
+          if grep -E '<summary>.*: |^Comment=.*: ' packaging/flatpak/dev.laneholloway.Sightings.metainfo.xml packaging/appimage/dev.laneholloway.Sightings.desktop; then
+            echo "::error::remove ': ' from the summary / Comment above"; exit 1
+          fi
           ./Sightings-dev-x86_64.AppImage --appimage-updateinformation | grep -F 'gh-releases-zsync|drlholloway|sightings|latest|'
           ./Sightings-dev-x86_64.AppImage --appimage-extract >/dev/null
           ls squashfs-root squashfs-root/usr/share/metainfo
