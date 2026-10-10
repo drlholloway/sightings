@@ -3,6 +3,11 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Changed
+- Developer: removed the unused `cupertino_icons` dependency.
+
 ## 0.3.7 — 2026-09-30
 
 ### Fixed

@@ -31,7 +31,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
   dca75_device: ^0.1.0
   dca75_protocol: ^0.1.0
   dca75_circuits: ^0.1.0
