@@ -7,6 +7,7 @@ GitHub Release notes.
 
 ### Changed
 - Developer: removed the unused `cupertino_icons` dependency.
+- Developer: Android builds use Gradle 9.8.1 and Kotlin 2.4.21.
 
 ## 0.3.7 — 2026-09-30
 
