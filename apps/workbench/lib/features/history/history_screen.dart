@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:go_router/go_router.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../app/format.dart';
+import '../../services/export.dart';
 import '../../services/providers.dart';
 import '../../widgets/pinout.dart';
 
@@ -170,17 +170,12 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
   Future<void> _export(List<ReadingRow> rows) async {
     final csv = readingsCsv(rows);
-    await SharePlus.instance.share(
-      ShareParams(
-        files: [
-          XFile.fromData(
-            utf8.encode(csv),
-            mimeType: 'text/csv',
-            name: 'dca75-readings.csv',
-          ),
-        ],
-        subject: 'DCA75 readings',
-      ),
+    await exportFile(
+      context,
+      bytes: utf8.encode(csv),
+      mimeType: 'text/csv',
+      name: 'dca75-readings.csv',
+      subject: 'DCA75 readings',
     );
   }
 

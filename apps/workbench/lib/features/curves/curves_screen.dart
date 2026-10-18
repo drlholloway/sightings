@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:dca75_device/dca75_device.dart';
@@ -7,9 +7,9 @@ import 'package:dca75_store/dca75_store.dart';
 import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../app/format.dart';
+import '../../services/export.dart';
 import '../../services/providers.dart';
 import '../../widgets/curve_plot.dart';
 import 'sweep_controller.dart';
@@ -452,17 +452,11 @@ class _CurvesScreenState extends ConsumerState<CurvesScreen> {
         sb.writeln('"${t.label}",${p.x},${p.y}');
       }
     }
-    await SharePlus.instance.share(
-      ShareParams(
-        files: [
-          XFile.fromData(
-            Uint8List.fromList(sb.toString().codeUnits),
-            mimeType: 'text/csv',
-            name:
-                'dca-${_kind.name}-${DateTime.now().millisecondsSinceEpoch}.csv',
-          ),
-        ],
-      ),
+    await exportFile(
+      context,
+      bytes: utf8.encode(sb.toString()),
+      mimeType: 'text/csv',
+      name: 'dca-${_kind.name}-${DateTime.now().millisecondsSinceEpoch}.csv',
     );
   }
 
@@ -472,18 +466,12 @@ class _CurvesScreenState extends ConsumerState<CurvesScreen> {
     if (boundary == null) return;
     final image = await boundary.toImage(pixelRatio: 2);
     final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    if (bytes == null) return;
-    await SharePlus.instance.share(
-      ShareParams(
-        files: [
-          XFile.fromData(
-            bytes.buffer.asUint8List(),
-            mimeType: 'image/png',
-            name:
-                'dca-${_kind.name}-${DateTime.now().millisecondsSinceEpoch}.png',
-          ),
-        ],
-      ),
+    if (bytes == null || !mounted) return;
+    await exportFile(
+      context,
+      bytes: bytes.buffer.asUint8List(),
+      mimeType: 'image/png',
+      name: 'dca-${_kind.name}-${DateTime.now().millisecondsSinceEpoch}.png',
     );
   }
 }

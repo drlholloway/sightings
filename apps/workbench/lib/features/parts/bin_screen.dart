@@ -5,9 +5,9 @@ import 'package:dca75_store/dca75_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../app/format.dart';
+import '../../services/export.dart';
 import '../../services/providers.dart';
 import '../../widgets/histogram.dart';
 import '../history/history_screen.dart' show historyFilterProvider;
@@ -81,16 +81,12 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   ReadingFilter(binId: b.id, limit: 100000),
                 );
                 final csv = readingsCsv(rows);
-                await SharePlus.instance.share(
-                  ShareParams(
-                    files: [
-                      XFile.fromData(
-                        utf8.encode(csv),
-                        mimeType: 'text/csv',
-                        name: 'bin-${b.name}.csv',
-                      ),
-                    ],
-                  ),
+                if (!context.mounted) return;
+                await exportFile(
+                  context,
+                  bytes: utf8.encode(csv),
+                  mimeType: 'text/csv',
+                  name: 'bin-${b.name}.csv',
                 );
               },
             ),

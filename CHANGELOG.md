@@ -5,6 +5,14 @@ GitHub Release notes.
 
 ## Unreleased
 
+### Fixed
+- On Linux, exporting from the Curves tab (CSV and PNG), History, a bin and the session log did
+  nothing. Exports now open a save dialog on the desktop, and the share sheet on Android.
+  ([#23](https://github.com/drlholloway/sightings/issues/23))
+- Hovering over or touching a curve plot now shows a readout. It snaps to the nearest point on
+  a trace and shows that trace's name and values in a pop-up beside the point and below the plot.
+  ([#23](https://github.com/drlholloway/sightings/issues/23))
+
 ### Changed
 - Developer: removed the unused `cupertino_icons` dependency.
 - Developer: Android builds use Gradle 9.8.1 and Kotlin 2.4.21.

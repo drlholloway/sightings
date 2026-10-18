@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dca75_protocol/dca75_protocol.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:workbench/widgets/curve_plot.dart';
@@ -86,6 +87,62 @@ void main() {
       ),
     );
     expect(find.byType(CustomPaint), findsWidgets);
+  });
+
+  testWidgets('CurvePlot hover snaps the readout to the nearest sample', (
+    tester,
+  ) async {
+    const traces = [
+      PlotTrace(
+        label: 'a',
+        color: Colors.red,
+        points: [(x: 0.0, y: 0.0), (x: 1.0, y: 2.0), (x: 2.0, y: 3.5)],
+      ),
+    ];
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: CurvePlot(
+            traces: traces,
+            xLabel: 'Vce (V)',
+            yLabel: 'Ic (mA)',
+            height: 300,
+          ),
+        ),
+      ),
+    );
+    final box = tester.getRect(find.byType(CurvePlot));
+    final axes = PlotAxes(traces, Size(box.width - 2, 300 - 2));
+    // Slightly off the sample, so the readout has to snap to it.
+    final near =
+        box.topLeft +
+        const Offset(1, 1) +
+        Offset(axes.px(1) + 6, axes.py(2) - 4);
+
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: Offset.zero);
+    addTearDown(mouse.removePointer);
+    await mouse.moveTo(near);
+    await tester.pump();
+    expect(find.text('a   Vce (V): 1.000   Ic (mA): 2.000'), findsOneWidget);
+
+    await mouse.moveTo(box.bottomRight + const Offset(0, 50));
+    await tester.pump();
+    expect(find.textContaining('Vce (V):'), findsNothing);
+  });
+
+  test('PlotAxes.nearest ignores pointers outside the plot', () {
+    const traces = [
+      PlotTrace(
+        label: 'a',
+        color: Colors.red,
+        points: [(x: 0.0, y: 0.0), (x: 1.0, y: 1.0)],
+      ),
+    ];
+    final axes = PlotAxes(traces, const Size(600, 300));
+    expect(axes.nearest(traces, const Offset(5, 5)), isNull);
+    expect(axes.nearest(const [], const Offset(200, 150)), isNull);
+    expect(axes.nearest(traces, const Offset(200, 150))?.trace.label, 'a');
   });
 
   test('niceTicks', () {

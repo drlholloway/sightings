@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:dca75_transport/dca75_transport.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:share_plus/share_plus.dart';
 
+import '../../services/export.dart';
 import '../../services/providers.dart';
 
 final logStreamProvider = StreamProvider<List<TransportLogEntry>>((ref) {
@@ -58,17 +60,12 @@ class _LogScreenState extends ConsumerState<LogScreen> {
               IconButton(
                 tooltip: 'Export capture (.dcalog)',
                 icon: const Icon(Icons.download_outlined),
-                onPressed: () => SharePlus.instance.share(
-                  ShareParams(
-                    files: [
-                      XFile.fromData(
-                        Uint8List.fromList(encodeCapture(entries).codeUnits),
-                        mimeType: 'text/plain',
-                        name:
-                            'session-${DateTime.now().millisecondsSinceEpoch}.dcalog',
-                      ),
-                    ],
-                  ),
+                onPressed: () => exportFile(
+                  context,
+                  bytes: utf8.encode(encodeCapture(entries)),
+                  mimeType: 'text/plain',
+                  name:
+                      'session-${DateTime.now().millisecondsSinceEpoch}.dcalog',
                 ),
               ),
               IconButton(

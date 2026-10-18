@@ -32,7 +32,7 @@ class PlotTrace {
 }
 
 /// Port of the reference client's canvas plotter: auto-ranging with zero
-/// snapping, nice ticks, legend, hover read-out.
+/// snapping, nice ticks, legend, hover read-out and pop-up.
 class CurvePlot extends StatefulWidget {
   const CurvePlot({
     super.key,
@@ -55,17 +55,38 @@ class _CurvePlotState extends State<CurvePlot> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final painter = _PlotPainter(
-      traces: widget.traces,
-      xLabel: widget.xLabel,
-      yLabel: widget.yLabel,
-      ink: theme.colorScheme.onSurface,
-      grid: theme.colorScheme.outlineVariant,
-      muted: theme.colorScheme.onSurfaceVariant,
-      background: theme.colorScheme.surface,
-      textStyle: theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12),
-      hover: _hover,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // The painter sits inside a 1px border, so its canvas is inset from
+        // the pointer's coordinates by that much on every side.
+        const inset = 1.0;
+        final size = Size(
+          constraints.maxWidth - 2 * inset,
+          widget.height - 2 * inset,
+        );
+        final axes = PlotAxes(widget.traces, size);
+        final hv = _hover;
+        final snap = hv == null
+            ? null
+            : axes.nearest(widget.traces, hv - const Offset(inset, inset));
+        final painter = _PlotPainter(
+          traces: widget.traces,
+          axes: axes,
+          xLabel: widget.xLabel,
+          yLabel: widget.yLabel,
+          ink: theme.colorScheme.onSurface,
+          grid: theme.colorScheme.outlineVariant,
+          muted: theme.colorScheme.onSurfaceVariant,
+          background: theme.colorScheme.surface,
+          textStyle: theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12),
+          snap: snap,
+        );
+        return _layout(theme, painter, snap);
+      },
     );
+  }
+
+  Widget _layout(ThemeData theme, _PlotPainter painter, PlotSnap? snap) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -93,7 +114,11 @@ class _CurvePlotState extends State<CurvePlot> {
         SizedBox(
           height: 20,
           child: Text(
-            painter.readout ?? '',
+            snap == null
+                ? ''
+                : '${snap.trace.label}   ${widget.xLabel}: '
+                      '${snap.point.x.toStringAsPrecision(4)}   '
+                      '${widget.yLabel}: ${snap.point.y.toStringAsPrecision(4)}',
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -118,33 +143,12 @@ List<double> niceTicks(double min, double max, [int n = 6]) {
   return t;
 }
 
-class _PlotPainter extends CustomPainter {
-  _PlotPainter({
-    required this.traces,
-    required this.xLabel,
-    required this.yLabel,
-    required this.ink,
-    required this.grid,
-    required this.muted,
-    required this.background,
-    required this.textStyle,
-    required this.hover,
-  });
+/// The point under the pointer, snapped to the nearest plotted sample.
+typedef PlotSnap = ({PlotTrace trace, ({double x, double y}) point, Offset at});
 
-  final List<PlotTrace> traces;
-  final String xLabel, yLabel;
-  final Color ink, grid, muted, background;
-  final TextStyle textStyle;
-  final Offset? hover;
-  String? readout;
-
-  static const double l = 62, r = 150, t = 18, b = 44;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final w = size.width, h = size.height;
-    canvas.drawRect(Offset.zero & size, Paint()..color = background);
-    double xmin = 0, xmax = 1, ymin = 0, ymax = 1;
+/// Auto-ranged axes for [traces] drawn into [size], with zero snapping.
+class PlotAxes {
+  PlotAxes(List<PlotTrace> traces, this.size) {
     var has = false;
     for (final tr in traces) {
       for (final p in tr.points) {
@@ -159,6 +163,7 @@ class _PlotPainter extends CustomPainter {
         ymax = math.max(ymax, p.y);
       }
     }
+    hasData = has;
     if (!has) {
       xmin = 0;
       xmax = 10;
@@ -171,8 +176,72 @@ class _PlotPainter extends CustomPainter {
     if (ymax == ymin) ymax = ymin + 1;
     ymax += (ymax - ymin) * 0.05;
     xmax += (xmax - xmin) * 0.02;
-    double px(double x) => l + (x - xmin) / (xmax - xmin) * (w - l - r);
-    double py(double y) => h - b - (y - ymin) / (ymax - ymin) * (h - t - b);
+  }
+
+  static const double l = 62, r = 150, t = 18, b = 44;
+
+  final Size size;
+  double xmin = 0, xmax = 1, ymin = 0, ymax = 1;
+  late final bool hasData;
+
+  Rect get plot => Rect.fromLTRB(l, t, size.width - r, size.height - b);
+  double px(double x) => l + (x - xmin) / (xmax - xmin) * plot.width;
+  double py(double y) =>
+      size.height - b - (y - ymin) / (ymax - ymin) * plot.height;
+
+  /// The sample nearest [pointer] on screen, or null when the pointer is
+  /// outside the plot area or nothing is plotted.
+  PlotSnap? nearest(List<PlotTrace> traces, Offset pointer) {
+    if (!hasData || !plot.contains(pointer)) return null;
+    PlotSnap? best;
+    var bestD = double.infinity;
+    for (final tr in traces) {
+      for (final p in tr.points) {
+        final at = Offset(px(p.x), py(p.y));
+        final d = (at - pointer).distanceSquared;
+        if (d < bestD) {
+          bestD = d;
+          best = (trace: tr, point: p, at: at);
+        }
+      }
+    }
+    return best;
+  }
+}
+
+class _PlotPainter extends CustomPainter {
+  _PlotPainter({
+    required this.traces,
+    required this.xLabel,
+    required this.yLabel,
+    required this.ink,
+    required this.grid,
+    required this.muted,
+    required this.background,
+    required this.textStyle,
+    required this.axes,
+    required this.snap,
+  });
+
+  final List<PlotTrace> traces;
+  final PlotAxes axes;
+  final String xLabel, yLabel;
+  final Color ink, grid, muted, background;
+  final TextStyle textStyle;
+  final PlotSnap? snap;
+
+  static const double l = PlotAxes.l,
+      r = PlotAxes.r,
+      t = PlotAxes.t,
+      b = PlotAxes.b;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width, h = size.height;
+    canvas.drawRect(Offset.zero & size, Paint()..color = background);
+    final xmin = axes.xmin, xmax = axes.xmax;
+    final ymin = axes.ymin, ymax = axes.ymax;
+    final px = axes.px, py = axes.py;
 
     final gridPaint = Paint()
       ..color = grid
@@ -248,25 +317,62 @@ class _PlotPainter extends CustomPainter {
       text(tr.label, Offset(w - r + 10, t + 4 + i * 17), color: tr.color);
     }
 
-    final hv = hover;
-    if (hv != null &&
-        has &&
-        hv.dx >= l &&
-        hv.dx <= w - r &&
-        hv.dy >= t &&
-        hv.dy <= h - b) {
-      final gx = xmin + (hv.dx - l) / (w - l - r) * (xmax - xmin);
-      final gy = ymin + (h - b - hv.dy) / (h - t - b) * (ymax - ymin);
-      readout =
-          '$xLabel: ${gx.toStringAsPrecision(4)}   $yLabel: ${gy.toStringAsPrecision(4)}';
-      canvas.drawLine(
-        Offset(hv.dx, t),
-        Offset(hv.dx, h - b),
-        Paint()..color = muted.withValues(alpha: 0.5),
+    final sn = snap;
+    if (sn != null) {
+      final line = Paint()..color = muted.withValues(alpha: 0.5);
+      canvas.drawLine(Offset(sn.at.dx, t), Offset(sn.at.dx, h - b), line);
+      canvas.drawLine(Offset(l, sn.at.dy), Offset(w - r, sn.at.dy), line);
+      canvas.drawCircle(sn.at, 4.5, Paint()..color = sn.trace.color);
+      canvas.drawCircle(
+        sn.at,
+        4.5,
+        Paint()
+          ..color = background
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.5,
       );
-    } else {
-      readout = null;
+      _bubble(canvas, sn, Rect.fromLTRB(l, t, w - r, h - b));
     }
+  }
+
+  /// A tooltip-style pop-up beside the snapped sample, flipped to whichever
+  /// side keeps it inside [area].
+  void _bubble(Canvas canvas, PlotSnap sn, Rect area) {
+    final tp = TextPainter(
+      text: TextSpan(
+        style: textStyle.copyWith(color: background),
+        children: [
+          TextSpan(
+            text: '${sn.trace.label}\n',
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+          TextSpan(
+            text:
+                '$xLabel: ${sn.point.x.toStringAsPrecision(4)}\n'
+                '$yLabel: ${sn.point.y.toStringAsPrecision(4)}',
+          ),
+        ],
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    const pad = 6.0, gap = 10.0;
+    final bw = tp.width + 2 * pad, bh = tp.height + 2 * pad;
+    var x = sn.at.dx + gap;
+    if (x + bw > area.right) x = sn.at.dx - gap - bw;
+    var y = sn.at.dy - gap - bh;
+    if (y < area.top) y = sn.at.dy + gap;
+    x = x.clamp(area.left, math.max(area.left, area.right - bw));
+    y = y.clamp(area.top, math.max(area.top, area.bottom - bh));
+    final box = RRect.fromRectAndRadius(
+      Rect.fromLTWH(x, y, bw, bh),
+      const Radius.circular(4),
+    );
+    canvas.drawRRect(box, Paint()..color = ink.withValues(alpha: 0.9));
+    canvas.drawRect(
+      Rect.fromLTWH(x, y + pad, 3, bh - 2 * pad),
+      Paint()..color = sn.trace.color,
+    );
+    tp.paint(canvas, Offset(x + pad + 2, y + pad));
   }
 
   @override
