@@ -3,7 +3,7 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
-## Unreleased
+## 0.3.8 — 2026-10-23
 
 ### Fixed
 - On Linux, exporting from the Curves tab (CSV and PNG), History, a bin and the session log did
