@@ -78,10 +78,12 @@ Run `dart format .`, `just analyze` and `just test` before finishing a change.
 
 ## Licensing and distribution decisions
 
-Source is public under PolyForm Shield 1.0.0; all builds are free; only
-Cryptid Effects may publish a paid edition; users are bound by
-`docs/EULA.md`. Do not propose MIT/Apache/GPL (they would allow competing
-paid editions) and do not re-raise the distribution question. Details in
+Source is public under the AGPL-3.0-only (decided 2026-11-24, replacing
+PolyForm Shield 1.0.0, so the project is open source by the OSI's definition);
+all builds are free. Anyone may now redistribute or sell a build, provided
+their changes stay under the AGPL. `docs/EULA.md` keeps the hardware,
+warranty and trademark terms for the builds. Do not re-raise the
+distribution question. Details in
 `PLAN.md` section 10.
 
 ## Git and releases

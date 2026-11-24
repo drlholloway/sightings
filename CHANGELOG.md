@@ -3,6 +3,13 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Changed
+- **License:** Sightings is now free software under the GNU Affero General Public License,
+  version 3 only (AGPL-3.0-only). Releases up to 0.3.8 remain under PolyForm Shield 1.0.0.
+  The End User License Agreement no longer restricts redistribution or changed versions.
+
 ## 0.3.8 — 2026-10-23
 
 ### Fixed

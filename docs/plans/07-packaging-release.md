@@ -45,7 +45,8 @@ signing, notarization and store listings are part of this phase rather than opti
 - Version from `pubspec.yaml`; `app_version` written into every session row.
 
 ## License and attribution
-- `LICENSE` is PolyForm Shield 1.0.0 with a Required Notice; `docs/EULA.md` holds the
+- `LICENSE` is the AGPL‑3.0 text and `NOTICE` the copyright and "version 3 only" statement
+  (PolyForm Shield 1.0.0 until 2026‑11‑24); `docs/EULA.md` holds the
   users' terms for the builds (shown in About and bundled as `assets/EULA.md`, keep the two
   in sync). Free on every platform; a free Play listing cannot later become paid. Once the
   repository is public, Actions minutes are free and the macOS CI jobs can run on every push.

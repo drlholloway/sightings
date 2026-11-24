@@ -73,8 +73,10 @@ hardware sanity‑check tool; it is not part of the repository.
 Note on provenance: the reference client was built from a reverse‑engineered protocol
 dossier. **Permission to distribute binaries has been granted** (decision recorded 2026‑09‑05):
 signing, notarization and store listings are in scope for Phase 7. The **source is public under
-PolyForm Shield 1.0.0** (decided 2026‑09‑06, see `LICENSE`): anyone may use, build and modify it
-but not compete with it; builds are free on every platform, and users are bound by `docs/EULA.md`.
+the AGPL‑3.0‑only** (decided 2026‑11‑24, replacing PolyForm Shield 1.0.0 from 2026‑09‑06; see
+`LICENSE` and `NOTICE`): anyone may use, build, modify and redistribute it, keeping their changes
+under the same license; builds are free on every platform, with `docs/EULA.md` for the hardware,
+warranty and trademark terms.
 
 ---
 
@@ -280,9 +282,10 @@ unknown.
 ## 10. Decisions and open questions
 
 ### Decided (2026‑09‑05)
-1. **Everything public and free; source under PolyForm Shield.** Free builds on macOS, Linux
-   and Android; the repository is public under PolyForm Shield 1.0.0 (no competing products),
-   with an EULA for users of the builds (2026‑09‑06). Phase 7 includes
+1. **Everything public and free; source under the AGPL.** Free builds on macOS, Linux
+   and Android; the repository is public under the AGPL‑3.0‑only since 2026‑11‑24 (before
+   that, PolyForm Shield 1.0.0, which barred competing products), with an EULA for users of
+   the builds (2026‑09‑06, trimmed 2026‑11‑24 to what the AGPL allows). Phase 7 includes
    signed/notarized macOS builds, a Linux AppImage and the Play listing. See §2.
 2. **Unit‑button results land as drafts.** A test started from the unit's own button is
    shown as a *draft* card that the user confirms (Save, optionally tagging first) or

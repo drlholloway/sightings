@@ -72,7 +72,8 @@ These are safety properties of the app and are not negotiable:
 
 ## Licensing of contributions
 
-Sightings is licensed under [PolyForm Shield 1.0.0](LICENSE). By submitting a contribution
+Sightings is licensed under the [GNU Affero General Public License, version 3
+only](LICENSE). By submitting a contribution
 you agree that it is licensed under the same terms and that Cryptid Effects may include it
 in any edition of Sightings, including a commercial one. Please do not submit code copied
 from Peak's software or from other projects under incompatible licenses.
