@@ -1,6 +1,6 @@
 # Sightings — End User License Agreement
 
-*Draft for review. Version 1, September 2026.*
+*Draft for review. Version 2, November 2026.*
 
 This agreement is between you and Cryptid Effects ("we", "us") and covers the
 Sightings application for macOS, Linux and Android (the "App").
@@ -8,23 +8,19 @@ Sightings application for macOS, Linux and Android (the "App").
 ## 1. License
 
 - The App is provided **free of charge** on every platform. You may install and use
-  it on any number of computers and devices you own or control, for personal or
-  commercial purposes.
+  it on any number of computers and devices, for personal or commercial purposes.
 - Builds obtained through the Mac App Store or Google Play are also subject to the
   store's terms.
-- The App is licensed, not sold. We keep all rights not expressly granted here.
+- The App is free software. Its source code is published under the GNU Affero
+  General Public License, version 3 only (AGPL-3.0-only).
 
-## 2. What you may not do
+## 2. Copying, changing and sharing
 
-- Redistribute, sell, rent, sublicense or make the App available to third parties,
-  including re-uploading the free builds to any store or site.
-- Create, sell or charge for any derivative, modified, rebranded or repackaged
-  version of the App. Only Cryptid Effects may offer a paid edition of Sightings.
-- Remove or alter any notices in the App.
-
-The source code of the App is published separately under the PolyForm Shield
-License 1.0.0; what you may do with the source is governed by that license, not
-by this agreement.
+Your rights to copy, modify and redistribute the App, and the conditions on doing
+so, are set by the AGPL-3.0-only, not by this agreement. Nothing here limits those
+rights. In short: you may share the App and build on it, and if you distribute a
+changed version, or run one as a service for others, you must publish your changes
+under the same license.
 
 ## 3. Your hardware and data
 
@@ -48,18 +44,13 @@ incidental or consequential damages, or for damage to components, equipment or
 data, arising from use of the App. As the App is free, our total liability is
 limited to zero to the extent the law allows.
 
-## 6. Termination
-
-This license ends automatically if you breach it. On termination you must delete
-the App.
-
-## 7. Trademarks
+## 6. Trademarks
 
 Peak Atlas, DCA Pro and DCA75 are trademarks of Peak Electronic Design Ltd.
 Sightings is not affiliated with, endorsed by or supported by Peak Electronic
 Design Ltd.
 
-## 8. Contact
+## 7. Contact
 
 Questions about this agreement: Cryptid Effects, via the contact details on the
 download page.

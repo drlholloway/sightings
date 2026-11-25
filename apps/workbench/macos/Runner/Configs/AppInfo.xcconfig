@@ -11,4 +11,4 @@ PRODUCT_NAME = Sightings
 PRODUCT_BUNDLE_IDENTIFIER = dev.laneholloway.workbench
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = © 2026 Cryptid Effects. Source under PolyForm Shield 1.0.0.
+PRODUCT_COPYRIGHT = © 2026 Cryptid Effects. Free software under the AGPL-3.0.

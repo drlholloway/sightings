@@ -34,7 +34,7 @@ class AppDelegate: FlutterAppDelegate {
       credits.append(NSAttributedString(string: "\n", attributes: body))
     }
     line("Companion for the Peak Atlas DCA75 semiconductor analyzer.")
-    line("Free on every platform. Source under PolyForm Shield 1.0.0.")
+    line("Free on every platform. Free software under the AGPL-3.0.")
     line("")
     link("Buy me a coffee ☕", tipURL)
     link("Source and releases on GitHub", sourceURL)

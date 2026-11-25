@@ -132,10 +132,12 @@ request checklist and the hard safety rules; the project follows the
 
 ## License
 
-[PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0), see `LICENSE`.
-You may use, build, modify and share Sightings freely, including at work, but not use it
-to make or sell anything that competes with it; any commercial edition is Cryptid Effects'
-alone. The macOS, Linux and Android builds are free, and users of the builds are bound by
-the End User License Agreement in `docs/EULA.md`.
+Sightings is free software under the
+[GNU Affero General Public License, version 3 only](LICENSE) (AGPL-3.0-only); the
+copyright notice is in `NOTICE`. You may use, build, modify and share it freely,
+including at work, and if you distribute a changed version, or run one as a service for
+others, you must publish your changes under the same license. The macOS, Linux and
+Android builds are free; `docs/EULA.md` adds the hardware, warranty and trademark terms
+for them. Releases up to 0.3.8 were under PolyForm Shield 1.0.0.
 
 Sightings is a Cryptid Effects project. Not affiliated with Peak Electronic Design Ltd.

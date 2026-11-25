@@ -6,6 +6,9 @@ GitHub Release notes.
 ## Unreleased
 
 ### Changed
+- **License:** Sightings is now free software under the GNU Affero General Public License,
+  version 3 only (AGPL-3.0-only). Releases up to 0.3.8 remain under PolyForm Shield 1.0.0.
+  The End User License Agreement no longer restricts redistribution or changed versions.
 - Developer: CI scans main and each pull request with SonarQube Cloud, with test coverage.
   `pubspec.lock` is committed and third-party GitHub Actions are pinned to commit hashes.
 
