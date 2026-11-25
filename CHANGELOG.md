@@ -11,6 +11,13 @@ GitHub Release notes.
   The End User License Agreement no longer restricts redistribution or changed versions.
 - Developer: CI scans main and each pull request with SonarQube Cloud, with test coverage.
   `pubspec.lock` is committed and third-party GitHub Actions are pinned to commit hashes.
+- Developer: every CI and release job builds with the Flutter version and exact package versions
+  recorded in `pubspec.lock`. The release workflow is read-only except for its publish job.
+- Android: the app declares that it uses no clear-text network traffic (it makes no network calls).
+
+### Fixed
+- Settings no longer describes the End User License Agreement as "not for redistribution", which
+  was left over from the previous license.
 
 ## 0.3.8 — 2026-10-23
 

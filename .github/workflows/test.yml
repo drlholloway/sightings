@@ -9,6 +9,13 @@ on:
 permissions:
   contents: read
 
+# The Flutter that pubspec.lock was written with, since Flutter itself fixes
+# some package versions. After upgrading Flutter on the dev machine: run
+# `flutter pub get`, commit pubspec.lock, and put the new version here and
+# in release.yml.
+env:
+  FLUTTER_VERSION: 3.47.2
+
 jobs:
   dart:
     name: Dart packages (${{ matrix.os }})
@@ -22,13 +29,14 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
       - name: libusb (Linux)
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y libusb-1.0-0 libusb-1.0-0-dev
       - name: libusb (macOS)
         if: runner.os == 'macOS'
         run: brew install libusb
-      - run: dart pub get
+      - run: flutter pub get --enforce-lockfile
       - run: dart analyze
       - name: test packages
         run: |
@@ -45,8 +53,9 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libusb-1.0-0-dev
-      - run: dart pub get
+      - run: flutter pub get --enforce-lockfile
       - run: cd apps/workbench && flutter build linux --release
       - name: flatpak bundle
         run: |
@@ -74,7 +83,8 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-      - run: dart pub get
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+      - run: flutter pub get --enforce-lockfile
       - run: cd apps/workbench && flutter build apk --debug
   macos:
     name: macOS package tests and debug app
@@ -84,8 +94,9 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: brew install libusb
-      - run: dart pub get
+      - run: flutter pub get --enforce-lockfile
       - name: test packages
         run: |
           for p in packages/dca75_protocol packages/dca75_transport packages/dca75_device packages/dca75_circuits packages/dca75_store tools/dca75_cli; do
@@ -101,8 +112,9 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libusb-1.0-0-dev
-      - run: dart pub get
+      - run: flutter pub get --enforce-lockfile
       - run: cd apps/workbench && flutter build linux --release
       - name: package bundle
         run: |
@@ -115,7 +127,7 @@ jobs:
           tar czf $STAGE.tar.gz $STAGE
       - name: appimage
         run: |
-          curl -sSL -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          curl --proto '=https' --tlsv1.2 -sSfL -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool
           APPIMAGETOOL=$PWD/appimagetool packaging/appimage/build-appimage.sh apps/workbench/build/linux/x64/release/bundle dev .
       - name: check appimage metadata
@@ -161,14 +173,10 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      # The Flutter that pubspec.lock was written with, since Flutter itself
-      # fixes some package versions. After upgrading Flutter on the dev
-      # machine: run `flutter pub get`, commit pubspec.lock, and put the
-      # new version here.
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
-          flutter-version: 3.47.2
+          flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: sudo apt-get update && sudo apt-get install -y libusb-1.0-0 libusb-1.0-0-dev
       # The analysis reads the resolved dependencies, and the tests' coverage.
       # Exactly the versions in pubspec.lock.

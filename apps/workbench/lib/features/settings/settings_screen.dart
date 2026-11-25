@@ -156,8 +156,8 @@ class SettingsScreen extends ConsumerWidget {
         ListTile(
           leading: const Icon(Icons.description_outlined),
           title: const Text('End User License Agreement'),
-          subtitle: Text(
-            'Free to use on every platform; not for redistribution.',
+          subtitle: const Text(
+            'Hardware, warranty and trademark terms for the builds.',
           ),
           onTap: () => _showEula(context),
         ),

@@ -69,10 +69,10 @@ void main() {
 
   testWidgets('CurvePlot draws traces without error', (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         home: Scaffold(
           body: CurvePlot(
-            traces: const [
+            traces: [
               PlotTrace(
                 label: 'a',
                 color: Colors.red,
