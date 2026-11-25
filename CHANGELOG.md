@@ -3,6 +3,12 @@
 All notable changes to Sightings. The section for a tagged version becomes the
 GitHub Release notes.
 
+## Unreleased
+
+### Changed
+- Developer: CI scans main and each pull request with SonarQube Cloud, with test coverage.
+  `pubspec.lock` is committed and third-party GitHub Actions are pinned to commit hashes.
+
 ## 0.3.8 — 2026-10-23
 
 ### Fixed

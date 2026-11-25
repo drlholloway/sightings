@@ -1,7 +1,8 @@
 .dart_tool/
 .packages
 build/
-pubspec.lock
+# Test coverage, written for SonarQube in CI
+coverage/
 *.iml
 .idea/
 .vscode/

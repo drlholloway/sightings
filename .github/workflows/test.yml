@@ -19,7 +19,7 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v7
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
       - name: libusb (Linux)
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libusb-1.0-0-dev
@@ -71,7 +71,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
       - run: dart pub get
@@ -81,7 +81,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
       - run: brew install libusb
@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v7
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libusb-1.0-0-dev
@@ -141,3 +141,52 @@ jobs:
             Sightings-*-x86_64.AppImage
             Sightings-*-x86_64.AppImage.zsync
           retention-days: 14
+  sonar:
+    name: SonarQube
+    # Main and pull requests; a release tag is the same code as main.
+    if: github.ref_type != 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # The scan signs in to SonarQube Cloud with the workflow's own
+      # identity; there's no token to keep.
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # the whole history, so new code is told from old
+      - name: Cache SonarQube packages
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      # The Flutter that pubspec.lock was written with, since Flutter itself
+      # fixes some package versions. After upgrading Flutter on the dev
+      # machine: run `flutter pub get`, commit pubspec.lock, and put the
+      # new version here.
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.2
+      - run: sudo apt-get update && sudo apt-get install -y libusb-1.0-0 libusb-1.0-0-dev
+      # The analysis reads the resolved dependencies, and the tests' coverage.
+      # Exactly the versions in pubspec.lock.
+      - run: flutter pub get --enforce-lockfile
+      - name: test packages with coverage
+        run: |
+          for p in packages/dca75_protocol packages/dca75_transport packages/dca75_device packages/dca75_circuits packages/dca75_store tools/dca75_cli; do
+            (cd $p && dart test --coverage-path=coverage/lcov.info)
+          done
+      - run: cd apps/workbench && flutter test --coverage
+      - name: Coverage paths from the repo root
+        # Flutter writes them relative to the app.
+        run: sed -i 's|^SF:lib/|SF:apps/workbench/lib/|' apps/workbench/coverage/lcov.info
+      - uses: SonarSource/sonarqube-auth-action@b372e2c2930aadfcc4f4399446da1e12772709ad # v1.2
+        id: auth
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4 # v8.5.0
+        with:
+          args: >
+            -Dsonar.organization=${{ steps.auth.outputs.organization }}
+            -Dsonar.projectKey=${{ steps.auth.outputs.project-key }}
