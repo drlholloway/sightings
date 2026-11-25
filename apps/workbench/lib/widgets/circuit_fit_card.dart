@@ -8,6 +8,7 @@ import '../services/circuits.dart';
 import '../services/dca55.dart';
 import '../services/leakage.dart';
 import '../services/settings.dart';
+import 'section_card.dart';
 
 /// "Valid for" card: which active circuit positions this reading fits.
 class CircuitFitCard extends ConsumerWidget {
@@ -52,96 +53,74 @@ class CircuitFitCard extends ConsumerWidget {
       fontWeight: FontWeight.w700,
     );
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: theme.colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(6),
+    return SectionCard(
+      title: 'PEDAL CIRCUITS',
+      action: TextButton(
+        onPressed: () => context.go('/circuits'),
+        child: const Text('Edit circuits'),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      children: [
+        if (circuits.isEmpty)
+          Text(
+            'No circuits are active. Turn some on under Circuits.',
+            style: theme.textTheme.bodySmall,
+          )
+        else if (good.isEmpty && near.isEmpty)
+          Text(
+            'No active circuit uses this kind of part.',
+            style: theme.textTheme.bodySmall,
+          )
+        else ...[
+          if (good.isNotEmpty) ...[
+            Text(
+              'Valid for',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
               children: [
-                Expanded(
-                  child: Text(
-                    'PEDAL CIRCUITS',
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      letterSpacing: 1,
-                      color: theme.colorScheme.onSurfaceVariant,
+                for (final f in good)
+                  Tooltip(
+                    message: f.results.map((r) => r.text).join('\n'),
+                    child: Chip(
+                      avatar: Icon(
+                        Icons.check_circle,
+                        size: 16,
+                        color: Colors.green.shade700,
+                      ),
+                      label: Text(
+                        '${f.circuit.name} · ${f.position.label}',
+                        style: chip,
+                      ),
+                      visualDensity: VisualDensity.compact,
                     ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () => context.go('/circuits'),
-                  child: const Text('Edit circuits'),
-                ),
               ],
             ),
-            if (circuits.isEmpty)
-              Text(
-                'No circuits are active. Turn some on under Circuits.',
-                style: theme.textTheme.bodySmall,
-              )
-            else if (good.isEmpty && near.isEmpty)
-              Text(
-                'No active circuit uses this kind of part.',
-                style: theme.textTheme.bodySmall,
-              )
-            else ...[
-              if (good.isNotEmpty) ...[
-                Text(
-                  'Valid for',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    for (final f in good)
-                      Tooltip(
-                        message: f.results.map((r) => r.text).join('\n'),
-                        child: Chip(
-                          avatar: Icon(
-                            Icons.check_circle,
-                            size: 16,
-                            color: Colors.green.shade700,
-                          ),
-                          label: Text(
-                            '${f.circuit.name} · ${f.position.label}',
-                            style: chip,
-                          ),
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      ),
-                  ],
-                ),
-              ],
-              if (near.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Text(
-                  'Not for',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                for (final f in near)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2),
-                    child: Text(
-                      '${f.circuit.name} · ${f.position.label}: ${f.firstFailure}',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  ),
-              ],
-            ],
           ],
-        ),
-      ),
+          if (near.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              'Not for',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            for (final f in near)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(
+                  '${f.circuit.name} · ${f.position.label}: ${f.firstFailure}',
+                  style: theme.textTheme.bodySmall,
+                ),
+              ),
+          ],
+        ],
+      ],
     );
   }
 }
