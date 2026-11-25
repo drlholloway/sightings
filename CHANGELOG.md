@@ -14,6 +14,7 @@ GitHub Release notes.
 - Developer: every CI and release job builds with the Flutter version and exact package versions
   recorded in `pubspec.lock`. The release workflow is read-only except for its publish job.
 - Android: the app declares that it uses no clear-text network traffic (it makes no network calls).
+- Developer: Android builds use Gradle 9.9.2 and the Android Gradle plugin 9.5.3.
 
 ### Fixed
 - Settings no longer describes the End User License Agreement as "not for redistribution", which
