@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/leakage.dart';
+import 'section_card.dart';
 
 /// Reverse-leakage figures for a saved diode reading.
 class LeakageCard extends ConsumerWidget {
@@ -34,107 +35,50 @@ class LeakageCard extends ConsumerWidget {
     final vp = plan?.voltPrefix ?? 'vr';
 
     String amps(double a) => a.abs() < 5e-9 ? '< 5 nA' : eng(a, 'A');
-    Widget row(String label, String value) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
-          Text(
-            value,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: theme.colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(6),
+    return SectionCard(
+      title: 'REVERSE LEAKAGE',
+      action: MeasureAction(
+        running: running,
+        measured: data != null,
+        icon: Icons.water_drop_outlined,
+        onMeasure: canMeasure && plan != null
+            ? () =>
+                  ref.read(leakageProvider.notifier).measure(readingId, result)
+            : null,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'REVERSE LEAKAGE',
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      letterSpacing: 1,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-                if (running)
-                  const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                else if (canMeasure && plan != null)
-                  TextButton.icon(
-                    onPressed: () => ref
-                        .read(leakageProvider.notifier)
-                        .measure(readingId, result),
-                    icon: const Icon(Icons.water_drop_outlined, size: 18),
-                    label: Text(data == null ? 'Measure' : 'Re‑measure'),
-                  ),
-              ],
-            ),
-            Text(
-              plan == null
-                  ? 'Needs a result with the junction leads known.'
-                  : isBjt
-                  ? 'Icbo: collector–base junction reverse-biased through 470 kΩ, emitter open (max ~25 µA); resolution a few nA.'
-                  : 'Cathode ${plan.cathode.label} reverse-biased through 470 kΩ (max ~25 µA); resolution a few nA.',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 8),
-            if (live?.error != null)
-              Text(
-                live!.error!,
-                style: TextStyle(color: theme.colorScheme.error),
-              )
-            else if (data == null && !running)
-              Text('Not measured yet.', style: theme.textTheme.bodySmall)
-            else ...[
-              for (final v in const ['5v', '10v'])
-                if (data?['leak_${ip}_$v'] != null)
-                  row(
-                    '${isBjt ? 'Icbo' : 'Ir'} @ ${eng(data!['leak_${vp}_$v']?.$1 ?? 0, 'V')}',
-                    amps(data['leak_${ip}_$v']!.$1),
-                  ),
-              if (isBjt && result.param('ic_leak') != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Text(
-                    'DCA75 identify Ic leakage (Iceo, base open): ${result.param('ic_leak')!.display}.',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-              if (result.param('d1_ir') != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Text(
-                    'DCA75 identify reverse current: ${result.param('d1_ir')!.display}.',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-            ],
-          ],
+      children: [
+        CardNote(
+          plan == null
+              ? 'Needs a result with the junction leads known.'
+              : isBjt
+              ? 'Icbo: collector–base junction reverse-biased through 470 kΩ, emitter open (max ~25 µA); resolution a few nA.'
+              : 'Cathode ${plan.cathode.label} reverse-biased through 470 kΩ (max ~25 µA); resolution a few nA.',
         ),
-      ),
+        const SizedBox(height: 8),
+        if (live?.error != null)
+          Text(live!.error!, style: TextStyle(color: theme.colorScheme.error))
+        else if (data == null && !running)
+          Text('Not measured yet.', style: theme.textTheme.bodySmall)
+        else ...[
+          for (final v in const ['5v', '10v'])
+            if (data?['leak_${ip}_$v'] != null)
+              ValueRow(
+                '${isBjt ? 'Icbo' : 'Ir'} @ ${eng(data!['leak_${vp}_$v']?.$1 ?? 0, 'V')}',
+                amps(data['leak_${ip}_$v']!.$1),
+              ),
+          if (isBjt && result.param('ic_leak') != null)
+            CardNote(
+              'DCA75 identify Ic leakage (Iceo, base open): ${result.param('ic_leak')!.display}.',
+              gap: true,
+            ),
+          if (result.param('d1_ir') != null)
+            CardNote(
+              'DCA75 identify reverse current: ${result.param('d1_ir')!.display}.',
+              gap: true,
+            ),
+        ],
+      ],
     );
   }
 }

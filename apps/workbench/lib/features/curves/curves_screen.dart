@@ -43,6 +43,9 @@ class _CurvesScreenState extends ConsumerState<CurvesScreen> {
   @override
   void initState() {
     super.initState();
+    // Start on a sweep that applies to what is identified so far: with no
+    // result that is the two-lead junction sweep, not the BJT default.
+    _selectKindFor(ref.read(lastResultProvider)?.result);
     if (widget.sweepId != null) _loadOverlay(widget.sweepId!);
     _refreshSaved();
   }

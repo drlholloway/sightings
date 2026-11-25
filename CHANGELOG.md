@@ -15,8 +15,12 @@ GitHub Release notes.
   recorded in `pubspec.lock`. The release workflow is read-only except for its publish job.
 - Android: the app declares that it uses no clear-text network traffic (it makes no network calls).
 - Developer: Android builds use Gradle 9.9.2 and the Android Gradle plugin 9.5.3.
+- Developer: widget tests cover the History, reading, Parts, bin and Curves screens, and the
+  DCA55, leakage and circuits cards share one card widget.
 
 ### Fixed
+- The Curves tab no longer shows the transistor sweep's settings before a part has been
+  identified; it starts on the PN junction sweep, the first one that can run.
 - Settings no longer describes the End User License Agreement as "not for redistribution", which
   was left over from the previous license.
 
